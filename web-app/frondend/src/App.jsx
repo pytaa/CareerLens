@@ -1,121 +1,71 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import React from 'react';
 
-function App() {
-  const [count, setCount] = useState(0)
+function CareerLensHero() {
+  const navLinks = [
+    { name: 'Beranda', active: true },
+    { name: 'Industri', active: false },
+    { name: 'Tentang', active: false },
+  ];
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="min-h-screen bg-bg">
+      {/* --- HEADER --- */}
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-border">
+        <nav className="w-full px-6 lg:px-12 h-16 flex items-center justify-between">
+          
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 rounded-full border border-gray-400"></div>
+            <span className="text-xl font-bold text-gray-950 tracking-tight">Career<span className="text-accent">Lens</span></span>
+          </div>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
+          <ul className="flex items-center gap-6">
+            {navLinks.map((link) => (
+              <li key={link.name}>
+                <a
+                  href="#"
+                  className={`text-sm font-medium transition-colors ${
+                    link.active
+                      ? 'text-gray-950 pb-2 border-b-2 border-accent'
+                      : 'text-gray-600 hover:text-gray-950'
+                  }`}
+                >
+                  {link.name}
+                </a>
+              </li>
+            ))}
           </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+          <div className="flex items-center gap-4 text-gray-600">
+            <button className="p-1 hover:text-gray-950">🌐</button>
+            <button className="p-1 hover:text-gray-950">☀️</button>
+          </div>
+        </nav>
+      </header>
+
+      {/* --- HERO SECTION --- */}
+      <main className="w-full px-6 lg:px-12 pt-16 pb-20 text-center">
+        {/* Konten dibatasi max-w-4xl agar teks tidak terlalu panjang, tapi tetap responsif */}
+        <div className="max-w-4xl mx-auto">
+            
+            <div className="inline-flex items-center gap-2 bg-accent-bg text-accent px-4 py-1.5 rounded-full border border-accent-border mb-10 shadow-sm">
+                <span className="text-sm font-semibold tracking-tight">Navigasi Karir Masa Depan</span>
+            </div>
+
+            <h1 className="text-6xl font-extrabold text-gray-950 leading-tight tracking-tighter mb-8">
+                Temukan <span className="text-accent">Lensa Karir Digitalmu.</span>
+            </h1>
+
+            <p className="text-xl text-text leading-relaxed mb-16">
+                Platform rekomendasi karir untuk 4 sektor industri digital utama: IT, Data Science, Desain, dan Digital Marketing.
+            </p>
+
+            <button className="inline-flex items-center gap-3 bg-gray-950 text-white px-7 py-3 rounded-full text-base font-medium shadow-md transition hover:bg-gray-800 mt-4">
+                Mulai Analisis Karir →
+            </button>
+        </div>
+      </main>
+    </div>
+  );
 }
 
-export default App
+export default CareerLensHero;
