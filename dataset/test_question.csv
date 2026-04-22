@@ -1,0 +1,31 @@
+question_id,questions,riasec_type
+Q01,"Saya merasa puas saat berhasil menemukan akar masalah yang membuat sebuah sistem tidak jalan, lalu memperbaikinya.",R
+Q02,Saya senang merakit komponen teknologi agar performanya maksimal untuk pekerjaan berat.,R
+Q03,Saya senang membuat perintah otomatis agar tugas komputer yang membosankan bisa selesai sendiri.,R
+Q04,Saya senang mengecek setiap tombol dan link satu per satu untuk memastikan semuanya berfungsi normal.,R
+Q05,Saya bangga ketika berhasil menyelesaikan aplikasi/web yang manfaatnya langsung terasa.,R
+Q06,Saya suka melihat kumpulan angka untuk menemukan rahasia atau tren tersembunyi di dalamnya.,I
+Q07,Saya merasa tertantang saat harus memecahkan teka-teki logika yang rumit dalam sistem.,I
+Q08,Saya tertarik meneliti kebenaran data untuk memastikan tidak ada info yang salah atau palsu.,I
+Q09,Saya merasa puas saat berhasil menerjemahkan angka-angka yang membingungkan menjadi cerita yang mudah dipahami.,I
+Q10,Saya senang menyelidiki kenapa sebuah strategi pemasaran tidak mencapai target yang diharapkan.,I
+Q11,Saya senang mempercantik tampilan website agar terlihat lebih modern dan menarik dipandang.,A
+Q12,Saya suka memadukan warna dan gaya tulisan yang pas agar informasi di layar enak dibaca.,A
+Q13,Saya senang menyusun kata-kata promosi yang kreatif untuk menarik minat banyak orang.,A
+Q14,Saya suka menata letak gambar dan tulisan agar pesan utamanya mudah ditangkap oleh mata.,A
+Q15,Saya senang mencoba-coba berbagai gaya desain baru agar tetap sesuai dengan tren masa kini.,A
+Q16,Saya senang membantu pengguna memahami cara menggunakan sebuah aplikasi.,S
+Q17,Saya tertarik mengetahui apa yang dirasakan pengguna saat memakai suatu produk digital.,S
+Q18,Saya menikmati berdiskusi dengan tim untuk meningkatkan pengalaman pengguna.,S
+Q19,Saya senang mengumpulkan feedback pengguna untuk memperbaiki suatu produk.,S
+Q20,Saya merasa puas ketika hasil kerja saya memudahkan orang lain.,S
+Q21,Saya tertarik mencari cara untuk meningkatkan jumlah pengguna suatu produk.,E
+Q22,Saya senang merancang strategi untuk mencapai target tertentu.,E
+Q23,Saya merasa tertantang untuk meningkatkan performa suatu kampanye atau proyek.,E
+Q24,Saya nyaman mengambil inisiatif dalam suatu proyek.,E
+Q25,Saya merasa termotivasi oleh target dan pencapaian.,E
+Q26,Saya senang mengatur data atau informasi agar rapi dan mudah digunakan.,C
+Q27,Saya menikmati pekerjaan yang membutuhkan ketelitian tinggi.,C
+Q28,Saya suka memastikan tidak ada kesalahan dalam hasil kerja.,C
+Q29,Saya menikmati bekerja dengan angka atau informasi detail.,C
+Q30,Saya merasa penting untuk menjaga akurasi dalam setiap pekerjaan.,C
