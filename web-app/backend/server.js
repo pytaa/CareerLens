@@ -18,7 +18,7 @@ app.post('/predict', (req, res) => {
   // Simulasi loading (delay) selama 1 detik agar UI di React terlihat natural
   setTimeout(() => {
     
-    // 1. Handling untuk Metode "interest" (Minat Karir)
+// 1. Handling untuk Metode "interest" (Minat Karir)
     if (method === 'interest') {
       return res.json({
         "status": "success",
@@ -30,15 +30,48 @@ app.post('/predict', (req, res) => {
               "role_id": "ROLE_001",
               "role_name": "Data Scientist",
               "match_pct": 87.0,
-              "description": "Ahli dalam mengolah data besar untuk insight bisnis.",
+              "description": "Ahli dalam mengolah data besar untuk insight bisnis dan pemodelan prediktif tingkat lanjut.",
               "salary_range": "8jt - 20jt",
               "skill_gap": null,
               "roadmap": {
                 "learning_path": [
-                  { "step": 1, "title": "Pengenalan Data Science", "resource": "Coursera" },
-                  { "step": 2, "title": "Python untuk Data", "resource": "Dicoding" }
+                  { "step": 1, "title": "Pengenalan Data Science & Statistika", "resource": "Coursera" },
+                  { "step": 2, "title": "Python untuk Data Analysis", "resource": "Dicoding" },
+                  { "step": 3, "title": "Machine Learning Fundamental", "resource": "Kaggle" }
                 ],
-                "dummy_projects": ["Analisis Data Penjualan", "Dashboard Visualisasi"]
+                "dummy_projects": ["Analisis Prediksi Harga Properti", "Dashboard Visualisasi Interaktif"]
+              }
+            },
+            {
+              "role_id": "ROLE_002",
+              "role_name": "Machine Learning Engineer",
+              "match_pct": 95.0,
+              "description": "Fokus pada perancangan, pembuatan, dan produksi (deployment) model machine learning agar dapat digunakan pada aplikasi skala besar.",
+              "salary_range": "10jt - 25jt",
+              "skill_gap": null,
+              "roadmap": {
+                "learning_path": [
+                  { "step": 1, "title": "Advanced Programming & Math", "resource": "Kaggle" },
+                  { "step": 2, "title": "Deep Learning Implementation", "resource": "DeepLearning.AI" },
+                  { "step": 3, "title": "Productionalization & Monitoring", "resource": "Coursera" }
+                ],
+                "dummy_projects": ["Scalable Image Recognition API", "Sistem Rekomendasi E-Commerce"]
+              }
+            },
+            {
+              "role_id": "ROLE_003",
+              "role_name": "Data Analyst",
+              "match_pct": 82.0,
+              "description": "Bertanggung jawab menerjemahkan angka menjadi laporan yang mudah dipahami manajemen untuk membantu pengambilan keputusan bisnis.",
+              "salary_range": "6jt - 15jt",
+              "skill_gap": null,
+              "roadmap": {
+                "learning_path": [
+                  { "step": 1, "title": "SQL & Spreadsheet Mastery", "resource": "DataCamp" },
+                  { "step": 2, "title": "Data Visualization (Tableau/PowerBI)", "resource": "Coursera" },
+                  { "step": 3, "title": "Exploratory Data Analysis (EDA)", "resource": "Dicoding" }
+                ],
+                "dummy_projects": ["Analisis Tingkat Churn Pelanggan", "Laporan Kinerja Kampanye Marketing"]
               }
             }
           ]
