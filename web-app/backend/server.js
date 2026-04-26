@@ -79,7 +79,7 @@ app.post('/predict', (req, res) => {
       });
     }
 
-    // 2. Handling untuk Metode "skill" (Analisis Skill)
+  // 2. Handling untuk Metode "skill" (Analisis Skill)
     if (method === 'skill') {
       // Validasi error jika skill kurang dari 2
       if (!payload.skills || payload.skills.length < 2) {
@@ -96,7 +96,7 @@ app.post('/predict', (req, res) => {
         "method_used": "skill",
         "data": {
           "chart_data": {
-            "labels": ["Data Scientist", "ML Engineer", "Data Analyst"],
+            "labels": ["Data Scientist", "Machine Learning Engineer", "Data Analyst"],
             "scores": [92.5, 85.0, 78.3]
           },
           "recommendations": [
@@ -104,15 +104,48 @@ app.post('/predict', (req, res) => {
               "role_id": "ROLE_001",
               "role_name": "Data Scientist",
               "match_pct": 92.5,
-              "description": "Ahli dalam mengolah data besar untuk insight bisnis.",
+              "description": "Ahli dalam mengolah data besar untuk insight bisnis dan pembuatan pemodelan prediktif tingkat lanjut.",
               "salary_range": "8jt - 20jt",
-              "skill_gap": ["Machine Learning", "Statistics"],
+              "skill_gap": ["Machine Learning", "Statistics Advanced"],
               "roadmap": {
                 "learning_path": [
-                  { "step": 1, "title": "Dasar Statistika", "resource": "Coursera" },
-                  { "step": 2, "title": "Deep Learning", "resource": "TensorFlow Cert" }
+                  { "step": 1, "title": "Dasar Statistika & Probabilitas", "resource": "Coursera" },
+                  { "step": 2, "title": "Deep Learning Fundamentals", "resource": "TensorFlow Cert" },
+                  { "step": 3, "title": "Big Data Processing", "resource": "Udacity" }
                 ],
-                "dummy_projects": ["Prediksi Harga Rumah", "Analisis Sentimen"]
+                "dummy_projects": ["Prediksi Harga Rumah Berbasis Regresi", "Analisis Sentimen Ulasan Produk"]
+              }
+            },
+            {
+              "role_id": "ROLE_002",
+              "role_name": "Machine Learning Engineer",
+              "match_pct": 85.0,
+              "description": "Pengembang perangkat lunak yang bertanggung jawab merancang, membangun, dan melakukan produksi (deployment) model AI berskala besar.",
+              "salary_range": "10jt - 25jt",
+              "skill_gap": ["Docker/Kubernetes", "Model Deployment (MLOps)"],
+              "roadmap": {
+                "learning_path": [
+                  { "step": 1, "title": "MLOps Fundamental", "resource": "DeepLearning.AI" },
+                  { "step": 2, "title": "Model Deployment Patterns", "resource": "AWS Academy" },
+                  { "step": 3, "title": "CI/CD untuk Machine Learning", "resource": "Coursera" }
+                ],
+                "dummy_projects": ["Pembuatan Scalable Image Classification API", "Real-time Fraud Detection Pipeline"]
+              }
+            },
+            {
+              "role_id": "ROLE_003",
+              "role_name": "Data Analyst",
+              "match_pct": 78.3,
+              "description": "Menganalisis dataset untuk mengidentifikasi tren, membuat visualisasi dashboard interaktif, dan membantu pengambilan keputusan manajemen.",
+              "salary_range": "6jt - 15jt",
+              "skill_gap": ["Tableau / PowerBI", "Business Intelligence Business Insight"],
+              "roadmap": {
+                "learning_path": [
+                  { "step": 1, "title": "Advanced SQL Queries", "resource": "DataCamp" },
+                  { "step": 2, "title": "Dashboard Design Principles", "resource": "Coursera" },
+                  { "step": 3, "title": "Data Storytelling", "resource": "Dicoding" }
+                ],
+                "dummy_projects": ["Sales Performance & Tracking Dashboard", "Customer Churn Analysis Report"]
               }
             }
           ]

@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/LandingPage/LandingPage.jsx';
 import MetodeAnalisis from './pages/MetodeAnalisis/MetodeAnalisis.jsx';
 import MinatKarir from './pages/MinatKarir/MinatKarir.jsx';
+import AnalisisSkill from './pages/AnalisisSkill/AnalisisSkill.jsx';
 
 
 function App() {
@@ -16,6 +17,9 @@ function App() {
        
        {/* jalur buat minat karir */}
        <Route path="/minat-karir" element={<MinatKarir />} />
+
+       {/* jalur buat analisis skill */}
+       <Route path="/analisis-skill" element={<AnalisisSkill />} />
       </Routes>
     </Router>
   );

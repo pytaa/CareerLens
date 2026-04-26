@@ -46,10 +46,8 @@ const MetodeAnalisis = () => {
           </button>
         </div>
 
-        {/* PERBAIKAN 1: Padding atas (pt) dikurangi, padding bawah (pb) ditambah agar judul naik */}
+
         <div className="bg-slate-50 w-full max-w-5xl rounded-4xl pt-8 pb-16 px-8 md:pt-12 md:pb-20 md:px-14 shadow-2xl flex flex-col items-center">
-          
-          {/* PERBAIKAN 2: Margin bottom (mb) diperbesar agar jarak ke kartu lebih proporsional */}
           <h1 className="text-4xl md:text-5xl font-bold text-blue-950 mb-12 md:mb-16 text-center">
             Metode Analisis
           </h1>
@@ -65,7 +63,6 @@ const MetodeAnalisis = () => {
                   {item.icon}
                 </div>
                 
-                {/* PERBAIKAN 3: Menambahkan class 'text-white' dan 'font-extrabold' secara eksplisit */}
                 <h2 className="text-2xl font-extrabold text-white mb-3">{item.title}</h2>
                 
                 <p className="text-white text-sm leading-relaxed px-2 font-medium">
