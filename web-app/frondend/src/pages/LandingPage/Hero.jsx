@@ -26,7 +26,7 @@ export default function Hero(){
         </p>
 
         <button 
-        //   onClick={() => navigate('/metode')}
+          onClick={() => navigate('/metode')}
           className="mt-8 flex items-center gap-2 bg-blue-950 hover:bg-blue-900 text-white px-8 py-4 rounded-full text-lg font-medium transition-all shadow-lg hover:shadow-xl hover:-translate-y-1"
         >
           Mulai Analisis Karir <FiArrowRight size={24} />

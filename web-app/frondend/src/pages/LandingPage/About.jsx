@@ -9,8 +9,8 @@ export default function About() {
         Tentang <span className="text-blue-500">CareerLens.</span>
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-        <div className="bg-cyan-100 p-8 md:p-12 rounded-[2rem] shadow-sm">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center"> 
+        <div className="bg-cyan-100 p-8 md:p-12  rounded-4xl shadow-sm">
           <p className="text-xl md:text-2xl font-medium text-slate-800 italic leading-relaxed">
             "CareerLens merupakan sebuah platform berbasis website yang
             bertujuan untuk membantu para pencari kerja dalam menentukan skill
