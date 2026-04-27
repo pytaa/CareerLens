@@ -153,7 +153,7 @@ app.post('/predict', (req, res) => {
       });
     }
 
-    // 3. Handling untuk Metode "riasec" (Tes Minat Bakat)
+// 3. Handling untuk Metode "riasec" (Tes Minat Bakat)
     if (method === 'riasec') {
       return res.json({
         "status": "success",
@@ -165,15 +165,45 @@ app.post('/predict', (req, res) => {
               "role_id": "ROLE_001",
               "role_name": "Data Scientist",
               "match_pct": 88.7,
-              "description": "Ahli dalam mengolah data besar untuk insight bisnis.",
+              "description": "Ahli dalam mengolah data besar untuk insight bisnis menggunakan pendekatan statistik dan pemrograman.",
               "salary_range": "8jt - 20jt",
               "skill_gap": ["Python", "TensorFlow"],
               "roadmap": {
                 "learning_path": [
-                  { "step": 1, "title": "Pengenalan Programming", "resource": "Dicoding" },
+                  { "step": 1, "title": "Pengenalan Programming & Statistik", "resource": "Dicoding" },
                   { "step": 2, "title": "Machine Learning Dasar", "resource": "Coursera" }
                 ],
                 "dummy_projects": ["Klasifikasi Gambar", "Sistem Rekomendasi Sederhana"]
+              }
+            },
+            {
+              "role_id": "ROLE_002",
+              "role_name": "Machine Learning Engineer",
+              "match_pct": 94.5,
+              "description": "Fokus pada pengembangan algoritma AI dan deployment model ke lingkungan produksi.",
+              "salary_range": "10jt - 25jt",
+              "skill_gap": ["Docker", "Kubernetes", "MLOps"],
+              "roadmap": {
+                "learning_path": [
+                  { "step": 1, "title": "Advanced Python Patterns", "resource": "Kaggle" },
+                  { "step": 2, "title": "Deep Learning Specialization", "resource": "DeepLearning.AI" }
+                ],
+                "dummy_projects": ["Object Detection System", "Automated Prediction Pipeline"]
+              }
+            },
+            {
+              "role_id": "ROLE_003",
+              "role_name": "Data Analyst",
+              "match_pct": 76.2,
+              "description": "Menganalisis data mentah untuk memberikan laporan visual yang membantu pengambilan keputusan bisnis.",
+              "salary_range": "6jt - 15jt",
+              "skill_gap": ["SQL Advanced", "Tableau"],
+              "roadmap": {
+                "learning_path": [
+                  { "step": 1, "title": "Data Visualization Mastery", "resource": "Google Data Analytics" },
+                  { "step": 2, "title": "Business Intelligence Tools", "resource": "Coursera" }
+                ],
+                "dummy_projects": ["Sales Performance Dashboard", "Churn Rate Analysis"]
               }
             }
           ]

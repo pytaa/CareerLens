@@ -4,6 +4,7 @@ import LandingPage from './pages/LandingPage/LandingPage.jsx';
 import MetodeAnalisis from './pages/MetodeAnalisis/MetodeAnalisis.jsx';
 import MinatKarir from './pages/MinatKarir/MinatKarir.jsx';
 import AnalisisSkill from './pages/AnalisisSkill/AnalisisSkill.jsx';
+import TesBakat from './pages/TesBakat/TesBakat.jsx';
 
 
 function App() {
@@ -20,6 +21,9 @@ function App() {
 
        {/* jalur buat analisis skill */}
        <Route path="/analisis-skill" element={<AnalisisSkill />} />
+
+       {/* jalur buat tes minat */}
+       <Route path="/tes-bakat" element={<TesBakat />} />
       </Routes>
     </Router>
   );
