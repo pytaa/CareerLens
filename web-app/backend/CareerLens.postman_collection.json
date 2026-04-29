@@ -1,0 +1,214 @@
+{
+  "info": {
+    "name": "CareerLens Backend",
+    "description": "Postman collection for testing CareerLens backend API endpoints using PostgreSQL and dataset-driven data.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": {
+      "major": 1,
+      "minor": 0,
+      "patch": 0
+    }
+  },
+  "item": [
+    {
+      "name": "Get Test Questions",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/test/questions",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "test",
+            "questions"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Fields",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/fields",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "fields"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Skills",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/fields/skills",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "fields",
+            "skills"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Recommendation (RIASEC + Skills + Fields)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"riasec_scores\": {\n    \"R\": 0.75,\n    \"I\": 0.80,\n    \"A\": 0.45,\n    \"S\": 0.60,\n    \"E\": 0.50,\n    \"C\": 0.55\n  },\n  \"selected_skills\": [\"Python\", \"Data Analysis\"],\n  \"selected_fields\": [\"F01\", \"F02\"]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/recommendation",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "recommendation"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Recommendation by Skill",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"selected_skills\": [\"JavaScript\", \"React\"],\n  \"selected_fields\": [\"F01\"]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/recommendation/skill",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "recommendation",
+            "skill"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Role Detail",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/recommendation/roles/R01",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "recommendation",
+            "roles",
+            "R01"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Roadmap",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/roadmap/R01",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "roadmap",
+            "R01"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Save User Result",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"riasec_scores\": {\n    \"R\": 0.75,\n    \"I\": 0.80,\n    \"A\": 0.45,\n    \"S\": 0.60,\n    \"E\": 0.50,\n    \"C\": 0.55\n  },\n  \"selected_skills\": [\"Python\", \"Data Analysis\"],\n  \"selected_fields\": [\"F01\", \"F02\"],\n  \"recommended_roles\": [\"R01\", \"R02\"]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/results/save",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "results",
+            "save"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get User Result by Session",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/results/{{sessionId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "results",
+            "{{sessionId}}"
+          ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "sessionId",
+      "value": "replace_with_session_id",
+      "type": "string"
+    }
+  ]
+}
