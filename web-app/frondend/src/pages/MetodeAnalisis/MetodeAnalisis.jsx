@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '../../components/Navbar';
-import { FiArrowLeft } from 'react-icons/fi';
+import { FiArrowLeft, FiChevronRight } from 'react-icons/fi';
 import { BiTargetLock, BiCodeAlt, BiBrain } from 'react-icons/bi';
 
 const MetodeAnalisis = () => {
@@ -11,67 +10,87 @@ const MetodeAnalisis = () => {
     {
       id: 'minat',
       title: 'Minat Karir',
-      desc: 'Sudah tahu tujuan industri spesifik',
-      icon: <BiTargetLock size={60} className="mb-5" />, 
+      desc: 'Analisis minat mendalam untuk menemukan bidang pekerjaan yang paling sesuai dengan passion dan aspirasi pribadi Anda.',
+      icon: <BiTargetLock size={28} className="text-blue-700" />,
       path: '/minat-karir'
     },
     {
       id: 'skill',
       title: 'Analisis Skill',
-      desc: 'Input skill untuk menemukan industri yang cocok',
-      icon: <BiCodeAlt size={60} className="mb-5" />,
+      desc: 'Evaluasi kompetensi teknis dan soft skills yang Anda miliki saat ini untuk dipetakan ke kebutuhan standar industri terkini.',
+      icon: <BiCodeAlt size={28} className="text-blue-700" />,
       path: '/analisis-skill'
     },
     {
       id: 'bakat',
       title: 'Tes Bakat',
-      desc: 'Belum yakin dengan skill yang dimiliki? Ayo ikut tes bakat',
-      icon: <BiBrain size={60} className="mb-5" />,
+      desc: 'Uji kecerdasan kognitif dan potensi alami Anda melalui serangkaian asesmen psikometrik yang telah tervalidasi secara saintifik.',
+      icon: <BiBrain size={28} className="text-blue-700" />,
       path: '/tes-bakat'
     }
   ];
 
   return (
-    <div className="min-h-screen bg-[#030b26] font-sans flex flex-col">
-      <Navbar />
-
-      <main className="grow relative flex flex-col items-center justify-center p-6 mt-8">
+    <div className="h-screen bg-slate-50/50 font-sans flex flex-col overflow-hidden">
+      
+      {/* Header Minimalis */}
+      <header className="w-full px-6 md:px-12 py-5 flex items-center relative shrink-0">
         
-        <div className="w-full max-w-5xl mb-6">
-          <button 
-            onClick={() => navigate(-1)} 
-            className="flex items-center gap-2 bg-white text-slate-800 px-6 py-2 rounded-full font-medium shadow-md hover:bg-slate-100 transition-colors w-fit"
-          >
-            <FiArrowLeft size={20} /> Kembali
-          </button>
+        {/* Tombol Kembali Saja */}
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-2 text-slate-500 hover:text-slate-900 font-medium transition-colors z-10"
+        >
+          <FiArrowLeft size={20} /> Kembali
+        </button>
+
+        {/* Logo CareerLens di Tengah */}
+        <div className="absolute left-1/2 -translate-x-1/2 font-extrabold text-xl md:text-2xl text-blue-950 tracking-tight">
+          CareerLens
         </div>
+      </header>
 
-
-        <div className="bg-slate-50 w-full max-w-5xl rounded-4xl pt-8 pb-16 px-8 md:pt-12 md:pb-20 md:px-14 shadow-2xl flex flex-col items-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-blue-950 mb-12 md:mb-16 text-center">
+      {/* Main Container dipusatkan (justify-center) untuk menghindari scroll */}
+      <main className="grow flex flex-col items-center justify-center px-6 pb-8">
+        
+        {/* Title & Subtitle */}
+        <div className="text-center max-w-2xl mb-10">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-blue-950 mb-4">
             Metode Analisis
           </h1>
+          <p className="text-slate-500 text-base md:text-lg leading-relaxed">
+            Pilih salah satu metode di bawah ini untuk memulai pemetaan jalur karir profesional Anda secara akurat.
+          </p>
+        </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 w-full max-w-4xl">
-            {methods.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => navigate(item.path)}
-                className="group flex flex-col items-center justify-center text-center bg-[#0277b6] hover:bg-[#026296] py-12 px-6 rounded-4xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 h-full"
-              >
-                <div className="text-white opacity-100 group-hover:scale-110 transition-transform duration-300">
-                  {item.icon}
-                </div>
-                
-                <h2 className="text-2xl font-extrabold text-white mb-3">{item.title}</h2>
-                
-                <p className="text-white text-sm leading-relaxed px-2 font-medium">
-                  {item.desc}
-                </p>
-              </button>
-            ))}
-          </div>
+        {/* Grid Kartu Pilihan */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 w-full max-w-6xl">
+          {methods.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => navigate(item.path)}
+              className="group flex flex-col items-start text-left bg-white p-6 lg:p-8 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-2 border border-slate-100/80"
+            >
+              {/* Kotak Ikon */}
+              <div className="w-14 h-14 lg:w-16 lg:h-16 bg-blue-100/60 rounded-2xl flex items-center justify-center mb-6">
+                {item.icon}
+              </div>
 
+              {/* Judul Kartu */}
+              <h2 className="text-xl lg:text-2xl font-bold text-blue-950 mb-3">{item.title}</h2>
+
+              {/* Deskripsi */}
+              <p className="text-slate-500 text-sm lg:text-base leading-relaxed mb-8 grow">
+                {item.desc}
+              </p>
+
+              {/* Action Link */}
+              <div className="flex items-center gap-2 text-blue-600 text-sm font-bold tracking-wider uppercase mt-auto">
+                MULAI ANALISIS 
+                <FiChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
+              </div>
+            </button>
+          ))}
         </div>
       </main>
     </div>
