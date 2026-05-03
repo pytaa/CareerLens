@@ -46,7 +46,6 @@ const MinatKarir = () => {
 
   return (
     <div className="min-h-screen bg-[#e2e8f0] font-sans flex flex-col">
-      <Navbar />
       
       {/* Mengatur komponen mana yang dirender berdasarkan state view */}
       {view === 'selection' ? (
