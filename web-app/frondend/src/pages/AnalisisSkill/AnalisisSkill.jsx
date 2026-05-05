@@ -12,7 +12,7 @@ const AnalisisSkill = () => {
   const [inputtedSkills, setInputtedSkills] = useState([]);
 
   const handleAnalyzeSkill = async (skillsArray) => {
-    setInputtedSkills(skillsArray); // Simpan input user untuk ditampilkan di sidebar Result
+    setInputtedSkills(skillsArray); // kita simpan input user untuk ditampilkan di sidebar Result
     setView('result');
 
     try {
@@ -22,7 +22,7 @@ const AnalisisSkill = () => {
         body: JSON.stringify({
           user_id: "user_anonim_123",
           method: "skill",
-          payload: { skills: skillsArray } // Payload sesuai API Contract
+          payload: { skills: skillsArray }
         })
       });
 
@@ -43,7 +43,6 @@ const AnalisisSkill = () => {
 
   return (
     <div className="min-h-screen bg-[#e2e8f0] font-sans flex flex-col">
-      <Navbar />
       {view === 'selection' ? (
         <SkillSelection onAnalyze={handleAnalyzeSkill} />
       ) : (
