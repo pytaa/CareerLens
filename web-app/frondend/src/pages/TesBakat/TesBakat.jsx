@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '../../components/Navbar';
 import TesBakatResult from './TesBakatResult';
-import TesBakatQuiz from './TesBakatQuiz'; 
+import TesBakatQuiz from './TesBakatQuiz';
 import { riasecQuestions } from '../../data/riasecQuestions';
-import { FiArrowLeft } from 'react-icons/fi';
+import { FiArrowLeft, FiPlayCircle, FiCheckCircle } from 'react-icons/fi';
 
 const TesBakat = () => {
   const navigate = useNavigate();
@@ -20,16 +19,21 @@ const TesBakat = () => {
   const [resultData, setResultData] = useState(null);
   const [interestCode, setInterestCode] = useState([]);
 
-  // Fungsi untuk menyimpan pilihan jawaban
   const handleSelectOption = (val) => {
     const newAnswers = [...answers];
     newAnswers[currentIdx] = val;
     setAnswers(newAnswers);
   };
 
-  // Fungsi Kalkulasi dan Fetch API
+  // mereset seluruh kuis jika user keluar
+  const handleCancelQuiz = () => {
+    setView('intro'); // Kembalikan ke halaman awal
+    setCurrentIdx(0); // Reset ke soal nomor 1
+    setAnswers(Array(30).fill(null)); // Kosongkan seluruh jawaban
+  };
+
   const handleSubmitQuiz = async () => {
-    setView('result'); // Pindah ke halaman hasil (akan menampilkan loading)
+    setView('result'); 
 
     const rawScores = { r: 0, i: 0, a: 0, s: 0, e: 0, c: 0 };
     answers.forEach((ansValue, idx) => {
@@ -75,50 +79,80 @@ const TesBakat = () => {
     }
   };
 
-  // --- 1. RENDER LAYAR INTRO ---
+  // intro
   if (view === 'intro') {
     return (
-      <div className="min-h-screen bg-slate-400 font-sans flex flex-col relative">
-        <Navbar />
-        <div className="grow flex items-center justify-center p-6 mt-8">
-           <div className="w-full max-w-6xl">
-              <button onClick={() => navigate(-1)} className="flex items-center gap-2 bg-white text-slate-800 px-6 py-2 rounded-full font-medium shadow-md hover:bg-slate-100 mb-6 w-max">
-                <FiArrowLeft size={20} /> Kembali
-              </button>
-              
-              <div className="bg-slate-50 w-full rounded-4xl p-16 shadow-2xl flex flex-col items-center relative overflow-hidden">
-                 <h1 className="text-5xl font-bold text-slate-300 mb-16 text-center">Metode Analisis</h1>
-                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-4xl opacity-50 blur-sm pointer-events-none">
-                    <div className="bg-cyan-200 h-64 rounded-3xl"></div>
-                    <div className="bg-cyan-200 h-64 rounded-3xl"></div>
-                    <div className="bg-cyan-200 h-64 rounded-3xl"></div>
-                 </div>
+      <div className="min-h-screen bg-slate-50/50 font-sans flex flex-col">
+        
+        {/* Header Minimalis */}
+        <header className="w-full px-6 md:px-10 py-5 flex items-center relative bg-white/50 border-b border-slate-200/60 z-10 backdrop-blur-sm">
+          <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-slate-500 hover:text-slate-800 font-medium transition-colors">
+            <FiArrowLeft size={20} /> Kembali
+          </button>
+          <div className="absolute left-1/2 -translate-x-1/2 font-extrabold text-xl text-blue-950 tracking-tight">
+            CareerLens
+          </div>
+        </header>
 
-                 {/* Modal Mulai Tes */}
-                 <div className="absolute inset-0 flex items-center justify-center z-10">
-                    <div className="bg-[#030b26] p-10 rounded-2xl shadow-2xl max-w-md w-full text-white text-center">
-                       <p className="text-lg leading-relaxed mb-6">
-                         Mohon jawab seluruh pertanyaan dengan jujur sesuai dengan kepribadian dan preferensi Anda. Tidak ada jawaban benar atau salah.<br/><br/>
-                         Apakah Anda sudah siap untuk memulai tes?
-                       </p>
-                       <div className="flex justify-center gap-4">
-                          <button onClick={() => navigate(-1)} className="bg-cyan-100 text-slate-800 px-6 py-2 rounded-xl font-bold">Tidak, Kembali</button>
-                          <button onClick={() => setView('quiz')} className="bg-[#0277b6] hover:bg-[#026296] text-white px-8 py-2 rounded-xl font-bold">Ya</button>
-                       </div>
-                    </div>
-                 </div>
+        <main className="grow flex items-center justify-center p-6 w-full">
+           <div className="bg-white w-full max-w-3xl rounded-4xl p-10 md:p-14 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 flex flex-col items-center text-center">
+              
+              <h1 className="text-3xl md:text-4xl font-bold text-[#030b26] mb-6">
+                Instruksi Tes RIASEC
+              </h1>
+              
+              <p className="text-slate-500 md:text-lg leading-relaxed max-w-xl mb-10">
+                Tes RIASEC dirancang untuk membantu Anda mengidentifikasi minat karier profesional melalui enam tipe kepribadian utama yang dikembangkan secara saintifik.
+              </p>
+
+              {/* Info Box (Soal & Waktu) */}
+              <div className="flex w-full max-w-lg border-y border-slate-100 py-6 mb-10">
+                <div className="flex-1 border-r border-slate-100">
+                  <h3 className="text-2xl font-bold text-blue-500 mb-1">30 Pertanyaan</h3>
+                  <p className="text-xs font-bold text-slate-400 tracking-widest uppercase">Jumlah Soal</p>
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-2xl font-bold text-blue-500 mb-1">10-15 Menit</h3>
+                  <p className="text-xs font-bold text-slate-400 tracking-widest uppercase">Estimasi Waktu</p>
+                </div>
               </div>
+
+              {/* List Panduan */}
+              <div className="w-full max-w-lg text-left mb-12">
+                <p className="text-slate-700 font-medium mb-6">Pahami panduan berikut sebelum memulai:</p>
+                <div className="space-y-4">
+                  <div className="flex items-start gap-4">
+                    <FiCheckCircle className="text-teal-500 mt-1 shrink-0" size={20} />
+                    <p className="text-slate-600 text-sm leading-relaxed">Jawablah dengan jujur berdasarkan preferensi pribadi Anda saat ini.</p>
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <FiCheckCircle className="text-teal-500 mt-1 shrink-0" size={20} />
+                    <p className="text-slate-600 text-sm leading-relaxed">Tidak ada jawaban yang benar atau salah dalam tes minat ini.</p>
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <FiCheckCircle className="text-teal-500 mt-1 shrink-0" size={20} />
+                    <p className="text-slate-600 text-sm leading-relaxed">Pastikan Anda berada di lingkungan yang tenang untuk fokus maksimal.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Tombol Mulai */}
+              <button 
+                onClick={() => setView('quiz')} 
+                className="flex items-center gap-3 bg-[#030b26] hover:bg-[#0a194f] text-white px-10 py-4 rounded-xl font-bold text-lg shadow-lg transition-all"
+              >
+                Mulai Tes Sekarang <FiPlayCircle size={22} />
+              </button>
+
            </div>
-        </div>
+        </main>
       </div>
     );
   }
 
-  // --- 2. RENDER LAYAR KUIS & 3. LAYAR HASIL ---
+  // render hasil atau quiz
   return (
-    <div className="min-h-screen bg-[#030b26] font-sans flex flex-col relative">
-      <Navbar />
-      
+    <div className="min-h-screen bg-slate-50/50 font-sans flex flex-col">
       {view === 'quiz' ? (
         <TesBakatQuiz 
           currentIdx={currentIdx}
@@ -129,12 +163,11 @@ const TesBakat = () => {
           onPrev={() => setCurrentIdx(prev => prev - 1)}
           onNext={() => setCurrentIdx(prev => prev + 1)}
           onSubmit={handleSubmitQuiz}
-          onCancel={() => navigate(-1)}
+          onCancel={handleCancelQuiz}
         />
       ) : (
         <TesBakatResult data={resultData} interestCode={interestCode} />
       )}
-
     </div>
   );
 };
