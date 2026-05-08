@@ -1,48 +1,56 @@
-const { Fields, Roles } = require('../models');
+const fs = require('fs');
+const path = require('path');
+const { Fields, LearningResources } = require('../models');
 
-// Get semua field/kategori industri
 exports.getFields = async (req, res, next) => {
   try {
-    const fields = await Fields.findAll();
-
+    const fields = await Fields.findAll({
+      order: [['field_id', 'ASC']]
+    });
     res.json({
       status: 'success',
-      data: {
-        fields,
-      },
+      data: fields
     });
   } catch (error) {
     next(error);
   }
 };
 
-// Get semua skill unik
 exports.getSkills = async (req, res, next) => {
   try {
-    const { MasterRoles } = require('../models');
-    
-    const roles = await MasterRoles.findAll({
-      attributes: ['skill'],
-      raw: true,
+    let allSkills = new Set();
+
+    const txtPath = path.join(__dirname, '../../../dataset/uncleaned/daftar_skill_unik_careerlens.txt');
+    if (fs.existsSync(txtPath)) {
+      const txtContent = fs.readFileSync(txtPath, 'utf8');
+      txtContent.split('\n').forEach(skill => {
+        const cleaned = skill.trim();
+        if (cleaned) allSkills.add(cleaned);
+      });
+    }
+
+    const dbSkills = await LearningResources.findAll({
+      attributes: ['nama_skill'],
+      raw: true
     });
 
-    // Extract dan unique skills
-    const skillsSet = new Set();
-    roles.forEach(role => {
-      if (role.skill) {
-        role.skill.split(',').forEach(skill => {
-          skillsSet.add(skill.trim());
+    dbSkills.forEach(row => {
+      if (row.nama_skill) {
+        row.nama_skill.split(',').forEach(s => {
+          const cleaned = s.trim();
+          if (cleaned) allSkills.add(cleaned);
         });
       }
     });
 
-    const skills = Array.from(skillsSet).sort();
+    const uniqueSkillsList = Array.from(allSkills)
+      .filter((v, i, a) => a.findIndex(t => t.toLowerCase() === v.toLowerCase()) === i)
+      .sort((a, b) => a.localeCompare(b));
 
     res.json({
       status: 'success',
-      data: {
-        skills,
-      },
+      count: uniqueSkillsList.length,
+      data: uniqueSkillsList
     });
   } catch (error) {
     next(error);

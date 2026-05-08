@@ -2,10 +2,12 @@ const express = require('express');
 const router = express.Router();
 const fieldsController = require('../controllers/fields.controller');
 
-// GET /api/fields - Get all fields
+// Route untuk mendapatkan daftar semua bidang industri (F01, F02, dsb)
+// GET /api/fields
 router.get('/', fieldsController.getFields);
 
-// GET /api/fields/skills - Get all unique skills
+// Route untuk mendapatkan daftar semua skill yang tersedia di database
+// GET /api/fields/skills
 router.get('/skills', fieldsController.getSkills);
 
 module.exports = router;

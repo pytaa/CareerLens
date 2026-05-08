@@ -1,46 +1,53 @@
-// Error handling middleware
+const config = require('../config/env');
+
 const errorHandler = (err, req, res, next) => {
-  console.error('Error:', err);
-
-  // Joi validation error
-  if (err.isJoi) {
-    return res.status(400).json({
-      status: 'error',
-      code: 400,
-      message: 'Validation Error',
-      details: err.details.map(detail => ({
-        field: detail.path.join('.'),
-        message: detail.message,
-      })),
+  if (config.nodeEnv === 'development') {
+    console.error(' [Backend Error]:', {
+      message: err.message,
+      stack: err.stack,
+      name: err.name
     });
   }
 
-  // Sequelize validation error
-  if (err.name === 'SequelizeValidationError') {
+  if (err.isJoi || err.name === 'ValidationError') {
     return res.status(400).json({
       status: 'error',
-      code: 400,
-      message: 'Validation Error',
-      details: err.errors,
+      message: 'Input yang Anda masukkan tidak valid',
+      errors: err.details ? err.details.map(d => ({
+        field: d.path.join('.'),
+        message: d.message
+      })) : err.message
     });
   }
 
-  // Custom error
-  if (err.status && err.message) {
+  if (err.name?.startsWith('Sequelize')) {
+    if (err.name === 'SequelizeUniqueConstraintError') {
+      return res.status(409).json({
+        status: 'error',
+        message: 'Data sudah terdaftar dalam sistem'
+      });
+    }
+
+    return res.status(400).json({
+      status: 'error',
+      message: 'Terjadi kesalahan pada saat mengakses database',
+      details: config.nodeEnv === 'development' ? err.errors : undefined
+    });
+  }
+
+  if (err.status) {
     return res.status(err.status).json({
       status: 'error',
-      code: err.status,
-      message: err.message,
+      message: err.message
     });
   }
 
-  // Default error
   res.status(500).json({
     status: 'error',
-    code: 500,
-    message: 'Internal Server Error',
-    error: process.env.NODE_ENV === 'development' ? err.message : undefined,
+    message: 'Maaf, terjadi kesalahan internal pada server kami',
+    error: config.nodeEnv === 'development' ? err.message : 'Internal Server Error'
   });
 };
 
 module.exports = errorHandler;
+

@@ -1,21 +1,17 @@
 const { LearningResources, DummyProjects, ProjectRoleMapping, MasterRoles } = require('../models');
 
-// Get roadmap lengkap untuk role tertentu
 async function getRoadmapForRole(roleId) {
   try {
-    // Get role details
     const role = await MasterRoles.findByPk(roleId);
     if (!role) {
       throw new Error('Role tidak ditemukan');
     }
 
-    // Get learning resources terstruktur per step
     const learningResources = await LearningResources.findAll({
       where: { role_id: roleId },
       order: [['step_number', 'ASC']],
     });
 
-    // Group resources by step
     const learningSteps = {};
     learningResources.forEach(resource => {
       const step = resource.step_number;
@@ -40,7 +36,6 @@ async function getRoadmapForRole(roleId) {
 
     const stepsArray = Object.values(learningSteps).sort((a, b) => a.step_number - b.step_number);
 
-    // Get dummy projects untuk role ini
     const projectMappings = await ProjectRoleMapping.findAll({
       where: { role_id: roleId },
       include: [{ model: DummyProjects }],

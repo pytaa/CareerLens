@@ -1,6 +1,5 @@
 const { getRoadmapForRole } = require('../services/roadmap.service');
 
-// Get roadmap lengkap untuk role tertentu
 exports.getRoadmap = async (req, res, next) => {
   try {
     const { roleId } = req.params;

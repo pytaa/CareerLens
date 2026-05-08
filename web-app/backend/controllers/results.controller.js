@@ -1,48 +1,38 @@
 const { v4: uuidv4 } = require('uuid');
 const { UserTestResults } = require('../models');
 
-// Save user test results
 exports.saveResult = async (req, res, next) => {
   try {
-    const { riasec_scores, selected_skills, selected_fields, recommended_roles } = req.body;
-
-    const sessionId = uuidv4();
+    const { user_id, method, riasec_scores, selected_skills, selected_fields, recommendations } = req.body;
 
     const result = await UserTestResults.create({
-      user_session_id: sessionId,
+      user_id: user_id || uuidv4(),
+      method,
       riasec_scores,
       selected_skills,
       selected_fields,
-      recommended_roles,
+      recommendations,
     });
 
-    res.json({
+    res.status(201).json({
       status: 'success',
       data: {
         result_id: result.result_id,
-        session_id: result.user_session_id,
+        user_id: result.user_id,
         message: 'Result saved successfully',
       },
     });
+
   } catch (error) {
     next(error);
   }
 };
 
-// Get user result berdasarkan session ID
 exports.getResult = async (req, res, next) => {
   try {
-    const { sessionId } = req.params;
+    const { resultId } = req.params;
 
-    if (!sessionId) {
-      const error = new Error('Session ID diperlukan');
-      error.status = 400;
-      return next(error);
-    }
-
-    const result = await UserTestResults.findOne({
-      where: { user_session_id: sessionId },
-    });
+    const result = await UserTestResults.findByPk(resultId);
 
     if (!result) {
       const error = new Error('Result tidak ditemukan');
@@ -55,11 +45,12 @@ exports.getResult = async (req, res, next) => {
       data: {
         result: {
           result_id: result.result_id,
-          session_id: result.user_session_id,
+          user_id: result.user_id,
+          method: result.method,
           riasec_scores: result.riasec_scores,
           selected_skills: result.selected_skills,
           selected_fields: result.selected_fields,
-          recommended_roles: result.recommended_roles,
+          recommendations: result.recommendations,
           created_at: result.created_at,
         },
       },
@@ -68,5 +59,6 @@ exports.getResult = async (req, res, next) => {
     next(error);
   }
 };
+
 
 module.exports = exports;

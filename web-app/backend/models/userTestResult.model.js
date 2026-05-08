@@ -7,26 +7,24 @@ const UserTestResults = sequelize.define('UserTestResults', {
     primaryKey: true,
     autoIncrement: true,
   },
-  user_session_id: {
+  user_id: {
     type: DataTypes.STRING(100),
-    unique: true,
+  },
+  method: {
+    type: DataTypes.STRING(20),
     allowNull: false,
   },
   riasec_scores: {
-    type: DataTypes.JSON,
-    allowNull: false,
+    type: DataTypes.JSONB,
   },
   selected_skills: {
-    type: DataTypes.JSON,
-    allowNull: false,
+    type: DataTypes.JSONB,
   },
   selected_fields: {
-    type: DataTypes.JSON,
-    allowNull: false,
+    type: DataTypes.JSONB,
   },
-  recommended_roles: {
-    type: DataTypes.JSON,
-    allowNull: true,
+  recommendations: {
+    type: DataTypes.JSONB,
   },
   created_at: {
     type: DataTypes.DATE,
@@ -36,5 +34,6 @@ const UserTestResults = sequelize.define('UserTestResults', {
   tableName: 'user_test_results',
   timestamps: false,
 });
+
 
 module.exports = UserTestResults;

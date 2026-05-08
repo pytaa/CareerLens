@@ -1,125 +1,88 @@
-const { Roles, MasterRoles, LearningResources, DummyProjects, ProjectRoleMapping } = require('../models');
-const {
-  cosineSimilarity,
-  riasecScoresToArray,
-  calculateSkillMatchScore,
-  calculateFinalRelevanceScore,
-} = require('./scoring.service');
+const { Roles, MasterRoles, LearningResources, DummyProjects } = require('../models');
+const { getAIPrediction } = require('./ai.service');
 
-// Get recommendations berdasarkan RIASEC scores dan skills
 async function getRecommendations(riasecScores, selectedSkills, selectedFields) {
   try {
-    // Fetch semua roles
-    let rolesQuery = Roles.findAll({
-      include: [{ model: MasterRoles, attributes: ['deskripsi', 'skill', 'estimated_salary'] }],
+    const aiResults = await getAIPrediction('riasec', {
+      riasec_scores: riasecScores,
+      skills: selectedSkills,
+      fields: selectedFields
     });
 
-    if (selectedFields && selectedFields.length > 0) {
-      rolesQuery = Roles.findAll({
-        where: { field_id: selectedFields },
-        include: [{ model: MasterRoles, attributes: ['deskripsi', 'skill', 'estimated_salary'] }],
-      });
-    } else {
-      rolesQuery = Roles.findAll({
-        include: [{ model: MasterRoles, attributes: ['deskripsi', 'skill', 'estimated_salary'] }],
-      });
-    }
-
-    const roles = await rolesQuery;
-
-    if (!roles || roles.length === 0) {
-      return [];
-    }
-
-    // Hitung relevance score untuk setiap role
-    const recommendations = roles
-      .map(role => {
-        const userRiasecArray = riasecScoresToArray(riasecScores);
-        const roleRiasecArray = riasecScoresToArray({
-          R: role.R,
-          I: role.I,
-          A: role.A,
-          S: role.S,
-          E: role.E,
-          C: role.C,
-        });
-
-        const riasecScore = cosineSimilarity(userRiasecArray, roleRiasecArray);
-        const skillScore = calculateSkillMatchScore(
-          selectedSkills || [],
-          role.MasterRole?.skill || ''
-        );
-
-        const relevanceScore = calculateFinalRelevanceScore(skillScore, riasecScore);
-
-        return {
-          role_id: role.role_id,
-          role_name: role.role_name,
-          field_id: role.field_id,
-          deskripsi: role.MasterRole?.deskripsi,
-          estimated_salary: role.MasterRole?.estimated_salary,
-          required_skills: role.MasterRole?.skill?.split(',').map(s => s.trim()) || [],
-          relevance_score: Math.round(relevanceScore * 100) / 100,
-          skill_match_score: Math.round(skillScore * 100) / 100,
-          riasec_match_score: Math.round(riasecScore * 100) / 100,
-        };
-      })
-      .sort((a, b) => b.relevance_score - a.relevance_score)
-      .slice(0, 5); // Return only top 5 recommendations
-
-    return recommendations;
+    return await enrichRecommendationData(aiResults);
   } catch (error) {
     console.error('Error in getRecommendations:', error);
     throw error;
   }
 }
 
-// Get role recommendations berdasarkan skill input
 async function getRecommendationsBySkill(selectedSkills, selectedFields) {
   try {
-    let rolesQuery = {};
+    const aiResults = await getAIPrediction('skill', {
+      skills: selectedSkills,
+      fields: selectedFields
+    });
 
-    if (selectedFields && selectedFields.length > 0) {
-      rolesQuery = Roles.findAll({
-        where: { field_id: selectedFields },
-        include: [{ model: MasterRoles, attributes: ['deskripsi', 'skill', 'estimated_salary'] }],
-      });
-    } else {
-      rolesQuery = Roles.findAll({
-        include: [{ model: MasterRoles, attributes: ['deskripsi', 'skill', 'estimated_salary'] }],
-      });
-    }
-
-    const roles = await rolesQuery;
-
-    const recommendations = roles
-      .map(role => {
-        const skillScore = calculateSkillMatchScore(
-          selectedSkills || [],
-          role.MasterRole?.skill || ''
-        );
-
-        return {
-          role_id: role.role_id,
-          role_name: role.role_name,
-          field_id: role.field_id,
-          deskripsi: role.MasterRole?.deskripsi,
-          estimated_salary: role.MasterRole?.estimated_salary,
-          required_skills: role.MasterRole?.skill?.split(',').map(s => s.trim()) || [],
-          relevance_score: Math.round(skillScore * 100) / 100,
-        };
-      })
-      .sort((a, b) => b.relevance_score - a.relevance_score)
-      .slice(0, 5); // Return only top 5 recommendations
-
-    return recommendations;
+    return await enrichRecommendationData(aiResults);
   } catch (error) {
     console.error('Error in getRecommendationsBySkill:', error);
     throw error;
   }
 }
 
+async function enrichRecommendationData(aiResults) {
+  const { recommendations, chart_data } = aiResults;
+
+  const enrichedRecommendations = await Promise.all(
+    recommendations.map(async (rec) => {
+      const roleDetail = await Roles.findOne({
+        where: { role_id: rec.role_id },
+        include: [
+          {
+            model: MasterRoles,
+            include: [
+              { model: LearningResources },
+              { model: DummyProjects }
+            ]
+          }
+        ]
+      });
+
+      if (!roleDetail) {
+        return {
+          ...rec,
+          roadmap: { learning_path: [], dummy_projects: [] }
+        };
+      }
+
+      return {
+        role_id: rec.role_id,
+        role_name: rec.role_name || roleDetail.role_name,
+        match_pct: rec.match_pct || 0,
+        description: rec.description || roleDetail.MasterRole?.deskripsi,
+        salary_range: rec.salary_range || roleDetail.MasterRole?.estimated_salary,
+        skill_gap: rec.skill_gap || [],
+        roadmap: {
+          learning_path: roleDetail.MasterRole?.LearningResources?.map(lr => ({
+            step: lr.step_number,
+            title: lr.nama_skill,
+            resource: lr.platform,
+            link: lr.link_course
+          })).sort((a, b) => a.step - b.step) || [],
+          dummy_projects: roleDetail.MasterRole?.DummyProjects?.map(dp => dp.judul_project) || []
+        }
+      };
+    })
+  );
+
+  return {
+    recommendations: enrichedRecommendations,
+    chart_data: chart_data
+  };
+}
+
 module.exports = {
   getRecommendations,
   getRecommendationsBySkill,
 };
+

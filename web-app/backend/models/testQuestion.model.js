@@ -5,7 +5,6 @@ const TestQuestions = sequelize.define('TestQuestions', {
   question_id: {
     type: DataTypes.STRING(10),
     primaryKey: true,
-    allowNull: false,
   },
   questions: {
     type: DataTypes.TEXT,
@@ -14,6 +13,9 @@ const TestQuestions = sequelize.define('TestQuestions', {
   riasec_type: {
     type: DataTypes.CHAR(1),
     allowNull: false,
+    validate: {
+      isIn: [['R', 'I', 'A', 'S', 'E', 'C']],
+    },
   },
 }, {
   tableName: 'test_questions',
