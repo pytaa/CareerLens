@@ -17,8 +17,12 @@ FIELD_NAMES = {
 
 
 class DatasetLoader:
-    def __init__(self, data_dir: str):
-        self.data_dir    = "dataset/"
+    def __init__(self, data_dir: str = "dataset"):
+        
+        self.data_dir = os.path.join(
+            os.path.dirname(os.path.dirname(__file__)),
+            data_dir
+        )
         self.df_master   = None   # master_feature_final.csv
         self.df_resources = None  # learning_resources.csv
         self.df_projects  = None  # dummy_projects.csv
