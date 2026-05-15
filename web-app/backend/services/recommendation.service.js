@@ -11,6 +11,7 @@ class RecommendationService extends BaseService {
     this.aiTimeout = parseInt(process.env.AI_SERVICE_TIMEOUT) || 30000;
   }
 
+  //Memprediksi minat
   async predictInterest(interestId, userId = null) {
     let result;
     const normalizedInterestId = this._normalizeInterestId(interestId);
@@ -49,6 +50,7 @@ class RecommendationService extends BaseService {
     return enriched;
   }
 
+  //Memprediksi Keahlian
   async predictSkill(selectedSkills, selectedFields = [], userId = null) {
     let result;
     const skills = Array.isArray(selectedSkills) ? selectedSkills : [];
@@ -88,6 +90,7 @@ class RecommendationService extends BaseService {
     return enriched;
   }
 
+  // Memprediksi RIASEC
   async predictRiasec(payload, userId = null) {
     let result;
     const scores = this._normalizeRiasecPayload(payload);
@@ -126,6 +129,7 @@ class RecommendationService extends BaseService {
     return enriched;
   }
 
+  //Mengambil data dari database 
   async _enrichPredictionResult(result) {
     if (!result || !Array.isArray(result.recommendations)) {
       return result;
@@ -152,6 +156,7 @@ class RecommendationService extends BaseService {
     };
   }
 
+  //mengambil data role dari database 
   async _loadRoleDetails(recommendations) {
     const roleIds = recommendations
       .map(item => item.role_id)
@@ -189,6 +194,7 @@ class RecommendationService extends BaseService {
     });
   }
 
+  //normalisasi data rekomendasi
   _normalizeRecommendation(item) {
     return {
       role_id: item.role_id || null,
@@ -212,8 +218,8 @@ class RecommendationService extends BaseService {
         link_course: item.link_course,
         tipe: item.tipe,
         platform: item.platform,
-        title: item.nama_skill, // Aligned with frontend
-        resource: item.platform // Aligned with frontend
+        title: item.nama_skill,
+        resource: item.platform
       }));
 
     const dummyProjects = (roleDetail.RoleProjectMappings || [])
@@ -221,7 +227,7 @@ class RecommendationService extends BaseService {
       .sort((a, b) => a.sort_order - b.sort_order)
       .map(mapping => {
         const project = mapping.DummyProject;
-        return project?.judul_project || ''; // Aligned with frontend (array of strings)
+        return project?.judul_project || '';
       });
 
     return {
@@ -230,6 +236,7 @@ class RecommendationService extends BaseService {
     };
   }
 
+  //membangun data chart
   _buildChartData(recommendations) {
     const labels = recommendations.map(item => item.role_name || 'Unknown');
     const scores = recommendations.map(item => {
@@ -242,6 +249,7 @@ class RecommendationService extends BaseService {
     return { labels, scores };
   }
 
+  //menormalisasi data riasec
   _normalizeRiasecPayload(payload) {
     if (!payload || typeof payload !== 'object') {
       throw new Error('Invalid RIASEC payload');
@@ -258,6 +266,7 @@ class RecommendationService extends BaseService {
     return payload;
   }
 
+  //menormalisasi data interest
   _normalizeInterestId(interestId) {
     const normalized = String(interestId || '').trim();
     const interestMapping = {
@@ -274,6 +283,7 @@ class RecommendationService extends BaseService {
     return interestMapping[normalized] || normalized;
   }
 
+  //menyimpan data user output
   async _storeUserOutput(userId, outputType, context, outputValue) {
     try {
       await userOutputRepository.create({
