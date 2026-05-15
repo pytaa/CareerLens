@@ -1,3 +1,4 @@
+// membuat model-model database CareerLens
 const sequelize = require('../config/database');
 const CareerFieldModel = require('./careerField');
 const IndustryCategoryModel = require('./industryCategory');
