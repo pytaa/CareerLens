@@ -1,3 +1,5 @@
+// backend/server.js
+
 require('dotenv').config();
 const { app, sequelize } = require('./app');
 
