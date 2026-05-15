@@ -1,3 +1,5 @@
+-- membuat tabel-tabel database CareerLens
+
 DROP VIEW IF EXISTS v_role_roadmap CASCADE;
 DROP TABLE IF EXISTS recommendation_events CASCADE;
 DROP TABLE IF EXISTS user_outputs CASCADE;
