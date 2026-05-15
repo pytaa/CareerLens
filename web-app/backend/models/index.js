@@ -1,46 +1,77 @@
 const sequelize = require('../config/database');
-const Fields = require('./field.model');
-const Roles = require('./role.model');
-const MasterRoles = require('./masterRole.model');
-const LearningResources = require('./learningResource.model');
-const DummyProjects = require('./dummyProject.model');
-const ProjectRoleMapping = require('./projectRoleMapping.model');
-const UserTestResults = require('./userTestResult.model');
+const CareerFieldModel = require('./careerField');
+const IndustryCategoryModel = require('./industryCategory');
+const RoleModel = require('./role');
+const SkillModel = require('./skill');
+const RoleSkillModel = require('./roleSkill');
+const LearningResourceModel = require('./learningResource');
+const DummyProjectModel = require('./dummyProject');
+const RoleProjectMappingModel = require('./roleProjectMapping');
+const RecommendationEventModel = require('./recommendationEvent');
+const UserModel = require('./user');
+const UserEmailModel = require('./userEmail');
+const TestResultModel = require('./testResult');
+const UserOutputModel = require('./userOutput');
 
-const TestQuestions = require('./testQuestion.model');
+const CareerField = CareerFieldModel(sequelize);
+const IndustryCategory = IndustryCategoryModel(sequelize);
+const Role = RoleModel(sequelize);
+const Skill = SkillModel(sequelize);
+const RoleSkill = RoleSkillModel(sequelize);
+const LearningResource = LearningResourceModel(sequelize);
+const DummyProject = DummyProjectModel(sequelize);
+const RoleProjectMapping = RoleProjectMappingModel(sequelize);
+const RecommendationEvent = RecommendationEventModel(sequelize);
+const User = UserModel(sequelize);
+const UserEmail = UserEmailModel(sequelize);
+const TestResult = TestResultModel(sequelize);
+const UserOutput = UserOutputModel(sequelize);
 
-Fields.hasMany(Roles, { foreignKey: 'field_id' });
-Roles.belongsTo(Fields, { foreignKey: 'field_id' });
+CareerField.hasMany(IndustryCategory, { foreignKey: 'field_id', sourceKey: 'field_id' });
+IndustryCategory.belongsTo(CareerField, { foreignKey: 'field_id', targetKey: 'field_id' });
 
-Fields.hasMany(MasterRoles, { foreignKey: 'field_id' });
-MasterRoles.belongsTo(Fields, { foreignKey: 'field_id' });
+CareerField.hasMany(Role, { foreignKey: 'field_id', sourceKey: 'field_id' });
+Role.belongsTo(CareerField, { foreignKey: 'field_id', targetKey: 'field_id' });
 
-MasterRoles.hasMany(LearningResources, { foreignKey: 'role_id' });
-LearningResources.belongsTo(MasterRoles, { foreignKey: 'role_id' });
+Role.belongsToMany(Skill, { through: RoleSkill, foreignKey: 'role_id', otherKey: 'skill_id' });
+Skill.belongsToMany(Role, { through: RoleSkill, foreignKey: 'skill_id', otherKey: 'role_id' });
+Role.hasMany(RoleSkill, { foreignKey: 'role_id' });
+Skill.hasMany(RoleSkill, { foreignKey: 'skill_id' });
 
-MasterRoles.belongsToMany(DummyProjects, {
-  through: ProjectRoleMapping,
-  foreignKey: 'role_id',
-  otherKey: 'project_id',
-});
-DummyProjects.belongsToMany(MasterRoles, {
-  through: ProjectRoleMapping,
-  foreignKey: 'project_id',
-  otherKey: 'role_id',
-});
+Role.hasMany(LearningResource, { foreignKey: 'role_id' });
+LearningResource.belongsTo(Role, { foreignKey: 'role_id' });
 
-Roles.hasOne(MasterRoles, { foreignKey: 'role_id', sourceKey: 'role_id' });
-MasterRoles.belongsTo(Roles, { foreignKey: 'role_id', targetKey: 'role_id' });
+Role.hasMany(RoleProjectMapping, { foreignKey: 'role_id' });
+RoleProjectMapping.belongsTo(Role, { foreignKey: 'role_id' });
+
+DummyProject.hasMany(RoleProjectMapping, { foreignKey: 'project_id' });
+RoleProjectMapping.belongsTo(DummyProject, { foreignKey: 'project_id' });
+
+User.hasMany(UserEmail, { foreignKey: 'user_id' });
+UserEmail.belongsTo(User, { foreignKey: 'user_id' });
+
+User.hasMany(TestResult, { foreignKey: 'user_id' });
+TestResult.belongsTo(User, { foreignKey: 'user_id' });
+
+User.hasMany(UserOutput, { foreignKey: 'user_id' });
+UserOutput.belongsTo(User, { foreignKey: 'user_id' });
+
+User.hasMany(RecommendationEvent, { foreignKey: 'user_id' });
+RecommendationEvent.belongsTo(User, { foreignKey: 'user_id' });
 
 module.exports = {
   sequelize,
-  Fields,
-  Roles,
-  MasterRoles,
-  LearningResources,
-  DummyProjects,
-  ProjectRoleMapping,
-  UserTestResults,
-  TestQuestions,
+  CareerField,
+  IndustryCategory,
+  Role,
+  Skill,
+  RoleSkill,
+  LearningResource,
+  DummyProject,
+  RoleProjectMapping,
+  RecommendationEvent,
+  User,
+  UserEmail,
+  TestResult,
+  UserOutput,
 };
-

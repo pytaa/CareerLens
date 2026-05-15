@@ -1,96 +1,190 @@
+require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 const csv = require('csv-parser');
-const sequelize = require('../config/database');
-const {
-  Fields,
-  Roles,
-  MasterRoles,
-  TestQuestions,
-  LearningResources,
-  DummyProjects,
-  ProjectRoleMapping,
-} = require('../models');
+const { sequelize, CareerField, IndustryCategory, Role, Skill, RoleSkill, LearningResource, DummyProject, RoleProjectMapping } = require('../models');
 
-const datasetPath = path.join(__dirname, '../../..', 'dataset');
+const datasetPath = path.join(__dirname, '../../../dataset');
 
-const readCSV = (fileName, rowTransformer = (row) => row) => {
+// Helper function to read CSV
+const readCSV = (filePath) => {
+  if (!fs.existsSync(filePath)) {
+    console.warn(`File not found: ${filePath}`);
+    return [];
+  }
   return new Promise((resolve, reject) => {
     const results = [];
-    const filePath = path.join(datasetPath, fileName);
-    
-    if (!fs.existsSync(filePath)) {
-      console.warn(`! File not found: ${fileName}, skipping...`);
-      return resolve([]);
-    }
-
     fs.createReadStream(filePath)
       .pipe(csv())
-      .on('data', (data) => results.push(rowTransformer(data)))
+      .on('data', (data) => results.push(data))
       .on('end', () => resolve(results))
       .on('error', reject);
   });
 };
 
-async function seedDatabase() {
-  try {
-    console.log('--- Starting CareerLens Database Seeding ---\n');
+// Seed career fields
+const seedCareerFields = async () => {
+  const fields = [
+    { field_id: 'F01', name: 'Teknologi Informasi & Software Development', description: 'Perangkat lunak, cloud, dan sistem digital.', sort_order: 1 },
+    { field_id: 'F02', name: 'Data Science & Artificial Intelligence', description: 'Analitik data, machine learning, dan AI.', sort_order: 2 },
+    { field_id: 'F03', name: 'Desain Kreatif & UI/UX', description: 'Pengalaman pengguna dan desain produk digital.', sort_order: 3 },
+    { field_id: 'F04', name: 'Digital Marketing & Analytics', description: 'Pemasaran digital berbasis data dan pertumbuhan.', sort_order: 4 }
+  ];
+  await CareerField.bulkCreate(fields);
+  console.log('Career fields seeded');
+};
 
-    console.log('Step 1: Seeding Fields...');
-    const fieldsData = await readCSV('fields.csv');
-    await Fields.bulkCreate(fieldsData, { ignoreDuplicates: true });
-    console.log(`✓ Seeded ${fieldsData.length} fields\n`);
+// Seed industry categories
+const seedIndustryCategories = async () => {
+  const categories = [
+    { slug: 'it_software', field_id: 'F01', display_title: 'Teknologi Informasi & Software Development' },
+    { slug: 'data_science', field_id: 'F02', display_title: 'Data Science & Artificial Intelligence' },
+    { slug: 'design_uiux', field_id: 'F03', display_title: 'Desain Kreatif & UI/UX Design' },
+    { slug: 'digital_marketing', field_id: 'F04', display_title: 'Digital Marketing & Analytics' }
+  ];
+  await IndustryCategory.bulkCreate(categories);
+  console.log('Industry categories seeded');
+};
 
-    console.log('Step 2: Seeding Roles (RIASEC)...');
-    const rolesData = await readCSV('roles.csv', (row) => ({
-      ...row,
-      R: parseFloat(row.R) || 0,
-      I: parseFloat(row.I) || 0,
-      A: parseFloat(row.A) || 0,
-      S: parseFloat(row.S) || 0,
-      E: parseFloat(row.E) || 0,
-      C: parseFloat(row.C) || 0,
-    }));
-    await Roles.bulkCreate(rolesData, { ignoreDuplicates: true });
-    console.log(`✓ Seeded ${rolesData.length} roles\n`);
-
-    console.log('Step 3: Seeding Master Roles...');
-    const masterRolesData = await readCSV('master_roles.csv');
-    await MasterRoles.bulkCreate(masterRolesData, { ignoreDuplicates: true });
-    console.log(`✓ Seeded ${masterRolesData.length} master roles\n`);
-
-    console.log('Step 4: Seeding Test Questions...');
-    const testQuestionsData = await readCSV('test_question.csv');
-    await TestQuestions.bulkCreate(testQuestionsData, { ignoreDuplicates: true });
-    console.log(`✓ Seeded ${testQuestionsData.length} test questions\n`);
-
-    console.log('Step 5: Seeding Learning Resources...');
-    const learningResourcesData = await readCSV('learning_resources.csv');
-    await LearningResources.bulkCreate(learningResourcesData, { ignoreDuplicates: true });
-    console.log(`✓ Seeded ${learningResourcesData.length} learning resources\n`);
-
-    console.log('Step 6: Seeding Dummy Projects...');
-    const dummyProjectsData = await readCSV('dummy_projects.csv');
-    await DummyProjects.bulkCreate(dummyProjectsData, { ignoreDuplicates: true });
-    console.log(`✓ Seeded ${dummyProjectsData.length} dummy projects\n`);
-
-    console.log('Step 7: Seeding Project Role Mappings...');
-    const projectRoleMappingData = await readCSV('project_role_mapping.csv');
-    await ProjectRoleMapping.bulkCreate(projectRoleMappingData, { ignoreDuplicates: true });
-    console.log(`✓ Seeded ${projectRoleMappingData.length} project role mappings\n`);
-
-    console.log('--- Database Seeding Completed Successfully! ---');
-    process.exit(0);
-  } catch (error) {
-    console.error('✗ Error seeding database:', error);
-    process.exit(1);
+// Seed roles
+const seedRoles = async () => {
+  const rolesData = await readCSV(path.join(datasetPath, 'roles.csv'));
+  console.log(`Read ${rolesData.length} roles from CSV`);
+  if (rolesData.length > 0) {
+    console.log('Sample row:', JSON.stringify(rolesData[0]));
   }
-}
+  const roles = rolesData.map(row => ({
+    role_id: row.role_id,
+    field_id: row.field_id,
+    role_name: row.role_name,
+    riasec_r: parseFloat(row.R),
+    riasec_i: parseFloat(row.I),
+    riasec_a: parseFloat(row.A),
+    riasec_s: parseFloat(row.S),
+    riasec_e: parseFloat(row.E),
+    riasec_c: parseFloat(row.C)
+  }));
+  await Role.bulkCreate(roles);
+  console.log('Roles seeded');
+};
 
-sequelize.sync({ alter: true })
-  .then(() => seedDatabase())
-  .catch(err => {
-    console.error('Database connection error:', err);
-    process.exit(1);
+// Seed skills (from master_roles.csv)
+const seedSkills = async () => {
+  const rolesData = await readCSV(path.join(datasetPath, 'master_roles.csv'));
+  const skillSet = new Set();
+  
+  rolesData.forEach(row => {
+    if (row.skill) {
+      row.skill.split(',').forEach(s => {
+        const trimmed = s.trim();
+        if (trimmed) skillSet.add(trimmed);
+      });
+    }
   });
 
+  const skills = Array.from(skillSet).map(name => ({ name }));
+  await Skill.bulkCreate(skills, { ignoreDuplicates: true });
+  console.log(`Seeded ${skills.length} unique skills`);
+};
+
+// Seed role skills (from master_roles.csv)
+const seedRoleSkills = async () => {
+  const rolesData = await readCSV(path.join(datasetPath, 'master_roles.csv'));
+  const allSkills = await Skill.findAll();
+  const skillMap = {};
+  allSkills.forEach(s => {
+    skillMap[s.name.toLowerCase()] = s.id;
+  });
+
+  const roleSkills = [];
+  rolesData.forEach(row => {
+    if (row.skill && row.role_id) {
+      row.skill.split(',').forEach(s => {
+        const trimmed = s.trim().toLowerCase();
+        const skillId = skillMap[trimmed];
+        if (skillId) {
+          roleSkills.push({
+            role_id: row.role_id,
+            skill_id: skillId,
+            weight: 1.0 // Default weight since CSV doesn't have it
+          });
+        }
+      });
+    }
+  });
+
+  await RoleSkill.bulkCreate(roleSkills, { ignoreDuplicates: true });
+  console.log(`Seeded ${roleSkills.length} role-skill associations`);
+};
+
+// Seed learning resources
+const seedLearningResources = async () => {
+  const lrData = await readCSV(path.join(datasetPath, 'learning_resources.csv'));
+  const resources = lrData.map(row => ({
+    role_id: row.role_id,
+    step_number: parseInt(row.step_number),
+    nama_skill: row.nama_skill,
+    link_course: row.link_course,
+    tipe: row.tipe,
+    platform: row.platform
+  }));
+  await LearningResource.bulkCreate(resources);
+  console.log('Learning resources seeded');
+};
+
+// Seed dummy projects
+const seedDummyProjects = async () => {
+  const projectsData = await readCSV(path.join(datasetPath, 'dummy_projects.csv'));
+  const projects = projectsData.map(row => ({
+    project_id: row.project_id,
+    judul_project: row.judul_project,
+    brief_case: row.brief_case,
+    instructions: row.instructions,
+    tools_used: row.tools_used
+  }));
+  await DummyProject.bulkCreate(projects);
+  console.log('Dummy projects seeded');
+};
+
+// Seed role project mapping
+const seedRoleProjectMapping = async () => {
+  const mappingData = await readCSV(path.join(datasetPath, 'project_role_mapping.csv'));
+  const mappings = mappingData.map(row => ({
+    role_id: row.role_id,
+    project_id: row.project_id,
+    sort_order: parseInt(row.sort_order) || 0
+  }));
+  await RoleProjectMapping.bulkCreate(mappings);
+  console.log('Role project mappings seeded');
+};
+
+// Main seed function
+const seedDatabase = async () => {
+  try {
+    console.log('Syncing database...');
+    // force: true will drop tables if they exist - perfect for a clean seed
+    await sequelize.sync({ force: true });
+    console.log('Database synced');
+
+    await seedCareerFields();
+    await seedIndustryCategories();
+    await seedRoles();
+    await seedSkills();
+    await seedLearningResources();
+    await seedDummyProjects();
+    await seedRoleProjectMapping();
+    await seedRoleSkills();
+    
+    console.log('Database seeded successfully!');
+  } catch (error) {
+    console.error('Error seeding database:', error);
+  } finally {
+    await sequelize.close();
+  }
+};
+
+if (require.main === module) {
+  seedDatabase();
+}
+
+module.exports = seedDatabase;

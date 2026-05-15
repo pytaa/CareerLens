@@ -18,6 +18,7 @@ const TesBakat = () => {
   // State Hasil API
   const [resultData, setResultData] = useState(null);
   const [interestCode, setInterestCode] = useState([]);
+  const [riasecScores, setRiasecScores] = useState(null);
 
   const handleSelectOption = (val) => {
     const newAnswers = [...answers];
@@ -52,6 +53,7 @@ const TesBakat = () => {
       .map(entry => entry[0].toUpperCase());
     
     setInterestCode(sortedTypes);
+    setRiasecScores(payloadScores);
 
     try {
       const response = await fetch('http://localhost:5000/predict', {
@@ -166,7 +168,7 @@ const TesBakat = () => {
           onCancel={handleCancelQuiz}
         />
       ) : (
-        <TesBakatResult data={resultData} interestCode={interestCode} />
+        <TesBakatResult data={resultData} interestCode={interestCode} riasecScores={riasecScores} />
       )}
     </div>
   );

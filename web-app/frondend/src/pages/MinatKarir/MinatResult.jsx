@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FiChevronLeft } from 'react-icons/fi';
 
@@ -6,6 +7,7 @@ const MinatResult = ({ data }) => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [email, setEmail] = useState('');
+  const [sendingReport, setSendingReport] = useState(false);
 
   // 1. Inisialisasi state dengan null
   const [activeRole, setActiveRole] = useState(null);
@@ -27,10 +29,30 @@ const MinatResult = ({ data }) => {
     );
   }
 
-  const handleDownload = () => {
-    alert(`Mensimulasikan pengiriman PDF ke: ${email}`);
-    setShowModal(false);
-    setEmail('');
+  const handleDownload = async () => {
+    if (!email) return;
+    setSendingReport(true);
+
+    try {
+      await axios.post('http://localhost:5000/api/reports/send', {
+        email,
+        user_id: data.user_id || null,
+        profile: {
+          name: data.user_name || data.name || '',
+          email
+        },
+        summary: `CareerLens merekomendasikan peran ${activeRole.role_name} berdasarkan hasil minat Anda.`,
+        recommendations: data.recommendations || []
+      });
+      alert(`Laporan PDF telah dikirim ke ${email}`);
+      setShowModal(false);
+      setEmail('');
+    } catch (error) {
+      console.error(error);
+      alert('Gagal mengirim laporan. Silakan coba lagi.');
+    } finally {
+      setSendingReport(false);
+    }
   };
 
   return (
@@ -84,7 +106,7 @@ const MinatResult = ({ data }) => {
            <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-8 text-center md:text-left">
              {activeRole.role_name}
            </h1>
-           
+
            {/* Deskripsi & Penghasilan */}
            <div className="flex flex-col md:flex-row gap-8 mb-10 border-b border-slate-200 pb-8">
               <div className="flex-1">
@@ -197,10 +219,10 @@ const MinatResult = ({ data }) => {
               <div className="flex justify-center">
                 <button 
                   onClick={handleDownload}
-                  disabled={!email}
+                  disabled={!email || sendingReport}
                   className="bg-[#0277b6] hover:bg-[#026296] disabled:opacity-50 disabled:cursor-not-allowed px-10 py-4 rounded-xl font-bold text-lg shadow-lg transition-all"
                 >
-                  Kirim dan Unduh
+                  {sendingReport ? 'Mengirim...' : 'Kirim dan Unduh'}
                 </button>
               </div>
            </div>

@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FiChevronLeft, FiAlertCircle } from 'react-icons/fi';
 
-const TesBakatResult = ({ data, interestCode }) => {
+const TesBakatResult = ({ data, interestCode, riasecScores }) => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [email, setEmail] = useState('');
   const [activeRole, setActiveRole] = useState(null);
+  const [sendingReport, setSendingReport] = useState(false);
 
   useEffect(() => {
     if (data && data.recommendations && data.recommendations.length > 0) {
@@ -22,10 +24,31 @@ const TesBakatResult = ({ data, interestCode }) => {
     );
   }
 
-  const handleDownload = () => {
-    alert(`Mensimulasikan pengiriman PDF ke: ${email}`);
-    setShowModal(false);
-    setEmail('');
+  const handleDownload = async () => {
+    if (!email) return;
+    setSendingReport(true);
+
+    try {
+      await axios.post('http://localhost:5000/api/reports/send', {
+        email,
+        user_id: data.user_id || null,
+        profile: {
+          name: data.user_name || data.name || '',
+          email
+        },
+        summary: `Hasil analisis CareerLens menunjukkan peran terbaik untuk Anda adalah ${activeRole.role_name}.`,
+        recommendations: data.recommendations || [],
+        riasec_scores: riasecScores || undefined
+      });
+      alert(`Laporan PDF telah dikirim ke ${email}`);
+      setShowModal(false);
+      setEmail('');
+    } catch (error) {
+      console.error(error);
+      alert('Gagal mengirim laporan. Silakan coba kembali.');
+    } finally {
+      setSendingReport(false);
+    }
   };
 
   return (
@@ -184,8 +207,8 @@ const TesBakatResult = ({ data, interestCode }) => {
                  <h3 className="text-2xl font-bold">Data Pengguna</h3>
               </div>
               <input type="email" placeholder="Masukkan Alamat E-mail *" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full p-4 rounded-xl mb-8 text-slate-800 font-medium outline-none focus:ring-4 focus:ring-blue-500/50" />
-              <button onClick={handleDownload} disabled={!email} className="w-full bg-[#0277b6] hover:bg-[#026296] disabled:opacity-50 px-10 py-4 rounded-xl font-bold text-lg shadow-lg">
-                Kirim dan Unduh
+              <button onClick={handleDownload} disabled={!email || sendingReport} className="w-full bg-[#0277b6] hover:bg-[#026296] disabled:opacity-50 px-10 py-4 rounded-xl font-bold text-lg shadow-lg">
+                {sendingReport ? 'Mengirim...' : 'Kirim dan Unduh'}
               </button>
            </div>
         </div>
