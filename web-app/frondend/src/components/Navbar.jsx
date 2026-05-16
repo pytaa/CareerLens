@@ -1,35 +1,38 @@
-import { Link } from 'react-scroll';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FiGlobe, FiMoon } from 'react-icons/fi';
 
 const Navbar = () => {
+  const navigate = useNavigate();
+
   return (
-    <header className="sticky top-0 z-50 w-full bg-slate-50/90 backdrop-blur-md border-b border-slate-200">
-      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-        {/* Logo Area */}
-        <div className="flex items-center gap-2">
-          {/* Placeholder untuk Logo CareerLens */}
-          <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">C</div>
-          <span className="text-xl font-bold text-blue-900 tracking-tight">CareerLens</span>
+    // PERBAIKAN: py-6 diubah menjadi py-4 agar tinggi navbar lebih ramping
+    <nav className="w-full px-6 md:px-16 py-4 flex items-center justify-between bg-white/90 backdrop-blur-sm fixed top-0 z-50 border-b border-slate-100">
+      {/* Logo */}
+      <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/')}>
+        <div className="w-8 h-8 bg-[#0277B6] rounded-full flex items-center justify-center text-white font-bold">
+          C
         </div>
-
-        {/* Navigation Links */}
-        <nav className="hidden md:flex gap-8 font-semibold text-slate-700">
-          <Link to="beranda" smooth={true} duration={500} className="cursor-pointer hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600 transition-all">Beranda</Link>
-          <Link to="industri" smooth={true} duration={500} offset={-80} className="cursor-pointer hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600 transition-all">Industri</Link>
-          <Link to="tentang" smooth={true} duration={500} offset={-80} className="cursor-pointer hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600 transition-all">Tentang</Link>
-        </nav>
-
-        {/* Action Icons */}
-        <div className="flex items-center gap-4">
-          <button className="p-2 bg-blue-100 text-blue-900 rounded-full hover:bg-blue-200 transition">
-            <FiGlobe size={20} />
-          </button>
-          <button className="p-2 bg-blue-100 text-blue-900 rounded-full hover:bg-blue-200 transition">
-            <FiMoon size={20} />
-          </button>
-        </div>
+        <span className="font-extrabold text-xl text-[#030B26] tracking-tight">CareerLens</span>
       </div>
-    </header>
+
+      {/* Menu Tengah */}
+      <div className="hidden md:flex items-center gap-10">
+        <a href="#beranda" className="text-[#030B26] font-bold border-b-2 border-[#0277B6] pb-1">Beranda</a>
+        <a href="#industri" className="text-slate-600 hover:text-[#030B26] font-medium transition-colors">Industri</a>
+        <a href="#tentang" className="text-slate-600 hover:text-[#030B26] font-medium transition-colors">Tentang</a>
+      </div>
+
+      {/* Ikon Kanan */}
+      <div className="flex items-center gap-4 text-slate-500">
+        <button className="p-2 hover:bg-slate-100 rounded-full transition-colors">
+          <FiGlobe size={20} />
+        </button>
+        <button className="p-2 hover:bg-slate-100 rounded-full transition-colors">
+          <FiMoon size={20} />
+        </button>
+      </div>
+    </nav>
   );
 };
 
