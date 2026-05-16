@@ -31,7 +31,7 @@ export default function Hero() {
 
   return (
     // PERBAIKAN LATAR: Menggunakan gradasi linear vertikal yang sangat halus (putih ke abu-abu muda ke biru pucat)
-    <section id="beranda" className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden w-full text-slate-900 bg-gradient-to-b from-white via-slate-50 to-blue-50/50">
+    <section id="beranda" className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden w-full text-slate-900 bg-linear-to-b from-white via-slate-50 to-blue-50/50">
       
       {/* Particles Background */}
       <div 
@@ -68,7 +68,7 @@ export default function Hero() {
            />
         </div>
 
-        <h1 className="text-4xl md:text-6xl font-extrabold text-[#030B26] leading-tight mb-6 min-h-[80px] md:min-h-[120px] flex items-center justify-center">
+        <h1 className="text-4xl md:text-6xl font-extrabold text-[#030B26] leading-tight mb-6 min-h-20 md:min-h-30 flex items-center justify-center">
           <span>
             {typedText}
             <span className={`inline-block w-1 h-[1em] bg-[#0277B6] ml-1 align-middle animate-pulse ${isTypingComplete ? 'hidden' : ''}`}></span>

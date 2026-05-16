@@ -1,69 +1,165 @@
-import React from 'react';
-import { FaCode, FaPalette, FaDatabase, FaChartLine } from 'react-icons/fa';
+import React, { useEffect, useRef, useState } from 'react';
+import { BiCodeAlt, BiData, BiPalette, BiTrendingUp } from 'react-icons/bi';
+import { BsArrowRight } from 'react-icons/bs';
 
-import imgIT from '../../../../assets/TI_dan_software.png';
-import imgDesign from '../../../../assets/desainKreatif_dan_UIUX.png';
-import imgData from '../../../../assets/dataScience_dan_AI.png';
-import imgMarketing from '../../../../assets/digitalMarketing_dan_analis.png';
+import gambarIT from "../../../../assets/TI_dan_software.png"
+import gambarData from "../../../../assets/dataScience_dan_AI.png"
+import desainKreatif from "../../../../assets/desainKreatif_dan_UIUX.png"
+import digitalMarketing from "../../../../assets/digitalMarketing_dan_analis.png"
 
-const industries = [
-  {
-    id: 1,
-    title: 'Teknologi Informasi & Software Development',
-    desc: 'Teknologi Informasi (IT) & Software Development adalah bidang yang berfokus pada pembangunan, pengelolaan, dan pemeliharaan sistem serta aplikasi digital, mulai dari website, aplikasi mobile, hingga infrastruktur server dan cloud.',
-    icon: <FaCode size={24} />,
-    img: imgIT 
-  },
-  {
-    id: 2,
-    title: 'Desain Kreatif & UI/UX',
-    desc: 'Desain Kreatif & UI/UX berfokus pada perancangan tampilan dan pengalaman pengguna agar produk digital tidak hanya menarik secara visual, tetapi juga mudah dan nyaman digunakan.',
-    icon: <FaPalette size={24} />,
-    img: imgDesign
-  },
-  {
-    id: 3,
-    title: 'Data Science & Artificial Intelligence',
-    desc: 'Data Science & Artificial Intelligence merupakan bidang yang mengolah data menjadi informasi bernilai serta mengembangkan sistem cerdas yang mampu belajar dan mengambil keputusan.',
-    icon: <FaDatabase size={24} />,
-    img: imgData
-  },
-  {
-    id: 4,
-    title: 'Digital Marketing & Analytics',
-    desc: 'Digital Marketing & Analytics adalah bidang yang berperan dalam mempromosikan produk atau layanan melalui platform digital serta menganalisis performa strategi pemasaran yang digunakan.',
-    icon: <FaChartLine size={24} />,
-    img: imgMarketing
-  }
-];
+// Komponen Pembungkus untuk Efek Animasi Muncul Saat Di-Scroll
+const ScrollFadeIn = ({ children, delay = 0, direction = 'up' }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const domRef = useRef();
 
-export default function Industri(){
-   return (
-    <section className="max-w-7xl mx-auto px-6 py-16">
-      <div className="mb-12">
-        <h2 className="text-4xl font-bold text-blue-950 mb-4">Sektor <span className="text-blue-600">Industri.</span></h2>
-        <p className="text-slate-600 text-lg max-w-3xl">
-          CareerLens memberikan rekomendasi karir untuk 4 sektor industri digital utama, yaitu IT, Data Science, Desain, dan Digital Marketing.
-        </p>
-      </div>
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // Jika elemen masuk ke dalam layar (viewport)
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(entry.target); // Hentikan observasi setelah animasi berjalan 1x
+        }
+      },
+      { threshold: 0.2 } // Animasi terpicu saat 20% elemen sudah terlihat
+    );
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {industries.map((item) => (
-          <div key={item.id} className="flex flex-col sm:flex-row bg-blue-950 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
-            <div className="sm:w-2/5 h-48 sm:h-auto">
-              <img src={item.img} alt={item.title} className="w-full h-full object-cover" />
-            </div>
-            <div className="sm:w-3/5 p-6 text-white space-y-3">
-              <div className="flex items-center gap-3 font-semibold text-lg">
-                <div className="p-2 bg-blue-900 rounded-lg">{item.icon}</div>
-                <h3>{item.title}</h3>
+    if (domRef.current) observer.observe(domRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  // Menentukan arah datangnya animasi
+  let translateClass = 'translate-y-16'; // default 'up'
+  if (direction === 'left') translateClass = '-translate-x-16';
+  if (direction === 'right') translateClass = 'translate-x-16';
+
+  return (
+    <div
+      ref={domRef}
+      className={`transition-all duration-1000 ease-out ${
+        isVisible ? 'opacity-100 translate-y-0 translate-x-0' : `opacity-0 ${translateClass}`
+      }`}
+      style={{ transitionDelay: `${delay}ms` }}
+    >
+      {children}
+    </div>
+  );
+};
+
+export default function Industri() {
+  const industries = [
+    { 
+      id: 'it_software', 
+      title: 'Teknologi Informasi & Software Development', 
+      desc: 'Membangun solusi perangkat lunak yang skalabel, arsitektur sistem cloud, dan aplikasi mobile masa depan. Peran ideal bagi Anda yang menyukai logika komputasi.', 
+      icon: <BiCodeAlt size={32} />,
+      color: 'bg-blue-100 text-blue-600',
+      image: gambarIT
+    },
+    { 
+      id: 'data_science', 
+      title: 'Data Science & Artificial Intelligence', 
+      desc: 'Mengolah big data menjadi wawasan strategis dan mengembangkan model machine learning cerdas. Cocok untuk pemikir analitis dan pemecah masalah.', 
+      icon: <BiData size={32} />,
+      color: 'bg-indigo-100 text-indigo-600',
+      image: gambarData
+    },
+    { 
+      id: 'design_uiux', 
+      title: 'Desain Kreatif & UI/UX Design', 
+      desc: 'Menciptakan pengalaman interaksi digital yang intuitif dan visual estetis. Karier yang memadukan empati pengguna dengan kreativitas tanpa batas.', 
+      icon: <BiPalette size={32} />,
+      color: 'bg-purple-100 text-purple-600',
+      image: desainKreatif
+    },
+    { 
+      id: 'digital_marketing', 
+      title: 'Digital Marketing & Analytics', 
+      desc: 'Memanfaatkan kanal digital dan metrik data untuk mengoptimalkan pertumbuhan bisnis. Jalur tepat bagi yang berminat pada strategi dan perilaku konsumen.', 
+      icon: <BiTrendingUp size={32} />,
+      color: 'bg-emerald-100 text-emerald-600',
+      image: digitalMarketing
+    }
+  ];
+
+  return (
+    // Background sedikit abu-abu untuk membedakan dengan Hero section yang putih/gradasi
+    <section id="industri" className="py-24 md:py-32 bg-slate-50 overflow-hidden w-full">
+      <div className="container mx-auto px-6 max-w-6xl">
+        
+        {/* Header Section */}
+        <div className="text-center mb-20">
+          <ScrollFadeIn direction="up">
+            <span className="text-[#0277B6] font-bold tracking-wider uppercase text-sm mb-4 block">Peluang Karir</span>
+          </ScrollFadeIn>
+          <ScrollFadeIn direction="up" delay={150}>
+            <h2 className="text-3xl md:text-5xl font-extrabold text-[#030B26] mb-6">
+              Jelajahi Sektor Industri Digital
+            </h2>
+          </ScrollFadeIn>
+          <ScrollFadeIn direction="up" delay={300}>
+            <p className="text-slate-500 md:text-lg max-w-2xl mx-auto leading-relaxed">
+              Pelajari berbagai bidang industri teknologi terkini dan temukan jalur spesialisasi yang paling sejalan dengan ambisi masa depan Anda.
+            </p>
+          </ScrollFadeIn>
+        </div>
+
+        {/* List Industri (Zig-Zag Layout) */}
+        <div className="space-y-24 md:space-y-32">
+          {industries.map((item, index) => {
+            // Logika Zig-Zag: Genap di kiri, Ganjil di kanan
+            const isEven = index % 2 === 0;
+
+            return (
+              <div key={item.id} className={`flex flex-col md:flex-row items-center gap-10 md:gap-16 ${isEven ? '' : 'md:flex-row-reverse'}`}>
+                
+                {/* Bagian Gambar */}
+                <div className="w-full md:w-1/2">
+                  <ScrollFadeIn direction={isEven ? 'left' : 'right'}>
+                    <div className="relative rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(3,11,38,0.08)] group">
+                      <div className="absolute inset-0 bg-[#030B26]/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+                      <img 
+                        src={item.image} 
+                        alt={item.title} 
+                        className="w-full h-auto aspect-video md:aspect-4/3 object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out"
+                      />
+                    </div>
+                  </ScrollFadeIn>
+                </div>
+
+                {/* Bagian Teks */}
+                <div className="w-full md:w-1/2 flex flex-col items-start text-left">
+                  <ScrollFadeIn direction="up" delay={200}>
+                    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-sm ${item.color}`}>
+                      {item.icon}
+                    </div>
+                  </ScrollFadeIn>
+                  
+                  <ScrollFadeIn direction="up" delay={350}>
+                    <h3 className="text-2xl md:text-3xl font-bold text-[#030B26] mb-4 leading-tight">
+                      {item.title}
+                    </h3>
+                  </ScrollFadeIn>
+                  
+                  <ScrollFadeIn direction="up" delay={500}>
+                    <p className="text-slate-500 leading-relaxed mb-8">
+                      {item.desc}
+                    </p>
+                  </ScrollFadeIn>
+                  
+                  <ScrollFadeIn direction="up" delay={650}>
+                    <button className="flex items-center gap-2 text-[#0277B6] font-bold group hover:text-[#030B26] transition-colors">
+                      Pelajari Lebih Lanjut
+                      <BsArrowRight className="group-hover:translate-x-1 transition-transform" />
+                    </button>
+                  </ScrollFadeIn>
+                </div>
+
               </div>
-              <p className="text-sm text-blue-100 leading-relaxed text-justify">
-                {item.desc}
-              </p>
-            </div>
-          </div>
-        ))}
+            );
+          })}
+        </div>
+
       </div>
     </section>
   );
