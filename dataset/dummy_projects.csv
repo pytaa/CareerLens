@@ -1,0 +1,69 @@
+project_id,judul_project,brief_case,instructions,tools_used
+P001,Enterprise Resource Planning System,Perusahaan membutuhkan sistem terintegrasi untuk mengelola operasi bisnis secara efisien,Identifikasi modul utama (inventory finance HR); Rancang database schema; Bangun REST API; Implementasi autentikasi; Buat dashboard monitoring; Lakukan testing dan deployment,Java; Spring Boot; MySQL
+P002,Responsive Company Website,Perusahaan ingin meningkatkan kehadiran online dengan website responsif,Analisis kebutuhan halaman; Buat wireframe; Implementasi UI responsif; Optimasi performa dan SEO dasar; Deploy ke hosting,React; Tailwind CSS
+P003,RESTful API Service,Perusahaan membutuhkan backend untuk integrasi berbagai layanan internal,Definisikan endpoint API; Desain database; Implementasi CRUD; Tambahkan autentikasi; Testing API; Deploy server,Node.js; Express; PostgreSQL
+P004,Full Stack Job Portal,Pengguna membutuhkan platform untuk mencari dan melamar pekerjaan secara online,Rancang fitur utama; Desain database; Bangun frontend dan backend; Integrasi API; Testing; Deploy aplikasi,MERN Stack
+P005,Mobile Fitness Tracker App,User ingin memonitor aktivitas kesehatan harian melalui aplikasi mobile,Desain UI/UX; Implementasi fitur tracking; Integrasi database; Tambahkan notifikasi; Testing aplikasi; Publish app,Flutter; Firebase
+P006,CI/CD Deployment Pipeline,Tim dev membutuhkan otomatisasi build dan deployment aplikasi,Setup repository; Konfigurasi pipeline CI/CD; Build dan test otomatis; Containerization; Deploy ke cloud; Monitoring,Docker; GitHub Actions; AWS
+P007,Automated Testing Suite,Aplikasi sering error sehingga dibutuhkan sistem testing otomatis,Tentukan skenario testing; Buat unit dan integration test; Jalankan automation; Analisis hasil; Perbaiki bug,Jest; Cypress
+P008,System Requirement Analysis Platform,Perusahaan membutuhkan dokumentasi kebutuhan sistem yang terstruktur,Kumpulkan requirement; Buat use case diagram; Desain flow sistem; Dokumentasi kebutuhan; Validasi dengan stakeholder,Figma; Draw.io
+P009,2D Adventure Game,Game sederhana untuk hiburan dengan level progression,Desain gameplay; Buat asset; Implementasi mekanik game; Tambah scoring system; Testing,Unity; C#
+P010,Smart Sensor Monitoring System,Sistem embedded untuk monitoring suhu dan kelembaban,Setup hardware sensor; Baca data sensor; Kirim data ke server; Tampilkan dashboard; Testing sistem,Arduino; C++
+P011,Cloud Migration Project,Perusahaan ingin migrasi sistem ke cloud untuk skalabilitas,Analisis sistem lama; Rancang arsitektur cloud; Migrasi database; Deploy aplikasi; Testing; Monitoring,AWS; EC2; S3
+P012,Linux Server Administration Setup,Perusahaan membutuhkan setup dan maintenance server Linux,Install OS; Konfigurasi server; Setup user dan security; Monitoring resource; Maintenance berkala,Ubuntu; Shell Script
+P013,Network Traffic Monitoring Tool,Admin ingin memonitor traffic jaringan secara real-time,Ambil data jaringan; Visualisasikan traffic; Deteksi anomali; Buat alert system; Testing tool,Python; Wireshark
+P014,IT Project Management Dashboard,Manajer butuh dashboard untuk tracking progress proyek,Tentukan KPI; desain dashboard; integrasi data proyek; visualisasi progress; evaluasi,Jira; Notion
+P015,AR Furniture Visualization App,User ingin melihat furniture dalam bentuk AR sebelum membeli,Desain model 3D; Implementasi AR; Integrasi UI; Testing pengalaman pengguna,Unity; ARCore
+P016,Blockchain Voting System,Sistem voting transparan berbasis blockchain,Desain smart contract; Implementasi voting logic; Deploy ke blockchain; Testing keamanan,Ethereum; Solidity
+P017,System Performance Optimization,Server mengalami bottleneck sehingga perlu optimasi,Analisis performa; Identifikasi bottleneck; Optimasi resource; Testing hasil; Monitoring,Linux; Prometheus
+P018,Cloud Infrastructure Architecture Design,Perusahaan membutuhkan arsitektur cloud scalable,Analisis kebutuhan; Desain arsitektur; Pilih layanan cloud; Dokumentasi; Review desain,Draw.io; AWS Architecture
+P019,Virtual Machine Deployment System,Efisiensi resource dengan virtualisasi server,Setup hypervisor; Buat VM; Konfigurasi resource; Testing performa; Monitoring,VMware; VirtualBox
+P020,Security Monitoring Dashboard,Tim security membutuhkan monitoring ancaman siber,Kumpulkan log; Visualisasikan data; Deteksi ancaman; Buat alert; Evaluasi sistem,Splunk; ELK Stack
+P021,IT Security Audit System,Perusahaan butuh audit keamanan sistem secara berkala,Tentukan standar audit; Scanning vulnerability; Analisis hasil; Buat laporan; Rekomendasi,Nessus; OWASP ZAP
+P022,Web Penetration Testing Lab,Simulasi serangan untuk menguji keamanan web,Setup vulnerable app; Lakukan scanning; Eksploitasi celah; Dokumentasi; Rekomendasi perbaikan,Burp Suite; Kali Linux
+P023,SOC Incident Response System,Tim SOC membutuhkan sistem penanganan insiden,Kumpulkan log; Deteksi insiden; Klasifikasi ancaman; Respon cepat; Evaluasi,SIEM; Splunk
+P024,Information Security Policy Platform,Manajemen membutuhkan sistem kebijakan keamanan,Identifikasi kebijakan; Dokumentasi standar; Implementasi kontrol; Evaluasi kepatuhan,ISO 27001 Docs
+P025,Cyber Defense Simulation,Sistem simulasi pertahanan terhadap serangan siber,Buat skenario serangan; Jalankan simulasi; Analisis respon; Perbaiki sistem,Metasploit
+P026,Enterprise Solution Architecture,Sistem integrasi antar aplikasi perusahaan,Analisis sistem; Desain arsitektur; Mapping integrasi; Dokumentasi; Validasi,TOGAF; Draw.io
+P027,Sales Data Dashboard,Perusahaan ingin memahami performa penjualan,Kumpulkan data; Bersihkan data; Buat dashboard; Analisis tren; Presentasi,Excel; Power BI
+P028,Customer Churn Prediction,Perusahaan ingin memprediksi pelanggan yang akan churn,Kumpulkan data; EDA; Feature engineering; Training model; Evaluasi; Deploy,Python; Scikit-learn
+P029,Recommendation System Engine,Platform ingin memberikan rekomendasi produk,Kumpulkan data user; Bangun model rekomendasi; Evaluasi; Deploy sistem,Python; TensorFlow
+P030,AI Customer Service Chatbot,Otomatisasi layanan pelanggan menggunakan AI,Desain flow chatbot; Integrasi NLP; Implementasi; Testing; Deploy,Python; OpenAI API
+P031,Business Intelligence Dashboard,Manajemen butuh insight visual dari data bisnis,Kumpulkan data; Transformasi data; Visualisasi; Analisis data; Presentasi,Tableau; SQL
+P032,ETL Data Pipeline,System integrasi data dari berbagai sumber,Ekstrak data; Transformasi; Load ke database; Scheduling; Monitoring,Python; Airflow
+P033,User Behavior Analytics,Tim produk ingin memahami perilaku user,Kumpulkan data; Analisis perilaku; Visualisasi; Insight; Rekomendasi,Mixpanel; SQL
+P034,Big Data Processing System,Analisis data skala besar,Setup cluster; Proses data; Analisis; Optimasi performa,Hadoop; Spark
+P035,Data Warehouse Implementation,Penyimpanan data terpusat untuk analitik,Desain schema; ETL; Implementasi warehouse; Query data,BigQuery; SQL
+P036,Image Classification Model,Klasifikasi gambar menggunakan deep learning,Kumpulkan dataset; Preprocessing; Training model; Evaluasi,PyTorch
+P037,Sentiment Analysis System,Analisis sentimen media sosial,Kumpulkan data; Preprocessing; Training model; Evaluasi; Visualisasi,NLTK; Python
+P038,Object Detection System,Deteksi objek real-time dari video,Setup model; Training; Integrasi kamera; Testing; Deploy,YOLO; OpenCV
+P039,AI Prompt Optimization Tool,Optimasi prompt untuk chatbot AI,Desain prompt; Testing variasi; Evaluasi hasil; Optimasi,OpenAI API
+P040,Database Schema Design,Desain struktur database untuk aplikasi skala besar,Analisis kebutuhan; Desain ERD; Normalisasi; Validasi,MySQL; ERD Tools
+P041,Enterprise Data Architecture,Desain arsitektur data perusahaan,Analisis kebutuhan; Desain arsitektur; Dokumentasi; Review,Draw.io
+P042,Database CRUD Application,Aplikasi pengelolaan database sederhana,Desain database; Implementasi CRUD; Testing; Deploy,PostgreSQL
+P043,Database Optimization Project,Optimasi query database untuk performa,Analisis query; Optimasi indexing; Testing performa; Evaluasi,MySQL; Indexing
+P044,Mobile App UI Design,Desain antarmuka aplikasi mobile yang user-friendly,Analisis kebutuhan; Wireframe; Mockup; Prototyping; Testing,Figma
+P045,UX Improvement Study,Riset untuk meningkatkan pengalaman pengguna,User research; Analisis pain point; Rekomendasi; Testing,User Testing; Miro
+P046,Product Design System,Design system untuk konsistensi produk,Identifikasi komponen; Desain sistem; Dokumentasi; Implementasi,Figma
+P047,Brand Identity Design,Desain identitas visual brand,Analisis brand; desain logo; pilih warna; guideline brand,Adobe Illustrator
+P048,Marketing Motion Graphics,Animasi untuk kampanye digital,Konsep animasi; Desain asset; Buat animasi; Lakukan rendering,After Effects
+P049,User Research Analysis,Analisis perilaku pengguna,Kumpulkan data; Analisis; Insight; Rekomendasi,Notion; Miro
+P050,Illustration Asset Kit,Pembuatan ilustrasi untuk aplikasi digital,Konsep desain; Buat ilustrasi; Revisi; Finalisasi,Procreate
+P051,3D Product Visualization,Model 3D produk untuk e-commerce,Desain model; Rendering; Optimasi asset,Blender
+P052,Game UI Interface Design,Desain UI untuk game,Wireframe UI; Buat desain; Implementasi; Testing,Figma; Unity UI
+P053,Design System Documentation,Dokumentasi komponen UI,Inventaris komponen; Dokumentasi; Publish system,Storybook
+P054,AR Experience UI Design,Desain UI untuk aplikasi AR,Desain UI; Integrasi AR; Testing User,Unity
+P055,Digital Campaign Strategy,Kampanye digital untuk meningkatkan brand awareness,Analisis target market; Strategi campaign; Eksekusi; Evaluasi,Google Ads
+P056,SEO Optimization Project,Optimasi website agar ranking di search engine,Audit SEO; Keyword research; Optimasi konten; Monitoring,Ahrefs; GSC
+P057,Content Marketing Plan,Strategi konten untuk meningkatkan engagement,Riset audience; Planning konten; Produksi; Evaluasi,Notion
+P058,Social Media Management Tool,Manajemen konten media sosial,Setup tools; Scheduling konten; Monitoring; Analisis,Hootsuite
+P059,Ads Performance Optimization,Optimasi iklan digital untuk ROI,Analisis campaign; A/B testing; Optimasi; Evaluasi,Meta Ads
+P060,Marketing Analytics Dashboard,Analisis performa marketing,Kumpulkan data; Visualisasi; Analisis; Insight,Power BI
+P061,Customer Relationship Management System,Sistem pengelolaan hubungan pelanggan,Setup CRM; Input data; Segmentasi; Analisis,HubSpot
+P062,Copywriting Campaign Project,Pembuatan konten marketing untuk konversi,Riset audience; Tulis konten; Testing; Evaluasi,Google Docs
+P063,Online Community Platform,Membangun komunitas online,Setup platform; Buat aturan; Engagement; Evaluasi,Discord
+P064,Task Automation Assistant,Otomatisasi tugas administratif,Identifikasi task; Buat workflow; Implementasi; Testing,Zapier
+P065,Marketing Operations Support,Mendukung operasional marketing,Kumpulkan data; Buat laporan; Analisis data; Support tim,Excel
+P066,E-commerce Store Optimization,Optimasi toko online,Audit toko; Optimasi produk; Testing; Evaluasi,Shopify
+P067,Campaign Performance Analysis,Analisis hasil campaign marketing,Kumpulkan data; Analisis KPI; Tarik insight; Buat rekomendasi,Google Analytics
+P068,Marketing Business Analysis,Analisis strategi bisnis marketing,Analisis data; Evaluasi strategi; Buat rekomendasi; Buat laporan,Excel; Python
