@@ -1,0 +1,69 @@
+// File: prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  user_id         String           @id
+  email           String?          @unique
+  created_at      DateTime         @default(now())
+  
+  // Relasi ke tabel lain
+  assessments     Assessment[]
+  recommendations Recommendation[]
+
+  @@map("users") // Opsional: Memaksa nama tabel di database menjadi lowercase
+}
+
+model Assessment {
+  assessment_id   Int              @id @default(autoincrement())
+  user_id         String
+  method          String
+  payload         Json
+  created_at      DateTime         @default(now())
+
+  // Relasi
+  user            User             @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  recommendations Recommendation[]
+  chart_data      ChartData[]
+
+  @@map("assessments")
+}
+
+model Recommendation {
+  recommendation_id Int        @id @default(autoincrement())
+  assessment_id     Int
+  user_id           String
+  role_id           String
+  role_name         String
+  match_pct         Decimal    @db.Decimal(5, 2)
+  description       String?
+  salary_range      String?
+  skill_gap         String[]   // Array of strings
+  roadmap           Json?
+  created_at        DateTime   @default(now())
+
+  // Relasi
+  assessment        Assessment @relation(fields: [assessment_id], references: [assessment_id], onDelete: Cascade)
+  user              User       @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+
+  @@map("recommendations")
+}
+
+model ChartData {
+  chart_id      Int        @id @default(autoincrement())
+  assessment_id Int
+  labels        String[]
+  scores        Decimal[]
+  created_at    DateTime   @default(now())
+
+  // Relasi
+  assessment    Assessment @relation(fields: [assessment_id], references: [assessment_id], onDelete: Cascade)
+
+  @@map("chart_data")
+}

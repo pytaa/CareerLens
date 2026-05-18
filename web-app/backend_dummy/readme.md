@@ -75,13 +75,9 @@ CREATE INDEX idx_recommendations_user ON recommendations(user_id);
 
 terus buat file .env dengan konfigurasi seperti ini
 PORT=5000
-DB_USER=postgres
-DB_PASSWORD=Admin1234 (password disesuaikan)
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=careerlens_db
-
-EMAIL_USER=email_kamu@gmail.com (belum diperlukan)
-EMAIL_PASSWORD=password_app_gmail_kamu (belum diperlukan)
-
+EMAIL_USER=email_kamu@gmail.com
+EMAIL_PASSWORD=password_app_gmail_kamu
 AI_SERVICE_URL=http://localhost:8000
+
+# Format: postgresql://USER:PASSWORD@HOST:PORT/DATABASE_NAME?schema=public
+DATABASE_URL="postgresql://postgres:Admin1234@localhost:5432/careerlens_db?schema=public"
