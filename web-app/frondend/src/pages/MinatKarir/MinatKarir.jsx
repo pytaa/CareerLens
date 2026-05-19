@@ -1,27 +1,36 @@
 // src/pages/MinatKarir/MinatKarir.jsx
 import React, { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import Navbar from '../../components/Navbar';
 import MinatSelection from './MinatSelection';
 import MinatResult from './MinatResult';
 
 const MinatKarir = () => {
-  // State untuk melacak apakah user sedang memilih atau sedang melihat hasil
-  const [view, setView] = useState('selection'); // 'selection' | 'result'
-  // State untuk menyimpan data JSON dari backend
+  const [view, setView] = useState('selection'); 
   const [resultData, setResultData] = useState(null);
 
-  // Fungsi yang dipanggil saat salah satu kotak industri diklik
+  //membuat atau mengambil ID Anonim dari peramban
+  const getOrCreateUserId = () => {
+    let userId = localStorage.getItem('careerlens_user_id');
+    if (!userId) {
+      userId = `user_${uuidv4()}`;
+      localStorage.setItem('careerlens_user_id', userId);
+    }
+    return userId;
+  };
+
   const handleSelectIndustry = async (industryId) => {
-    // 1. Pindah tampilan ke halaman hasil (akan menampilkan tulisan loading)
     setView('result');
 
     try {
-      // 2. Fetch ke Backend Dummy kita (sesuai API Contract)
+      // Panggil fungsi UUID di sini
+      const currentUserId = getOrCreateUserId(); 
+
       const response = await fetch('http://localhost:5000/predict', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          user_id: "user_anonim_123", // UUID dummy
+          user_id: currentUserId, 
           method: "interest",
           payload: { interest_id: industryId }
         })
@@ -29,12 +38,11 @@ const MinatKarir = () => {
 
       const jsonResponse = await response.json();
 
-      // 3. Simpan data hasil ke state
       if (jsonResponse.status === 'success') {
         setResultData(jsonResponse.data);
       } else {
         alert("Gagal menganalisis: " + jsonResponse.message);
-        setView('selection'); // Kembali jika gagal
+        setView('selection'); 
       }
 
     } catch (error) {
@@ -46,14 +54,11 @@ const MinatKarir = () => {
 
   return (
     <div className="min-h-screen bg-[#e2e8f0] font-sans flex flex-col">
-      
-      {/* Mengatur komponen mana yang dirender berdasarkan state view */}
       {view === 'selection' ? (
         <MinatSelection onSelect={handleSelectIndustry} />
       ) : (
         <MinatResult data={resultData} />
       )}
-      
     </div>
   );
 };
