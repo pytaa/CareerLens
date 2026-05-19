@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid'; 
 import TesBakatResult from './TesBakatResult';
 import TesBakatQuiz from './TesBakatQuiz';
 import { riasecQuestions } from '../../data/riasecQuestions';
@@ -19,6 +20,16 @@ const TesBakat = () => {
   const [resultData, setResultData] = useState(null);
   const [interestCode, setInterestCode] = useState([]);
   const [riasecScores, setRiasecScores] = useState(null);
+
+  // Fungsi cerdas untuk membuat atau mengambil ID Anonim dari peramban
+  const getOrCreateUserId = () => {
+    let userId = localStorage.getItem('careerlens_user_id');
+    if (!userId) {
+      userId = `user_${uuidv4()}`;
+      localStorage.setItem('careerlens_user_id', userId);
+    }
+    return userId;
+  };
 
   const handleSelectOption = (val) => {
     const newAnswers = [...answers];
@@ -56,11 +67,14 @@ const TesBakat = () => {
     setRiasecScores(payloadScores);
 
     try {
+      // Ambil ID dinamis sebelum fetch
+      const currentUserId = getOrCreateUserId();
+
       const response = await fetch('http://localhost:5000/predict', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          user_id: "user_anonim_123",
+          user_id: currentUserId, 
           method: "riasec",
           payload: { riasec_scores: payloadScores }
         })
