@@ -1,75 +1,70 @@
-import tensorflow as tf
-import numpy as np
+
 import os
+import numpy as np
+import tensorflow as tf
+from sklearn.metrics import f1_score, precision_score, recall_score
+
 
 class CareerLensCallback(tf.keras.callbacks.Callback):
-    def __init__(
-        self,
-        val_data  : tuple,
-        log_dir   : str = "logs/",
-        patience  : int = 5,
-        save_path : str = "saved_model/careerlens_best.keras"
-    ):
+    def __init__(self, val_data, log_dir="logs/",
+                 patience=10, save_path="saved_model/model.keras"):
         super().__init__()
         self.val_data   = val_data
         self.patience   = patience
         self.save_path  = save_path
         self.best_score = -999
         self.wait       = 0
-
-        # Buat folder jika belum ada
-        os.makedirs(log_dir,                          exist_ok=True)
+        os.makedirs(log_dir, exist_ok=True)
         os.makedirs(os.path.dirname(save_path) or ".", exist_ok=True)
-
-        # TensorBoard writer
         self.writer = tf.summary.create_file_writer(log_dir)
 
     def on_epoch_end(self, epoch, logs=None):
-        X_val, y_val = self.val_data
-        preds        = self.model.predict(X_val, verbose=0)
+        (X_u, X_r), y_val = self.val_data
+        preds = self.model.predict([X_u, X_r], verbose=0)
 
-        # Handle output dict (SkillModel) vs tensor (RIASECModel)
         if isinstance(preds, dict):
-            pred_scores = preds.get("role_score", preds)
+            scores = preds.get("role_score", preds)
         else:
-            pred_scores = preds
+            scores = preds
 
-        avg_score = float(np.mean(pred_scores))
+        scores = np.array(scores).flatten() / 100.0
+        y_pred = (scores >= 0.5).astype(int)
+        y_true = y_val.astype(int)
 
-        # Log ke TensorBoard 
+        # Metrik klasifikasi
+        accuracy  = float((y_pred == y_true).mean() * 100)
+        f1        = float(f1_score(y_true, y_pred, zero_division=0) * 100)
+        precision = float(precision_score(y_true, y_pred, zero_division=0) * 100)
+        recall    = float(recall_score(y_true, y_pred, zero_division=0) * 100)
+
         with self.writer.as_default():
-            tf.summary.scalar(
-                "val_avg_similarity", avg_score, step=epoch
-            )
+            tf.summary.scalar("val_accuracy",  accuracy,  step=epoch)
+            tf.summary.scalar("val_f1",        f1,        step=epoch)
+            tf.summary.scalar("val_precision", precision, step=epoch)
+            tf.summary.scalar("val_recall",    recall,    step=epoch)
             if logs:
-                for key, val in logs.items():
-                    tf.summary.scalar(key, val, step=epoch)
+                for k, v in logs.items():
+                    tf.summary.scalar(k, v, step=epoch)
         self.writer.flush()
 
         print(
-            f"\n[CareerLensCallback] Epoch {epoch+1:3d} | "
-            f"Avg Similarity : {avg_score:.2f}% | "
-            f"Loss           : {logs.get('loss', 0):.4f}"
+            f"[Callback] Epoch {epoch+1:3d} | "
+            f"Acc: {accuracy:.1f}% | "
+            f"F1: {f1:.1f}% | "
+            f"Prec: {precision:.1f}% | "
+            f"Rec: {recall:.1f}% | "
+            f"Loss: {logs.get('loss', 0):.4f}"
         )
 
-        # Simpan model terbaik + early stopping 
-        if avg_score > self.best_score:
-            self.best_score = avg_score
+        # Simpan berdasarkan F1 score (lebih robust dari accuracy)
+        if f1 > self.best_score:
+            self.best_score = f1
             self.wait       = 0
             self.model.save(self.save_path)
-            print(
-                f" Model tersimpan → {self.save_path} "
-                f"(best: {self.best_score:.2f}%)"
-            )
+            print(f"  Saved! Best F1: {self.best_score:.1f}%")
         else:
             self.wait += 1
-            print(
-                f"  Tidak ada peningkatan "
-                f"({self.wait}/{self.patience})"
-            )
+            print(f"  No improvement ({self.wait}/{self.patience})")
             if self.wait >= self.patience:
-                print(
-                    f" Early stopping di epoch {epoch+1} "
-                    f"— best score: {self.best_score:.2f}%"
-                )
+                print(f"  Early stopping — best F1: {self.best_score:.1f}%")
                 self.model.stop_training = True
