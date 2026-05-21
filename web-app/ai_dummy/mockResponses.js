@@ -17,8 +17,8 @@ const mockResponses = {
             skill_gap: null,
             roadmap: {
               learning_path: [
-                { step: 1, title: "Pengenalan Data Science", resource: "Coursera" },
-                { step: 2, title: "Python untuk Data", resource: "Dicoding" }
+                { step: 1, title: "Pengenalan Data Science", resource: "https://www.coursera.org" },
+                { step: 2, title: "Python untuk Data", resource: "https://www.dicoding.com" }
               ],
               dummy_projects: ["Analisis Data Penjualan", "Dashboard Visualisasi"]
             }
@@ -41,8 +41,8 @@ const mockResponses = {
             skill_gap: null,
             roadmap: {
               learning_path: [
-                { step: 1, title: "Dasar Desain UI/UX", resource: "Google UX Cert" },
-                { step: 2, title: "Prototyping dengan Figma", resource: "YouTube / Dicoding" }
+                { step: 1, title: "Dasar Desain UI/UX", resource: "https://www.coursera.org" },
+                { step: 2, title: "Prototyping dengan Figma", resource: "https://www.udemy.com" }
               ],
               dummy_projects: ["Redesign Aplikasi M-Banking", "Wireframing Web E-Commerce"]
             }
@@ -71,8 +71,8 @@ const mockResponses = {
             skill_gap: ["Machine Learning", "Statistics"],
             roadmap: {
               learning_path: [
-                { step: 1, title: "Dasar Statistika", resource: "Coursera" },
-                { step: 2, title: "Deep Learning", resource: "TensorFlow Cert" }
+                { step: 1, title: "Dasar Statistika", resource: "https://www.coursera.org" },
+                { step: 2, title: "Deep Learning", resource: "https://www.edx.org" }
               ],
               dummy_projects: ["Prediksi Harga Rumah", "Analisis Sentimen Teks"]
             }
@@ -86,8 +86,8 @@ const mockResponses = {
             skill_gap: ["Model Deployment", "MLOps", "C++"],
             roadmap: {
               learning_path: [
-                { step: 1, title: "Machine Learning Engineering for Production", resource: "DeepLearning.AI" },
-                { step: 2, title: "Docker & Kubernetes untuk ML", resource: "Udemy" }
+                { step: 1, title: "Machine Learning Engineering for Production", resource: "https://www.coursera.org" },
+                { step: 2, title: "Docker & Kubernetes untuk ML", resource: "https://www.udemy.com" }
               ],
               dummy_projects: ["Deploy Model Rekomendasi ke REST API", "Sistem Deteksi Anomali Real-time"]
             }
@@ -101,8 +101,8 @@ const mockResponses = {
             skill_gap: ["Tableau", "Advanced SQL", "Storytelling"],
             roadmap: {
               learning_path: [
-                { step: 1, title: "Google Data Analytics Professional Certificate", resource: "Coursera" },
-                { step: 2, title: "Data Visualization with Tableau", resource: "DataCamp" }
+                { step: 1, title: "Google Data Analytics Professional Certificate", resource: "https://www.coursera.org" },
+                { step: 2, title: "Data Visualization with Tableau", resource: "https://www.udemy.com" }
               ],
               dummy_projects: ["Dashboard Performa Sales Interaktif", "Analisis Churn Pelanggan"]
             }
@@ -128,8 +128,8 @@ const mockResponses = {
             skill_gap: ["Docker", "System Design"],
             roadmap: {
               learning_path: [
-                { step: 1, title: "RESTful API dengan Node.js", resource: "Dicoding" },
-                { step: 2, title: "Database Architecture", resource: "Udemy" }
+                { step: 1, title: "RESTful API dengan Node.js", resource: "https://www.dicoding.com" },
+                { step: 2, title: "Database Architecture", resource: "https://www.udemy.com" }
               ],
               dummy_projects: ["Membuat API Toko Online", "Sistem Autentikasi JWT"]
             }
@@ -143,8 +143,8 @@ const mockResponses = {
             skill_gap: ["AWS Certified Solutions Architect", "Terraform", "Networking"],
             roadmap: {
               learning_path: [
-                { step: 1, title: "AWS Cloud Practitioner Essentials", resource: "AWS Training" },
-                { step: 2, title: "Infrastructure as Code", resource: "HashiCorp" }
+                { step: 1, title: "AWS Cloud Practitioner Essentials", resource: "https://www.coursera.org" },
+                { step: 2, title: "Infrastructure as Code", resource: "https://www.udemy.com" }
               ],
               dummy_projects: ["Hosting Web Highly Available di AWS", "Otomatisasi Server dengan Terraform"]
             }
@@ -158,8 +158,8 @@ const mockResponses = {
             skill_gap: ["Kubernetes", "CI/CD Pipelines", "Linux Administration"],
             roadmap: {
               learning_path: [
-                { step: 1, title: "GitLab CI/CD Masterclass", resource: "Udemy" },
-                { step: 2, title: "Kubernetes for Beginners", resource: "KodeKloud" }
+                { step: 1, title: "GitLab CI/CD Masterclass", resource: "https://www.udemy.com" },
+                { step: 2, title: "Kubernetes for Beginners", resource: "https://www.edx.org" }
               ],
               dummy_projects: ["Membuat Pipeline Auto-Deploy Express.js", "Setup Monitoring Cluster dengan Prometheus"]
             }
@@ -185,8 +185,8 @@ const mockResponses = {
             skill_gap: ["Next.js", "TypeScript", "State Management"],
             roadmap: {
               learning_path: [
-                { step: 1, title: "Belajar Membuat Aplikasi Web dengan React", resource: "Dicoding" },
-                { step: 2, title: "Advanced TypeScript", resource: "Frontend Masters" }
+                { step: 1, title: "Belajar Membuat Aplikasi Web dengan React", resource: "https://www.dicoding.com" },
+                { step: 2, title: "Advanced TypeScript", resource: "https://www.udemy.com" }
               ],
               dummy_projects: ["Clone Aplikasi Spotify", "Dashboard Analitik Real-time"]
             }
@@ -200,8 +200,8 @@ const mockResponses = {
             skill_gap: ["Node.js", "PostgreSQL", "API Security"],
             roadmap: {
               learning_path: [
-                { step: 1, title: "Menjadi Back-End Developer Expert", resource: "Dicoding" },
-                { step: 2, title: "Web Security Fundamentals", resource: "Coursera" }
+                { step: 1, title: "Menjadi Back-End Developer Expert", resource: "https://www.dicoding.com" },
+                { step: 2, title: "Web Security Fundamentals", resource: "https://www.coursera.org" }
               ],
               dummy_projects: ["Aplikasi E-Commerce End-to-End", "Sistem Manajemen Rumah Sakit"]
             }
@@ -215,8 +215,8 @@ const mockResponses = {
             skill_gap: ["Figma Prototyping", "User Research", "Design Systems"],
             roadmap: {
               learning_path: [
-                { step: 1, title: "Google UX Design Professional Certificate", resource: "Coursera" },
-                { step: 2, title: "Membangun Design System", resource: "Memorisely" }
+                { step: 1, title: "Google UX Design Professional Certificate", resource: "https://www.coursera.org" },
+                { step: 2, title: "Membangun Design System", resource: "https://www.dicoding.com" }
               ],
               dummy_projects: ["Redesign Alur Checkout Marketplace", "Wireframing Aplikasi Finansial"]
             }
@@ -242,8 +242,8 @@ const mockResponses = {
             skill_gap: ["Python", "TensorFlow"],
             roadmap: {
               learning_path: [
-                { step: 1, title: "Pengenalan Programming", resource: "Dicoding" },
-                { step: 2, title: "Machine Learning Dasar", resource: "Coursera" }
+                { step: 1, title: "Pengenalan Programming", resource: "https://www.dicoding.com" },
+                { step: 2, title: "Machine Learning Dasar", resource: "https://www.coursera.org" }
               ],
               dummy_projects: ["Klasifikasi Gambar", "Sistem Rekomendasi Sederhana"]
             }
@@ -266,8 +266,8 @@ const mockResponses = {
             skill_gap: ["Agile/Scrum", "Data Analytics Dasar"],
             roadmap: {
               learning_path: [
-                { step: 1, title: "Product Management 101", resource: "Binar Academy" },
-                { step: 2, title: "Agile Framework", resource: "Coursera" }
+                { step: 1, title: "Product Management 101", resource: "https://www.edx.org" },
+                { step: 2, title: "Agile Framework", resource: "https://www.coursera.org" }
               ],
               dummy_projects: ["Membuat PRD (Product Requirements Document)", "Riset Pasar Fitur Baru"]
             }
