@@ -1,198 +1,268 @@
 // src/pages/AnalisisSkill/SkillResult.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { FiChevronLeft, FiAlertCircle } from 'react-icons/fi';
+import { 
+  FiChevronLeft, 
+  FiCheckCircle, 
+  FiActivity, 
+  FiDollarSign,
+  FiMap,
+  FiBriefcase,
+  FiAlertTriangle,
+  FiTarget
+} from 'react-icons/fi';
+
+// Fungsi helper untuk mengekstrak nama platform
+const getPlatformName = (resourceStr) => {
+  if (!resourceStr) return "UNKNOWN";
+  if (resourceStr.startsWith('http')) {
+    try {
+      const domain = new URL(resourceStr).hostname;
+      return domain.replace('www.', '').split('.')[0];
+    } catch (e) {
+      return "LINK";
+    }
+  }
+  return resourceStr;
+};
 
 const SkillResult = ({ data, inputtedSkills }) => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [email, setEmail] = useState('');
-  const [activeRole, setActiveRole] = useState(null);
+  const [sendingReport, setSendingReport] = useState(false);
 
-  useEffect(() => {
-    if (data && data.recommendations && data.recommendations.length > 0) {
-      setActiveRole(data.recommendations[0]);
-    }
-  }, [data]);
+  // 1. Menggunakan Derived State untuk mencegah error useEffect
+  const [selectedRoleId, setSelectedRoleId] = useState(null);
+  
+  // 2. Mencari role aktif secara dinamis
+  const activeRole = data?.recommendations?.find(r => r.role_id === selectedRoleId) || data?.recommendations?.[0];
 
   if (!data || !activeRole) {
     return (
-      <div className="grow flex items-center justify-center text-slate-800 text-2xl font-bold bg-white w-full h-full min-h-125">
+      <div className="grow flex items-center justify-center text-slate-800 text-2xl font-bold bg-white w-full h-full min-h-screen">
         Menganalisis Keahlian Anda...
       </div>
     );
   }
 
-  const handleDownload = () => {
-    alert(`Mensimulasikan pengiriman PDF ke: ${email}`);
-    setShowModal(false);
-    setEmail('');
+  const handleDownload = async () => {
+    if (!email) return;
+    setSendingReport(true);
+    try {
+      await axios.post('http://localhost:5000/api/reports/send', {
+        email,
+        user_id: data.user_id || null,
+        profile: { name: data.user_name || data.name || '', email },
+        summary: `CareerLens merekomendasikan peran ${activeRole.role_name} berdasarkan analisis skill Anda.`,
+        recommendations: data.recommendations || []
+      });
+      alert(`Laporan PDF telah dikirim ke ${email}`);
+      setShowModal(false);
+      setEmail('');
+    } catch (error) {
+      console.error(error);
+      alert('Gagal mengirim laporan. Silakan coba lagi.');
+    } finally {
+      setSendingReport(false);
+    }
   };
 
+  // Kalkulasi untuk SVG Circular Progress
+  const radius = 48;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset = circumference - (activeRole.match_pct / 100) * circumference;
+
   return (
-    <div className="grow flex flex-col w-full bg-white relative">
+    <div className="grow flex flex-col w-full bg-white relative min-h-screen">
       
-      {/* Container Utama Full Width */}
-      <div className="flex flex-col md:flex-row w-full grow border-t border-slate-200">
+      {/* --- HEADER ATAS --- */}
+      <div className="w-full bg-white px-6 py-5 flex items-center justify-between border-b border-slate-200 shrink-0 relative">
+        <button 
+          onClick={() => navigate('/')} 
+          className="flex items-center gap-2 text-slate-500 hover:text-[#1e3a8a] font-medium text-sm transition-colors z-10"
+        >
+          <FiChevronLeft size={18} /> Kembali ke Beranda
+        </button>
+        <div className="absolute left-1/2 -translate-x-1/2 font-extrabold text-xl text-[#1e3a8a] tracking-tight">
+          CareerLens
+        </div>
+      </div>
+
+      <div className="flex flex-col md:flex-row w-full grow">
         
-        {/* Sidebar Kiri */}
-        <div className="w-full md:w-1/4 bg-slate-50 border-r border-slate-200 p-6 md:p-8 flex flex-col">
+        {/* --- SIDEBAR KIRI --- */}
+        <div className="w-full md:w-1/4 bg-slate-50/50 border-r border-slate-200 p-6 md:p-8 flex flex-col">
           
-          {/* Section Skill Kamu (Dari Input) */}
-          <div className="mb-8">
-            <h2 className="font-bold text-lg text-slate-800 mb-3">Skill Kamu</h2>
-            <div className="flex flex-wrap gap-2">
-              {inputtedSkills.map(skill => (
-                <span key={skill} className="bg-[#0277b6] text-white px-3 py-1 rounded-full text-sm font-medium shadow-sm">
-                  {skill}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          <h2 className="font-bold text-lg text-slate-800 mb-1">Bidang Sektor Industri</h2>
-          <p className="text-[#0277b6] font-bold text-lg mb-8">Data Science & Artificial Intelligence</p>
+          <p className="text-xs font-bold text-slate-400 tracking-wider mb-4 uppercase">
+            Hasil Rekomendasi
+          </p>
           
-          <h3 className="font-bold text-slate-800 text-lg mb-4">Rekomendasi Sektor Industri</h3>
-          
-          <div className="space-y-4 grow">
-            {data.recommendations.map((role) => (
-              <button 
-                key={role.role_id}
-                onClick={() => setActiveRole(role)}
-                className={`w-full text-left px-6 py-4 rounded-xl font-bold transition-all duration-300 ${
-                  role.role_id === activeRole.role_id 
-                    ? 'bg-[#0277b6] text-white shadow-md translate-x-2' 
-                    : 'bg-cyan-100 text-[#0277b6] hover:bg-cyan-200 hover:translate-x-1'
-                }`}
-              >
-                {role.role_name}
-              </button>
-            ))}
-          </div>
-
-          <div className="mt-8">
-             <div className="bg-cyan-100 p-4 rounded-xl mb-6 shadow-sm">
-                <p className="text-sm text-slate-700 italic font-medium">
-                  "Berdasarkan analisis model kami, Anda memiliki fondasi teknis yang kuat."
-                </p>
-             </div>
-             <button 
-               onClick={() => navigate(0)} 
-               className="bg-[#0b1234] text-white px-8 py-3 rounded-full font-bold hover:bg-blue-900 shadow-md transition-all w-full"
-             >
-               Mulai Analisis Baru
-             </button>
+          <div className="space-y-3 grow">
+            {data.recommendations.map((role) => {
+              const isActive = role.role_id === activeRole.role_id;
+              
+              return (
+                <button 
+                  key={role.role_id}
+                  onClick={() => setSelectedRoleId(role.role_id)} 
+                  className={`w-full flex items-center justify-between px-4 py-4 rounded-xl transition-all duration-300 ${
+                    isActive 
+                      ? 'border-2 border-[#1e3a8a] bg-[#f8fafc] text-[#1e3a8a] shadow-sm' 
+                      : 'border border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`p-2 rounded-lg ${isActive ? 'bg-[#e2e8f0]' : 'bg-slate-100'}`}>
+                      <FiActivity size={18} className={isActive ? 'text-[#1e3a8a]' : 'text-slate-500'} />
+                    </div>
+                    <div className="flex flex-col items-start">
+                      <span className="font-bold text-sm text-slate-800">{role.role_name}</span>
+                      <span className="text-[11px] font-bold text-slate-400">{role.match_pct}% Match</span>
+                    </div>
+                  </div>
+                  
+                  {isActive && <FiCheckCircle size={18} className="text-[#1e3a8a]" />}
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        {/* Konten Kanan (Detail Role) */}
+        {/* --- KONTEN KANAN --- */}
         <div className="w-full md:w-3/4 p-8 md:p-12 overflow-y-auto bg-white transition-all duration-500">
            
-           <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
-             <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4 md:mb-0">
-               {activeRole.role_name}
-             </h1>
-           </div>
+           {/* Bagian Atas: Lingkaran Persentase & Info Role */}
+           <div className="flex flex-col md:flex-row items-center md:items-stretch gap-8 mb-12">
+             
+             {/* Grafik Lingkaran SVG (Diperbarui agar persis dengan desain) */}
+             <div className="relative w-40 h-40 flex items-center justify-center shrink-0">
+               <svg className="transform -rotate-90 w-40 h-40">
+                 {/* Lingkaran Background (Abu-abu muda, sedikit lebih tipis) */}
+                 <circle cx="80" cy="80" r="64" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-slate-100" />
+                 {/* Lingkaran Progress (Biru Dongker, Lebih Tebal) */}
+                 <circle 
+                   cx="80" cy="80" r="64" 
+                   stroke="currentColor" strokeWidth="14" fill="transparent" 
+                   strokeDasharray={2 * Math.PI * 64} 
+                   strokeDashoffset={2 * Math.PI * 64 - (activeRole.match_pct / 100) * (2 * Math.PI * 64)} 
+                   strokeLinecap="round"
+                   className="text-[#030b26] transition-all duration-1000 ease-out" 
+                 />
+               </svg>
+               <div className="absolute inset-0 flex flex-col items-center justify-center pt-1">
+                 <span className="text-3xl font-extrabold text-[#030b26] tracking-tight leading-none">{activeRole.match_pct}%</span>
+                 <span className="text-[10px] font-bold text-slate-400 tracking-widest mt-1">MATCH</span>
+               </div>
+             </div>
 
-           {/* Progress Bar Match */}
-           <div className="flex items-center gap-4 mb-10">
-              <span className="bg-green-500 text-white px-3 py-1 rounded-md text-sm font-bold whitespace-nowrap shadow-sm">
-                High Match
-              </span>
-              <div className="w-full h-4 bg-slate-200 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-[#0277b6] rounded-full transition-all duration-1000 ease-out"
-                  style={{ width: `${activeRole.match_pct}%` }}
-                ></div>
-              </div>
-              <span className="font-bold text-[#0277b6]">{activeRole.match_pct}%</span>
-           </div>
-           
-           {/* Deskripsi & Penghasilan */}
-           <div className="flex flex-col md:flex-row gap-8 mb-10 border-b border-slate-200 pb-8">
-              <div className="flex-1">
-                <h4 className="font-bold text-sm text-slate-800 mb-2">Deskripsi Peran :</h4>
-                <p className="text-slate-600 text-sm leading-relaxed">{activeRole.description}</p>
-              </div>
-              <div className="flex-1 md:border-l border-slate-200 md:pl-8">
-                <h4 className="font-bold text-sm text-slate-800 mb-2">Penghasilan:</h4>
-                <p className="text-slate-600 text-sm leading-relaxed">
-                  Sekitar {activeRole.salary_range} menurut rata-rata industri di Indonesia.
-                </p>
-              </div>
-           </div>
-
-           {/* Bagian Roadmap */}
-           <div className="mb-6">
-              <span className="bg-[#0b1234] text-white px-6 py-2 rounded-xl font-bold text-sm">
-                Rekomendasi Road Map
-              </span>
-           </div>
-           
-           <div className="space-y-6 mb-10 pl-3">
-              {activeRole.roadmap.learning_path.map((step, index) => (
-                 <div key={index} className="border-l-2 border-[#0277b6] pl-6 relative">
-                    <div className="absolute w-4 h-4 bg-[#0277b6] rounded-full -left-2.25 top-0 border-4 border-white shadow-sm"></div>
-                    <h5 className="font-bold text-[#0277b6] text-sm mb-1">Step {step.step}</h5>
-                    <p className="font-bold text-slate-800 text-lg">{step.title}</p>
-                    <p className="text-sm text-slate-500 mt-1">Resource: {step.resource}</p>
+             {/* Teks Judul & Deskripsi (Sejajar vertikal dengan lingkaran) */}
+             <div className="flex flex-col justify-center">
+               <h1 className="text-4xl md:text-5xl font-bold text-[#030b26] mb-4 text-center md:text-left tracking-tight">
+                 {activeRole.role_name}
+               </h1>
+               <p className="text-slate-500 leading-relaxed mb-6 max-w-2xl text-sm md:text-base text-center md:text-left">
+                 {activeRole.description}
+               </p>
+               <div className="inline-flex items-center gap-3 bg-slate-50/50 border border-slate-100 px-5 py-3 rounded-xl w-max mx-auto md:mx-0">
+                 <FiDollarSign className="text-[#030b26] text-xl" />
+                 <div className="flex flex-col">
+                   <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Gaji Estimasi</span>
+                   <span className="text-sm font-bold text-slate-800">{activeRole.salary_range}</span>
                  </div>
-              ))}
+               </div>
+             </div>
            </div>
 
-           {/* Skill Gap Section */}
+           {/* --- PETA JALAN BELAJAR --- */}
+           <div className="mb-14">
+             <div className="flex items-center gap-3 mb-8">
+               <div className="bg-slate-100 text-[#1e3a8a] p-2.5 rounded-xl">
+                 <FiMap size={22} />
+               </div>
+               <h3 className="text-2xl font-bold text-slate-800">Peta Jalan Belajar</h3>
+             </div>
+
+             <div className="space-y-0 pl-2">
+               {activeRole.roadmap.learning_path.map((step, index) => {
+                 const isLast = index === activeRole.roadmap.learning_path.length - 1;
+                 return (
+                   <div key={index} className="flex gap-5">
+                     <div className="flex flex-col items-center">
+                       <div className="w-8 h-8 shrink-0 rounded-full bg-[#1e3a8a] text-white flex items-center justify-center font-bold text-sm z-10 shadow-md">
+                         {step.step}
+                       </div>
+                       {!isLast && <div className="w-px h-full bg-slate-200 mt-2 min-h-16"></div>}
+                     </div>
+                     <div className="flex-1 pb-10">
+                       <div className="flex justify-between items-start">
+                         <div className="pr-6">
+                           <h4 className="text-lg font-bold text-slate-900 mb-1">{step.title}</h4>
+                           <p className="text-slate-500 text-sm mb-3">
+                             Pelajari materi inti terkait {step.title.toLowerCase()} untuk memperkuat fondasi Anda.
+                           </p>
+                           <a
+                             href={step.resource.startsWith('http') ? step.resource : '#'}
+                             target={step.resource.startsWith('http') ? "_blank" : "_self"}
+                             rel="noreferrer"
+                             className="text-[#1e3a8a] font-bold text-sm hover:underline flex items-center gap-1"
+                           >
+                             Mulai Belajar <span>➔</span>
+                           </a>
+                         </div>
+                         <div className="bg-slate-100 text-slate-500 text-[10px] font-bold px-3 py-1.5 rounded uppercase tracking-widest shrink-0 shadow-sm">
+                           {getPlatformName(step.resource)}
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                 );
+               })}
+             </div>
+           </div>
+
+           {/* --- SKILL GAP (KESENJANGAN KETERAMPILAN) --- */}
            {activeRole.skill_gap && activeRole.skill_gap.length > 0 && (
-             <div className="mb-12 bg-red-50 border border-red-100 p-6 rounded-2xl shadow-sm">
-                <div className="flex items-center gap-2 mb-3 text-red-600">
-                  <FiAlertCircle size={20} />
-                  <h4 className="font-bold text-lg">Skill Gap (Kesenjangan Keahlian)</h4>
-                </div>
-                <p className="text-sm text-slate-600 mb-4">
-                  Untuk memaksimalkan potensi Anda di peran ini, kami menyarankan Anda untuk memperkuat keahlian berikut:
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {activeRole.skill_gap.map((gap, index) => (
-                    <span key={index} className="bg-white border border-red-200 text-red-600 px-4 py-1.5 rounded-lg text-sm font-bold shadow-sm">
-                      {gap}
+             <div className="mb-14">
+               <div className="flex items-center gap-3 mb-6 text-red-500">
+                 <FiAlertTriangle size={24} />
+                 <h3 className="text-2xl font-bold text-slate-800">Kesenjangan Keterampilan (Skill Gap)</h3>
+               </div>
+               
+               <div className="bg-red-50/80 border border-red-100 rounded-2xl p-6 flex flex-col md:flex-row items-start md:items-center gap-6 shadow-sm">
+                  <div className="bg-white text-red-500 p-4 rounded-xl shadow-sm shrink-0 border border-red-100">
+                    <FiTarget size={28} />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[11px] font-bold text-red-400 uppercase tracking-wider mb-3">
+                      Keterampilan Yang Perlu Dipelajari
                     </span>
-                  ))}
-                </div>
+                    <div className="flex flex-wrap gap-2">
+                      {activeRole.skill_gap.map((gap, index) => (
+                        <span key={index} className="bg-white border border-red-200 text-red-600 px-4 py-1.5 rounded-full text-sm font-bold shadow-sm">
+                          {gap}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+               </div>
              </div>
            )}
 
-           {/* Bagian Rekomendasi Pelatihan (Ditambahkan Kembali) */}
-           <div className="mb-6">
-              <span className="bg-[#0b1234] text-white px-6 py-2 rounded-xl font-bold text-sm">
-                Rekomendasi Pelatihan
-              </span>
-           </div>
-           
-           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-              {activeRole.roadmap.learning_path.map((item, index) => (
-                 <div key={index} className="bg-cyan-50 border border-cyan-100 p-5 rounded-2xl flex flex-col justify-between min-h-30 shadow-sm hover:shadow-md transition-shadow">
-                    <h6 className="font-bold text-[#0277b6] text-sm leading-snug">
-                      {index + 1}. {item.title}
-                    </h6>
-                    <div className="mt-4 text-center border-t border-cyan-200 pt-3">
-                      <span className="text-sm text-slate-500 font-medium">{item.resource}</span>
-                    </div>
-                 </div>
-              ))}
+           {/* --- PROYEK REKOMENDASI --- */}
+           <div className="mb-8 flex items-center gap-3">
+             <div className="bg-slate-100 text-[#1e3a8a] p-2.5 rounded-xl">
+               <FiBriefcase size={22} />
+             </div>
+             <h3 className="text-2xl font-bold text-slate-800">Proyek Rekomendasi</h3>
            </div>
 
-           {/* Bagian Dummy Projects */}
-           <div className="mb-6">
-              <span className="bg-[#0b1234] text-white px-6 py-2 rounded-xl font-bold text-sm">
-                Proyek yang Bisa Kamu Coba
-              </span>
-           </div>
-
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-12">
+           <div className="flex flex-col gap-4 pb-12">
               {activeRole.roadmap.dummy_projects.map((project, index) => (
-                 <div key={index} className="bg-[#026296] text-white p-6 rounded-2xl shadow-md hover:-translate-y-1 transition-transform">
-                    <h6 className="font-bold text-lg mb-2">{index + 1}. {project}</h6>
-                    <p className="text-blue-100 text-sm leading-relaxed">
+                 <div key={index} className="bg-white border border-slate-100 p-6 rounded-2xl shadow-[0_2px_10px_rgb(0,0,0,0.02)] hover:shadow-md transition-all">
+                    <h6 className="font-bold text-slate-900 text-base mb-1">{project}</h6>
+                    <p className="text-slate-500 text-sm leading-relaxed">
                       Kerjakan proyek simulasi ini untuk memperkuat portofolio dan pemahaman praktikal Anda.
                     </p>
                  </div>
@@ -201,36 +271,60 @@ const SkillResult = ({ data, inputtedSkills }) => {
         </div>
       </div>
 
-      {/* Baris Bawah & Tombol Unduh PDF */}
-      <div className="w-full bg-[#026296] text-white p-4 md:px-8 flex justify-between items-center shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-10">
-         <div>
+      {/* --- BARIS BAWAH & TOMBOL AKSI --- */}
+      <div className="w-full bg-[#030b26] text-white p-4 md:px-8 flex flex-col md:flex-row justify-between items-center gap-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-10 shrink-0">
+         <div className="text-center md:text-left">
             <h4 className="font-bold text-lg">Hasil Analisis</h4>
             <p className="text-xs md:text-sm text-blue-100">Dapatkan hasil analisis melalui email atau unduh langsung.</p>
          </div>
-         <button 
-           onClick={() => setShowModal(true)}
-           className="bg-white text-slate-800 px-8 py-2 md:py-3 rounded-xl font-bold text-sm hover:bg-slate-100 shadow-sm"
-         >
-           Unduh PDF
-         </button>
+         
+         <div className="flex items-center gap-3 w-full md:w-auto">
+           <button 
+             onClick={() => navigate(0)} 
+             className="flex-1 md:flex-none border border-white/30 text-white px-8 py-2 md:py-3 rounded-xl font-bold text-sm hover:bg-white/10 transition-colors shadow-sm"
+           >
+             Tes Ulang
+           </button>
+           <button 
+             onClick={() => setShowModal(true)}
+             className="flex-1 md:flex-none bg-white text-slate-900 px-8 py-2 md:py-3 rounded-xl font-bold text-sm hover:bg-slate-200 transition-colors shadow-sm"
+           >
+             Unduh PDF
+           </button>
+         </div>
       </div>
 
-      {/* Modal Popup Email */}
+      {/* --- MODAL POPUP EMAIL --- */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm px-4">
-           <div className="bg-[#030b26] p-10 rounded-3xl shadow-2xl w-full max-w-md text-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm px-4">
+           <div className="bg-[#030b26] p-8 md:p-10 rounded-3xl shadow-2xl w-full max-w-md text-white relative border border-slate-700">
               <div className="flex items-center gap-4 mb-8">
-                 <button onClick={() => setShowModal(false)} className="p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors"><FiChevronLeft size={24} /></button>
+                 <button onClick={() => setShowModal(false)} className="p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors">
+                   <FiChevronLeft size={24} />
+                 </button>
                  <h3 className="text-2xl font-bold">Data Pengguna</h3>
               </div>
               <p className="mb-4 text-sm text-slate-300">Masukkan E-mail Anda untuk mengunduh hasil</p>
-              <input type="email" placeholder="Masukkan Alamat E-mail *" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full p-4 rounded-xl mb-8 text-slate-800 font-medium outline-none focus:ring-4 focus:ring-blue-500/50 transition-all placeholder:text-slate-400" />
+              <input 
+                type="email" 
+                placeholder="Masukkan Alamat E-mail *" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full p-4 rounded-xl mb-8 text-slate-900 font-medium outline-none focus:ring-4 focus:ring-blue-500/50 transition-all placeholder:text-slate-400 bg-white"
+              />
               <div className="flex justify-center">
-                <button onClick={handleDownload} disabled={!email} className="bg-[#0277b6] hover:bg-[#026296] disabled:opacity-50 disabled:cursor-not-allowed px-10 py-4 rounded-xl font-bold text-lg shadow-lg transition-all">Kirim dan Unduh</button>
+                <button 
+                  onClick={handleDownload}
+                  disabled={!email || sendingReport}
+                  className="bg-[#0277b6] hover:bg-[#026296] disabled:opacity-50 disabled:cursor-not-allowed px-10 py-4 rounded-xl font-bold text-lg shadow-lg transition-all w-full"
+                >
+                  {sendingReport ? 'Mengirim...' : 'Kirim dan Unduh'}
+                </button>
               </div>
            </div>
         </div>
       )}
+
     </div>
   );
 };
