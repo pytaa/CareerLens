@@ -17,8 +17,8 @@ const PageHeader = () => {
         <FiArrowLeft size={20} /> Kembali
       </button>
 
-      {/* Logo CareerLens di Tengah */}
-      <div className="absolute left-1/2 -translate-x-1/2 font-extrabold text-xl md:text-2xl text-blue-950 tracking-tight">
+      {/* Logo CareerLens di Tengah (Disembunyikan di layar HP) */}
+      <div className="hidden md:block absolute left-1/2 -translate-x-1/2 font-extrabold text-xl md:text-2xl text-blue-950 tracking-tight">
         CareerLens
       </div>
       

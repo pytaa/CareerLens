@@ -445,7 +445,7 @@ const SkillSelection = ({ onAnalyze }) => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50/50 font-sans flex flex-col">
+    <div className="min-h-screen bg-slate-50 font-sans flex flex-col">
       
       {/* Header Minimalis */}
       <PageHeader/>
