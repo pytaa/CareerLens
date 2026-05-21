@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiArrowLeft, FiChevronRight } from 'react-icons/fi';
 import { BiTargetLock, BiCodeAlt, BiBrain } from 'react-icons/bi';
+import PageHeader from "../../components/PageHeader.jsx"
 
 const MetodeAnalisis = () => {
   const navigate = useNavigate();
@@ -34,21 +35,8 @@ const MetodeAnalisis = () => {
     <div className="h-screen bg-slate-50/50 font-sans flex flex-col overflow-hidden">
       
       {/* Header Minimalis */}
-      <header className="w-full px-6 md:px-12 py-5 flex items-center relative shrink-0">
-        
-        {/* Tombol Kembali Saja */}
-        <button
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-slate-500 hover:text-slate-900 font-medium transition-colors z-10"
-        >
-          <FiArrowLeft size={20} /> Kembali
-        </button>
+      <PageHeader />
 
-        {/* Logo CareerLens di Tengah */}
-        <div className="absolute left-1/2 -translate-x-1/2 font-extrabold text-xl md:text-2xl text-blue-950 tracking-tight">
-          CareerLens
-        </div>
-      </header>
 
       {/* Main Container dipusatkan (justify-center) untuk menghindari scroll */}
       <main className="grow flex flex-col items-center justify-center px-6 pb-8">

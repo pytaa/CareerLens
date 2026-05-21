@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { FiArrowLeft, FiX, FiChevronDown } from 'react-icons/fi';
 import { BiBrain, BiBarChartAlt2 } from 'react-icons/bi';
+import PageHeader from "../../components/PageHeader.jsx"
 
 const SkillSelection = ({ onAnalyze }) => {
-  const navigate = useNavigate();
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -449,18 +448,7 @@ const SkillSelection = ({ onAnalyze }) => {
     <div className="min-h-screen bg-slate-50/50 font-sans flex flex-col">
       
       {/* Header Minimalis */}
-      <header className="w-full px-6 md:px-10 py-5 flex items-center relative bg-white/50 border-b border-slate-200/60 z-10 backdrop-blur-sm">
-        <button
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-slate-500 hover:text-slate-800 font-medium transition-colors"
-        >
-          <FiArrowLeft size={20} /> Kembali
-        </button>
-
-        <div className="absolute left-1/2 -translate-x-1/2 font-extrabold text-xl text-blue-950 tracking-tight">
-          CareerLens
-        </div>
-      </header>
+      <PageHeader/>
 
       {/* Main Container */}
       <main className="grow flex flex-col items-center pt-12 md:pt-16 px-6 pb-20 w-full">
