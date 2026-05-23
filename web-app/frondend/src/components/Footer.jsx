@@ -1,5 +1,7 @@
 import React from 'react';
 import { FiInstagram, FiMessageCircle, FiMail, FiPhone, FiMapPin, FiBriefcase } from 'react-icons/fi';
+// Impor logo custom milikmu
+import logoIcon from '../../../assets/careerLens_logo_1.png'; 
 
 const Footer = () => {
   return (
@@ -28,11 +30,17 @@ const Footer = () => {
 
         {/* Copyright & Logo */}
         <div className="flex flex-col items-start md:items-end justify-between">
-           <div className="flex items-center gap-2 mb-4 md:mb-0">
-              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center font-bold">C</div>
-              <span className="text-xl font-bold text-blue-400">CareerLens</span>
+           
+           {/* Logo Kustom Pengganti Teks */}
+           <div className="flex items-center mb-4 md:mb-0">
+              <img 
+                src={logoIcon} 
+                alt="CareerLens Logo" 
+                className="h-10 w-auto object-contain" 
+              />
            </div>
-           <p className="text-sm text-slate-400 text-left md:text-right">
+           
+           <p className="text-sm text-slate-400 text-left md:text-right mt-4 md:mt-0">
              © 2026 .CareerLens. Personalize Your Career Roadmap.
            </p>
         </div>

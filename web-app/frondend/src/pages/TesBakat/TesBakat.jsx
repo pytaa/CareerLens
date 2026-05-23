@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid'; 
 import TesBakatResult from './TesBakatResult';
 import TesBakatQuiz from './TesBakatQuiz';
 import { riasecQuestions } from '../../data/riasecQuestions';
 import { FiArrowLeft, FiPlayCircle, FiCheckCircle } from 'react-icons/fi';
+import PageHeader from "../../components/PageHeader.jsx"
 
 const TesBakat = () => {
-  const navigate = useNavigate();
   
   // State Navigasi Halaman
   const [view, setView] = useState('intro'); // 'intro', 'quiz', 'result'
@@ -101,14 +100,7 @@ const TesBakat = () => {
       <div className="min-h-screen bg-slate-50/50 font-sans flex flex-col">
         
         {/* Header Minimalis */}
-        <header className="w-full px-6 md:px-10 py-5 flex items-center relative bg-white/50 border-b border-slate-200/60 z-10 backdrop-blur-sm">
-          <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-slate-500 hover:text-slate-800 font-medium transition-colors">
-            <FiArrowLeft size={20} /> Kembali
-          </button>
-          <div className="absolute left-1/2 -translate-x-1/2 font-extrabold text-xl text-blue-950 tracking-tight">
-            CareerLens
-          </div>
-        </header>
+        <PageHeader />
 
         <main className="grow flex items-center justify-center p-6 w-full">
            <div className="bg-white w-full max-w-3xl rounded-4xl p-10 md:p-14 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 flex flex-col items-center text-center">
