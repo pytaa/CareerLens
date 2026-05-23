@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: careerlens_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: careerlens
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: 
+      context: ./web-app/backend
+      dockerfile: Dockerfile
+    container_name: careerlens_backend
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - NODE_ENV=development
+      - DB_DIALECT=postgres
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=careerlens
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - AI_SERVICE_URL=http://ai_service:8000
+      - AI_SERVICE_TIMEOUT=60000
+      - CORS_ORIGIN=http://localhost:3000,http://localhost:5173
+    depends_on:
+      db:
+        condition: service_healthy
+      ai_service:
+        condition: service_started
+    # Uncomment the command below if you want docker-compose to automatically seed the database on startup
+    # command: sh -c "npm run seed && npm start"
+
+  ai_service:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: careerlens_ai
+    ports:
+      - "8000:8000"
+    environment:
+      - ENV=production
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
