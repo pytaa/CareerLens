@@ -6,6 +6,9 @@ class UserController extends BaseController {
     super(userService);
   }
 
+  /**
+   * Menangani request untuk mendapatkan riwayat tes dan rekomendasi pengguna.
+   */
   async getHistory(req, res, next) {
     try {
       const { userId } = req.params;
@@ -16,6 +19,9 @@ class UserController extends BaseController {
     }
   }
 
+  /**
+   * Menangani request untuk menyimpan sebuah output hasil ke profil pengguna.
+   */
   async saveOutput(req, res, next) {
     try {
       const { userId } = req.params;

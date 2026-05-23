@@ -6,6 +6,11 @@ class ReportController extends BaseController {
     super(reportService);
   }
 
+  /**
+   * Mengirimkan laporan hasil analisa/rekomendasi pengguna ke email mereka.
+   * Endpoint ini akan memanggil reportService untuk proses kompilasi PDF/Email.
+   */
+  
   async sendReport(req, res, next) {
     try {
       const { email, user_id, profile, summary, recommendations, riasec_scores } = req.body;
