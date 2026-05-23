@@ -1,3 +1,6 @@
+/**
+ * Fungsi CRUD bawaan ada di sini agar repository spesifik tidak perlu mengulang kode.
+ */
 class BaseRepository {
   constructor(model) {
     this.model = model;

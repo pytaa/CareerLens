@@ -2,6 +2,9 @@ const { Op } = require('sequelize');
 const BaseRepository = require('./base.repository');
 const { Role, LearningResource, RoleProjectMapping, DummyProject, Skill } = require('../models');
 
+/**
+ * Repository untuk operasi database entitas Role (Pekerjaan).
+ */
 class RoleRepository extends BaseRepository {
   constructor() {
     super(Role);
@@ -11,6 +14,10 @@ class RoleRepository extends BaseRepository {
     return await this.findAll({ where: { field_id: fieldId } });
   }
 
+  /**
+   * Mencari daftar Role berdasarkan kemiripan (similarity) skor RIASEC.
+   * Digunakan oleh algoritma fallback prediksi RIASEC.
+   */
   async findByRiasecScores(scores, limit = 5) {
     const { r, i, a, s, e, c } = scores;
     return await this.findAll({
@@ -21,6 +28,10 @@ class RoleRepository extends BaseRepository {
     });
   }
 
+  /**
+   * Mengambil detail komprehensif role beserta relasinya (Learning Resource, Dummy Project, Skill).
+   * Digunakan untuk memperkaya (enrich) data rekomendasi dari AI.
+   */
   async findDetailsByIdsOrNames(roleIds = [], roleNames = []) {
     const conditions = [];
 

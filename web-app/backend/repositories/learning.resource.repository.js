@@ -1,6 +1,9 @@
 const BaseRepository = require('./base.repository');
 const { LearningResource } = require('../models');
 
+/**
+ * Repository untuk roadmap dan materi pembelajaran (Learning Resource).
+ */
 class LearningResourceRepository extends BaseRepository {
   constructor() {
     super(LearningResource);

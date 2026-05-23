@@ -1,6 +1,9 @@
 const BaseRepository = require('./base.repository');
 const { UserOutput } = require('../models');
 
+/**
+ * Repository untuk menyimpan output rekomendasi akhir yang dihasilkan untuk pengguna.
+ */
 class UserOutputRepository extends BaseRepository {
   constructor() {
     super(UserOutput);
