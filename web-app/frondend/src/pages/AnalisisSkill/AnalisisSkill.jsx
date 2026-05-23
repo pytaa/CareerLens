@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { v4 as uuidv4 } from 'uuid'; // Import UUID
+import { v4 as uuidv4 } from 'uuid';
 import Navbar from '../../components/Navbar';
 import SkillSelection from './SkillSelection';
 import SkillResult from './SkillResult';
@@ -11,7 +11,7 @@ const AnalisisSkill = () => {
   // State untuk menyimpan skill yang diketik user
   const [inputtedSkills, setInputtedSkills] = useState([]);
 
-  // membuat atau mengambil ID Anonim dari peramban
+  // Membuat atau mengambil ID Anonim dari peramban
   const getOrCreateUserId = () => {
     let userId = localStorage.getItem('careerlens_user_id');
     if (!userId) {
@@ -22,7 +22,7 @@ const AnalisisSkill = () => {
   };
 
   const handleAnalyzeSkill = async (skillsArray) => {
-    setInputtedSkills(skillsArray); // simpan input user untuk ditampilkan di sidebar
+    setInputtedSkills(skillsArray); 
     setView('result');
 
     try {
@@ -53,12 +53,23 @@ const AnalisisSkill = () => {
     }
   };
 
+  // Fungsi untuk menangani tombol kembali dan tes ulang
+  const handleBackOrRetake = () => {
+    setView('selection');
+    setResultData(null); // Kosongkan data agar siap untuk tes baru
+    setInputtedSkills([]); // Opsional: Kosongkan juga input skill jika ingin benar-benar reset
+  };
+
   return (
     <div className="min-h-screen bg-[#e2e8f0] font-sans flex flex-col">
       {view === 'selection' ? (
         <SkillSelection onAnalyze={handleAnalyzeSkill} />
       ) : (
-        <SkillResult data={resultData} inputtedSkills={inputtedSkills} />
+        <SkillResult 
+          resultData={resultData} 
+          onBack={handleBackOrRetake} 
+          onRetake={handleBackOrRetake} 
+        />
       )}
     </div>
   );
