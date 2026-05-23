@@ -1,7 +1,6 @@
 // src/pages/MinatKarir/MinatKarir.jsx
 import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import Navbar from '../../components/Navbar';
 import MinatSelection from './MinatSelection';
 import MinatResult from './MinatResult';
 
@@ -9,7 +8,7 @@ const MinatKarir = () => {
   const [view, setView] = useState('selection'); 
   const [resultData, setResultData] = useState(null);
 
-  //membuat atau mengambil ID Anonim dari peramban
+  // Membuat atau mengambil ID Anonim dari peramban
   const getOrCreateUserId = () => {
     let userId = localStorage.getItem('careerlens_user_id');
     if (!userId) {
@@ -23,7 +22,6 @@ const MinatKarir = () => {
     setView('result');
 
     try {
-      // Panggil fungsi UUID di sini
       const currentUserId = getOrCreateUserId(); 
 
       const response = await fetch('http://localhost:5000/predict', {
@@ -52,12 +50,22 @@ const MinatKarir = () => {
     }
   };
 
+  // Fungsi untuk tombol kembali & tes ulang
+  const handleBackOrRetake = () => {
+    setView('selection');
+    setResultData(null); // Kosongkan data agar siap untuk tes baru
+  };
+
   return (
     <div className="min-h-screen bg-[#e2e8f0] font-sans flex flex-col">
       {view === 'selection' ? (
         <MinatSelection onSelect={handleSelectIndustry} />
       ) : (
-        <MinatResult data={resultData} />
+        <MinatResult 
+          resultData={resultData}  /* <-- INI YANG TADI SALAH */
+          onBack={handleBackOrRetake} 
+          onRetake={handleBackOrRetake} 
+        />
       )}
     </div>
   );

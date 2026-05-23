@@ -7,25 +7,25 @@ const MinatSelection = ({ onSelect }) => {
 
   const industries = [
     { 
-      id: 'it_software', 
+      id: "F01", 
       title: 'Teknologi Informasi & Software Development', 
       desc: 'Membangun solusi perangkat lunak yang skalabel, arsitektur sistem cloud, dan aplikasi mobile masa depan.', 
       icon: <BiCodeAlt size={24} className="text-[#0277b6]" /> 
     },
     { 
-      id: 'data_science', 
+      id: "F02", 
       title: 'Data Science & Artificial Intelligence', 
       desc: 'Mengolah data besar menjadi wawasan strategis dan mengembangkan algoritma cerdas berbasis AI.', 
       icon: <BiData size={24} className="text-[#0277b6]" /> 
     },
     { 
-      id: 'design_uiux', 
+      id: "F03", 
       title: 'Desain Kreatif & UI/UX Design', 
       desc: 'Menciptakan pengalaman pengguna yang intuitif dan visual yang estetik untuk produk digital modern.', 
       icon: <BiPalette size={24} className="text-[#0277b6]" /> 
     },
     { 
-      id: 'digital_marketing', 
+      id: "F04", 
       title: 'Digital Marketing & Analytics', 
       desc: 'Mengoptimalkan pertumbuhan bisnis melalui strategi pemasaran digital berbasis performa dan data.', 
       icon: <BiTrendingUp size={24} className="text-[#0277b6]" /> 

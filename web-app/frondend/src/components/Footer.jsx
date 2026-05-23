@@ -31,7 +31,6 @@ const Footer = () => {
         {/* Copyright & Logo */}
         <div className="flex flex-col items-start md:items-end justify-between">
            
-           {/* Logo Kustom Pengganti Teks */}
            <div className="flex items-center mb-4 md:mb-0">
               <img 
                 src={logoIcon} 
