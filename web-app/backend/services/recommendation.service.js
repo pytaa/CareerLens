@@ -3,32 +3,67 @@ const roleRepository = require('../repositories/role.repository');
 const testResultRepository = require('../repositories/test.result.repository');
 const userOutputRepository = require('../repositories/user.output.repository');
 const axios = require('axios');
+const axiosRetry = require('axios-retry').default || require('axios-retry');
+const NodeCache = require('node-cache');
 
+// Configure axios to retry on timeouts or 5xx errors (useful for Hugging Face cold starts)
+axiosRetry(axios, {
+  retries: 3,
+  retryDelay: axiosRetry.exponentialDelay,
+  retryCondition: (error) => {
+    return axiosRetry.isNetworkOrIdempotentRequestError(error) || error.code === 'ECONNABORTED' || (error.response && error.response.status >= 500);
+  }
+});
 class RecommendationService extends BaseService {
   constructor() {
     super(null); // No single repository
     this.aiServiceUrl = process.env.AI_SERVICE_URL || 'http://localhost:8000';
     this.aiTimeout = parseInt(process.env.AI_SERVICE_TIMEOUT) || 30000;
+    
+    // Inisialisasi Cache In-Memory dengan TTL 24 jam (86400 detik)
+    this.cache = new NodeCache({ stdTTL: 86400 });
   }
 
-  //Memprediksi minat
+  _isValidUUID(uuid) {
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    return typeof uuid === 'string' && uuidRegex.test(uuid);
+  }
+
+  /**
+   * Memprediksi/Merekomendasikan karir berdasarkan bidang minat.
+   * Alur: Memanggil API AI -> Menyimpan riwayat tes -> Menambah detail (Enrichment) dengan data lokal DB.
+   * Jika AI gagal/timeout, sistem otomatis mengeksekusi _fallbackPredictInterest.
+   */
   async predictInterest(interestId, userId = null) {
     let result;
     const normalizedInterestId = this._normalizeInterestId(interestId);
+    const cacheKey = `ai:interest:${normalizedInterestId}`;
 
     try {
-      const aiResponse = await axios.post(`${this.aiServiceUrl}/predict`, {
-        user_id: userId || 'anonymous',
-        method: 'interest',
-        payload: { interest_id: normalizedInterestId }
-      }, {
-        timeout: this.aiTimeout,
-        headers: { 'Content-Type': 'application/json' }
-      });
+      let aiData = this.cache.get(cacheKey);
 
-      const aiData = aiResponse.data;
+      if (aiData) {
+        console.log(`⚡ [Cache Hit] predictInterest: ${normalizedInterestId}`);
+      } else {
+        console.log(`⏳ [Cache Miss] predictInterest: ${normalizedInterestId}`);
+        const aiResponse = await axios.post(`${this.aiServiceUrl}/predict`, {
+          user_id: userId || 'anonymous',
+          method: 'interest',
+          payload: { interest_id: normalizedInterestId }
+        }, {
+          timeout: this.aiTimeout,
+          headers: { 'Content-Type': 'application/json' }
+        });
 
-      if (userId) {
+        aiData = aiResponse.data;
+        // Simpan ke cache jika AI berhasil menjawab
+        if (aiData.status === 'success') {
+          this.cache.set(cacheKey, aiData);
+        }
+      }
+
+      // Tetap simpan riwayat tes ke database jika userId adalah UUID yang valid
+      if (this._isValidUUID(userId)) {
         await testResultRepository.create({
           user_id: userId,
           test_name: 'interest',
@@ -46,29 +81,44 @@ class RecommendationService extends BaseService {
     }
 
     const enriched = await this._enrichPredictionResult(result);
-    if (userId) await this._storeUserOutput(userId, 'interest', { interest_id: normalizedInterestId }, enriched);
+    if (this._isValidUUID(userId)) await this._storeUserOutput(userId, 'interest', { interest_id: normalizedInterestId }, enriched);
     return enriched;
   }
 
-  //Memprediksi Keahlian
+  /**
+   * Memprediksi karir berdasarkan keahlian (Skill) user.
+   */
   async predictSkill(selectedSkills, selectedFields = [], userId = null) {
     let result;
     const skills = Array.isArray(selectedSkills) ? selectedSkills : [];
     const fields = Array.isArray(selectedFields) ? selectedFields : [];
+    
+    // Sort array agar urutan input tidak mempengaruhi cache (A,B sama dengan B,A)
+    const cacheKey = `ai:skill:${[...skills].sort().join(',')}:${[...fields].sort().join(',')}`;
 
     try {
-      const aiResponse = await axios.post(`${this.aiServiceUrl}/predict`, {
-        user_id: userId || 'anonymous',
-        method: 'skill',
-        payload: { skills, selected_fields: fields }
-      }, {
-        timeout: this.aiTimeout,
-        headers: { 'Content-Type': 'application/json' }
-      });
+      let aiData = this.cache.get(cacheKey);
 
-      const aiData = aiResponse.data;
+      if (aiData) {
+        console.log(`⚡ [Cache Hit] predictSkill: ${cacheKey}`);
+      } else {
+        console.log(`⏳ [Cache Miss] predictSkill: ${cacheKey}`);
+        const aiResponse = await axios.post(`${this.aiServiceUrl}/predict`, {
+          user_id: userId || 'anonymous',
+          method: 'skill',
+          payload: { skills, selected_fields: fields }
+        }, {
+          timeout: this.aiTimeout,
+          headers: { 'Content-Type': 'application/json' }
+        });
 
-      if (userId) {
+        aiData = aiResponse.data;
+        if (aiData.status === 'success') {
+          this.cache.set(cacheKey, aiData);
+        }
+      }
+
+      if (this._isValidUUID(userId)) {
         await testResultRepository.create({
           user_id: userId,
           test_name: 'skill',
@@ -86,28 +136,43 @@ class RecommendationService extends BaseService {
     }
 
     const enriched = await this._enrichPredictionResult(result);
-    if (userId) await this._storeUserOutput(userId, 'skill', { skills, selected_fields: fields }, enriched);
+    if (this._isValidUUID(userId)) await this._storeUserOutput(userId, 'skill', { skills, selected_fields: fields }, enriched);
     return enriched;
   }
 
-  // Memprediksi RIASEC
+  /**
+   * Memprediksi karir berdasarkan kepribadian tipe RIASEC (Realistic, Investigative, dll).
+   */
   async predictRiasec(payload, userId = null) {
     let result;
     const scores = this._normalizeRiasecPayload(payload);
+    
+    // Cache key berdasarkan kombinasi nilai skor
+    const cacheKey = `ai:riasec:${JSON.stringify(scores)}`;
 
     try {
-      const aiResponse = await axios.post(`${this.aiServiceUrl}/predict`, {
-        user_id: userId || 'anonymous',
-        method: 'riasec',
-        payload: scores
-      }, {
-        timeout: this.aiTimeout,
-        headers: { 'Content-Type': 'application/json' }
-      });
+      let aiData = this.cache.get(cacheKey);
 
-      const aiData = aiResponse.data;
+      if (aiData) {
+        console.log(`⚡ [Cache Hit] predictRiasec: ${cacheKey}`);
+      } else {
+        console.log(`⏳ [Cache Miss] predictRiasec: ${cacheKey}`);
+        const aiResponse = await axios.post(`${this.aiServiceUrl}/predict`, {
+          user_id: userId || 'anonymous',
+          method: 'riasec',
+          payload: { riasec_scores: scores }
+        }, {
+          timeout: this.aiTimeout,
+          headers: { 'Content-Type': 'application/json' }
+        });
 
-      if (userId) {
+        aiData = aiResponse.data;
+        if (aiData.status === 'success') {
+          this.cache.set(cacheKey, aiData);
+        }
+      }
+
+      if (this._isValidUUID(userId)) {
         await testResultRepository.create({
           user_id: userId,
           test_name: 'riasec',
@@ -125,11 +190,14 @@ class RecommendationService extends BaseService {
     }
 
     const enriched = await this._enrichPredictionResult(result);
-    if (userId) await this._storeUserOutput(userId, 'riasec', { riasec_scores: scores }, enriched);
+    if (this._isValidUUID(userId)) await this._storeUserOutput(userId, 'riasec', { riasec_scores: scores }, enriched);
     return enriched;
   }
 
-  //Mengambil data dari database 
+  /**
+   * Mengambil data mentah (hanya berisi ID Role dan skor) dari AI, 
+   * kemudian menggabungkannya dengan data terperinci dari Database Lokal PostgreSQL 
+   */
   async _enrichPredictionResult(result) {
     if (!result || !Array.isArray(result.recommendations)) {
       return result;
