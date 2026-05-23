@@ -1,5 +1,3 @@
-// File: prisma/schema.prisma
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -17,20 +15,24 @@ model User {
   assessments     Assessment[]
   recommendations Recommendation[]
 
-  @@map("users") // Opsional: Memaksa nama tabel di database menjadi lowercase
+  @@map("users")
 }
 
 model Assessment {
-  assessment_id   Int              @id @default(autoincrement())
-  user_id         String
-  method          String
-  payload         Json
-  created_at      DateTime         @default(now())
+  assessment_id          Int              @id @default(autoincrement())
+  user_id                String
+  method                 String
+  payload                Json
+  
+  interest_code          String?
+  sector_recommendations Json?
+
+  created_at             DateTime         @default(now())
 
   // Relasi
-  user            User             @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
-  recommendations Recommendation[]
-  chart_data      ChartData[]
+  user                   User             @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  recommendations        Recommendation[]
+  chart_data             ChartData?       // UBAH: Menjadi 1-to-1 relation (sebelumnya array ChartData[])
 
   @@map("assessments")
 }
@@ -41,11 +43,20 @@ model Recommendation {
   user_id           String
   role_id           String
   role_name         String
-  match_pct         Decimal    @db.Decimal(5, 2)
+  
+  // Menggunakan Float agar mudah dibaca frontend (misal: 43.9 atau 98.3)
+  match_pct         Float?     
+  
   description       String?
   salary_range      String?
-  skill_gap         String[]   // Array of strings
-  roadmap           Json?
+
+  
+  skill_relevant    String[]   
+  skill_gap         String[]   
+  
+  // Roadmap menampung learning_path & dummy_projects yang bersarang
+  roadmap           Json?      
+  
   created_at        DateTime   @default(now())
 
   // Relasi
@@ -57,9 +68,9 @@ model Recommendation {
 
 model ChartData {
   chart_id      Int        @id @default(autoincrement())
-  assessment_id Int
+  assessment_id Int        @unique 
   labels        String[]
-  scores        Decimal[]
+  scores        Float[]    
   created_at    DateTime   @default(now())
 
   // Relasi

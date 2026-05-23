@@ -10,7 +10,7 @@ const { PrismaPg } = require('@prisma/adapter-pg');
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
-const prisma = new PrismaClient({ adapter }); // <-- Ini yang sebelumnya terlewat!
+const prisma = new PrismaClient({ adapter });
 
 const AI_SERVICE_URL = process.env.AI_SERVICE_URL;
 
@@ -35,25 +35,32 @@ router.post('/', async (req, res) => {
           create: { user_id: user_id }
         });
 
+        // MENYIMPAN ASSESSMENT
+        // Menyisipkan field eksklusif Riasec (interest_code & sector_recommendations). 
+        // Jika method bukan riasec, nilainya akan otomatis menjadi undefined/null.
         const newAssessment = await tx.assessment.create({
           data: {
             user_id: user_id,
             method: method,
-            payload: payload
+            payload: payload,
+            interest_code: aiData.data.interest_code || null,
+            sector_recommendations: aiData.data.sector_recommendations || null
           }
         });
 
+        // MENYIMPAN RECOMMENDATIONS
         if (aiData.data.recommendations && aiData.data.recommendations.length > 0) {
           const recommendationsToInsert = aiData.data.recommendations.map(rec => ({
             assessment_id: newAssessment.assessment_id,
             user_id: user_id,
             role_id: rec.role_id,
             role_name: rec.role_name,
-            match_pct: rec.match_pct,
+            match_pct: rec.match_pct, // Mendukung format angka Float maupun null
             description: rec.description,
             salary_range: rec.salary_range,
+            skill_relevant: rec.skill_relevant || [], // Menampung array skill_relevant baru
             skill_gap: rec.skill_gap || [],
-            roadmap: rec.roadmap
+            roadmap: rec.roadmap // Disimpan utuh sebagai JSON bersarang
           }));
 
           await tx.recommendation.createMany({
@@ -61,6 +68,7 @@ router.post('/', async (req, res) => {
           });
         }
 
+        // MENYIMPAN CHART DATA (Jika ada)
         if (aiData.data.chart_data !== null) {
           await tx.chartData.create({
             data: {
