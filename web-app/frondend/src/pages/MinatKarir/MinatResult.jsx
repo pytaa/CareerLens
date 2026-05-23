@@ -4,6 +4,8 @@ import {
   FiExternalLink,
   FiMap,
   FiBriefcase,
+  FiMenu,
+  FiX
 } from "react-icons/fi";
 import { BiMoney } from "react-icons/bi";
 import IconUang from "../../../../assets/iconUang.png";
@@ -12,6 +14,7 @@ import ResultHeader from "../../components/ResultHeader";
 
 const MinatResult = ({ resultData, onBack, onRetake }) => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // State untuk menu mobile
 
   const dataInti = resultData?.data?.data || resultData?.data || resultData;
   const recommendations = dataInti?.recommendations;
@@ -52,23 +55,51 @@ const MinatResult = ({ resultData, onBack, onRetake }) => {
     }, {}) || {};
 
   return (
-    <div className="min-h-screen bg-white font-sans text-slate-900 flex flex-col">
+    <div className="min-h-screen bg-white font-sans text-slate-900 flex flex-col relative overflow-x-hidden">
       <ResultHeader onBack={onBack} />
 
-      <main className="grow flex flex-col md:flex-row w-full items-stretch">
-        {/* SIDEBAR */}
-        <aside className="w-full md:w-[320px] lg:w-85 shrink-0 flex flex-col z-10 pt-8 pb-8 pl-4 md:pl-8 pr-5 md:pr-6 border-r border-slate-200/60">
-          <h3 className="text-[11px] font-bold text-slate-400 tracking-wider uppercase mb-5 pl-1">
-            Hasil Rekomendasi
-          </h3>
+      <main className="grow flex flex-col md:flex-row w-full items-stretch relative">
+        
+        {isMobileMenuOpen && (
+          <div 
+            className="fixed inset-0 bg-black/40 z-40 md:hidden backdrop-blur-sm transition-opacity"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+        )}
+
+        {/* SIDEBAR (Di HP menjadi Drawer yang meluncur dari kiri) */}
+        <aside 
+          className={`
+            fixed md:relative inset-y-0 left-0 z-50 w-[85%] sm:w-[320px] lg:w-85 
+            bg-white md:bg-transparent shadow-2xl md:shadow-none
+            transform transition-transform duration-300 ease-in-out
+            ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+            shrink-0 flex flex-col pt-8 pb-8 pl-6 md:pl-8 pr-6 border-r border-slate-200/60 overflow-y-auto
+          `}
+        >
+          <div className="flex items-center justify-between mb-5 pl-1">
+            <h3 className="text-[11px] font-bold text-slate-400 tracking-wider uppercase">
+              Hasil Rekomendasi
+            </h3>
+            {/* Tombol Close khusus Mobile */}
+            <button 
+              className="md:hidden p-2 text-slate-400 hover:text-red-500 rounded-lg bg-slate-50"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <FiX size={20} />
+            </button>
+          </div>
+
           <div className="flex flex-col gap-3">
             {recommendations.map((rec, idx) => {
               const isActive = activeIndex === idx;
               return (
                 <button
                   key={rec.role_id || idx}
-                  onClick={() => setActiveIndex(idx)}
-                  // REVISI: Padding disesuaikan, border dipertebal (border-[2px]) saat aktif, icon dihapus
+                  onClick={() => {
+                    setActiveIndex(idx);
+                    setIsMobileMenuOpen(false); // Tutup menu di HP saat ditekan
+                  }}
                   className={`p-4 rounded-xl transition-all duration-300 text-left w-full ${
                     isActive
                       ? "border-2 border-[#000066] bg-[#F8FAFE] shadow-sm"
@@ -88,7 +119,18 @@ const MinatResult = ({ resultData, onBack, onRetake }) => {
 
         {/* BAGIAN KANAN */}
         <section className="w-full flex-1 flex flex-col">
-          <div className="pt-8 pb-4 pl-6 md:pl-12 pr-4 md:pr-8">
+          <div className="pt-8 pb-4 pl-6 md:pl-12 pr-6 md:pr-8">
+            
+            {/* HAMBURGER MENU (Hanya muncul di HP, tepat di atas judul) */}
+            <div className="md:hidden mb-6">
+              <button
+                onClick={() => setIsMobileMenuOpen(true)}
+                className="inline-flex items-center gap-2 p-2 bg-white border border-slate-200 rounded-lg shadow-sm text-[#000066] hover:bg-slate-50 transition-colors"
+              >
+                <FiMenu size={24} />
+              </button>
+            </div>
+
             <h1 className="text-4xl md:text-[2.75rem] font-bold text-[#000066] mb-5 tracking-tight">
               {activeRole.role_name}
             </h1>
@@ -102,7 +144,6 @@ const MinatResult = ({ resultData, onBack, onRetake }) => {
               </h3>
               <div className="flex flex-wrap gap-2">
                 {activeRole.skill_relevant?.map((skill, i) => (
-                  // REVISI: Warna text skill menjadi #464651
                   <span
                     key={i}
                     className="px-4 py-2 bg-[#F7F9FB] text-[#464651] text-[13px] font-semibold rounded-full border border-slate-100 capitalize"
@@ -123,7 +164,6 @@ const MinatResult = ({ resultData, onBack, onRetake }) => {
                   />
                 </div>
                 <div className="pr-4">
-                  {/* REVISI: Warna tulisan Gaji Estimasi menjadi #464651, Nominal menjadi #191C1E dengan font-medium */}
                   <p className="text-[10px] font-bold text-[#464651] tracking-widest uppercase mb-0.5">
                     Gaji Estimasi
                   </p>
@@ -135,7 +175,7 @@ const MinatResult = ({ resultData, onBack, onRetake }) => {
             </div>
           </div>
 
-          <div className="bg-[#F7F9FB] flex-1 w-full pt-14 pb-12 pl-6 md:pl-12 pr-4 md:pr-8">
+          <div className="bg-[#F7F9FB] flex-1 w-full pt-14 pb-12 pl-6 md:pl-12 pr-6 md:pr-8">
             <div className="mb-14">
               <div className="flex items-center gap-3 mb-10">
                 <FiMap className="text-[#000066]" size={30} />
@@ -165,7 +205,6 @@ const MinatResult = ({ resultData, onBack, onRetake }) => {
                             <h4 className="font-bold text-[#000066] text-lg leading-tight">
                               {course.nama_skill}
                             </h4>
-                            {/* REVISI: Warna tulisan platform kursus (Coursera dll) menjadi #464651 */}
                             <span className="shrink-0 bg-slate-100 text-[#464651] text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">
                               {course.platform}
                             </span>
@@ -235,7 +274,7 @@ const MinatResult = ({ resultData, onBack, onRetake }) => {
                           {toolsList.map((tool, i) => (
                             <span
                               key={i}
-                              className="px-4 py-1.5 bg-[#F7F9FB] text-slate-700 text-[13px] font-semibold rounded-full border border-slate-100"
+                              className="px-4 py-1.5 bg-[#F7F9FB] text-[#464651] text-[13px] font-semibold rounded-full border border-slate-100"
                             >
                               {tool.trim()}
                             </span>
@@ -263,7 +302,6 @@ const MinatResult = ({ resultData, onBack, onRetake }) => {
             </p>
           </div>
           <div className="flex items-center gap-3 w-full md:w-auto">
-            {/* REVISI: Hover state tombol diperhalus (bg hover, scale hover) */}
             <button
               onClick={onRetake}
               className="flex-1 md:flex-none px-6 py-2.5 border border-blue-400 hover:bg-[#00004d] hover:border-[#00004d] rounded-xl font-bold transition-all duration-300 text-sm whitespace-nowrap"
