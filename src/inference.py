@@ -54,66 +54,161 @@ def predict_by_skill(
     user_skills : list,
     loader      : DatasetLoader,
     skill_model : tf.keras.Model,
-    top_k       : int = 3
+    top_k       : int = 5
 ) -> tuple:
     """
     Pipeline 2: pencocokan skill user dengan role.
     Menggunakan SkillModel (Deep Learning).
-    Return top_k=3 role dengan skor dan skill gap.
-
-    user_skills: list skill user, contoh ["python", "sql"]
-    Return     : (results, chart_data)
     """
-    role_skill_matrix = loader.get_role_skill_matrix()  # (68, 390)
-    n_roles           = len(role_skill_matrix)
 
-    # Encode skill user → (1, 390)
-    user_vector = loader.encode_user_skills(user_skills)
+    role_skill_matrix = loader.get_role_skill_matrix()
+    n_roles = len(role_skill_matrix)
 
-    # Batch inference — semua role sekaligus
-    user_matrix = np.repeat(user_vector, n_roles, axis=0)
-    preds       = skill_model.predict(
-        [user_matrix, role_skill_matrix], verbose=0
+    # =====================================================
+    # Encode user skill
+    # =====================================================
+
+    user_vector = loader.encode_user_skills(
+        user_skills
     )
-    all_scores  = preds["role_score"].flatten().tolist()
 
-    # Urutkan dan ambil top_k
-    sorted_idx = np.argsort(all_scores)[::-1][:top_k]
+    # =====================================================
+    # Batch inference
+    # =====================================================
 
-    user_lower = [s.lower().strip() for s in user_skills]
+    user_matrix = np.repeat(
+        user_vector,
+        n_roles,
+        axis=0
+    )
+
+    preds = skill_model.predict(
+        [user_matrix, role_skill_matrix],
+        verbose=0
+    )
+
+    all_scores = preds[
+        "role_score"
+    ].flatten().tolist()
+
+    # =====================================================
+    # FILTER OVERLAP SKILL
+    # =====================================================
+
+    user_lower = [
+        s.lower().strip()
+        for s in user_skills
+    ]
+
+    filtered_scores = []
+
+    for idx, score in enumerate(all_scores):
+
+        row = loader.df_master.iloc[idx]
+
+        role_skills = [
+            s.strip().lower()
+            for s in str(
+                row.get("skill", "")
+            ).split(",")
+            if s.strip()
+        ]
+
+        # Hitung overlap
+        overlap = len(
+            set(user_lower)
+            &
+            set(role_skills)
+        )
+
+        # Minimal ada 1 skill cocok
+        if overlap >= 1:
+
+            filtered_scores.append({
+                "idx"     : idx,
+                "score"   : score,
+                "overlap" : overlap
+            })
+
+    # =====================================================
+    # SORTING
+    # =====================================================
+
+    filtered_scores = sorted(
+        filtered_scores,
+        key=lambda x: (
+            x["overlap"],
+            x["score"]
+        ),
+        reverse=True
+    )
+
+    top_results = filtered_scores[:top_k]
+
+    # =====================================================
+    # BUILD RESULTS
+    # =====================================================
 
     results = []
-    for idx in sorted_idx:
+
+    for item in top_results:
+
+        idx = item["idx"]
+
         row = loader.df_master.iloc[idx]
 
         role_skills = [
             s.strip()
-            for s in str(row.get("skill", "")).split(",")
+            for s in str(
+                row.get("skill", "")
+            ).split(",")
             if s.strip()
         ]
 
-        # Skill gap = skill role yang belum dimiliki user
         skill_gap_list = [
             s for s in role_skills
             if s.lower() not in user_lower
         ]
 
-        roadmap = loader.get_roadmap_by_role(row["role_id"])
+        roadmap = loader.get_roadmap_by_role(
+            row["role_id"]
+        )
 
         results.append({
-            "role_id"       : row["role_id"],
-            "role_name"     : row["nama_role"],
-            "match_pct"     : round(all_scores[idx], 1),
-            "description"   : row.get("deskripsi", ""),
-            "salary_range"  : format_salary(row.get("gaji", "")),
-            "skill_relevant": role_skills,
-            "skill_gap"     : skill_gap_list,
-            "roadmap"       : roadmap
+
+            "role_id" : row["role_id"],
+            "role_name" : row["nama_role"],
+            "match_pct" : round(
+                item["score"],
+                1
+            ),
+            "description" : row.get(
+                "deskripsi",
+                ""
+            ),
+            "salary_range" : format_salary(
+                row.get("gaji", "")
+            ),
+            "skill_relevant" : role_skills,
+            "skill_gap" : skill_gap_list,
+            "roadmap" : roadmap
         })
 
+    # =====================================================
+    # Chart Data
+    # =====================================================
+
     chart_data = {
-        "labels": [r["role_name"] for r in results],
-        "scores": [r["match_pct"]  for r in results]
+
+        "labels": [
+            r["role_name"]
+            for r in results
+        ],
+
+        "scores": [
+            r["match_pct"]
+            for r in results
+        ]
     }
 
     return results, chart_data
@@ -125,7 +220,7 @@ def predict_by_riasec(
     riasec_scores : dict,
     loader        : DatasetLoader,
     riasec_model  : tf.keras.Model,
-    top_k         : int = 3
+    top_k         : int = 5
 ) -> tuple:
     """
     Pipeline 3: pencocokan kepribadian RIASEC user dengan role.
@@ -220,7 +315,7 @@ def predict(
         if not user_skills:
             raise ValueError("Payload 'skills' tidak boleh kosong")
         recommendations, chart_data = predict_by_skill(
-            user_skills, loader, skill_model, top_k=3
+            user_skills, loader, skill_model, top_k=5
         )
         extra = None
 
@@ -232,7 +327,7 @@ def predict(
             )
         recommendations, chart_data, interest_code, sector_recs \
             = predict_by_riasec(
-                riasec_scores, loader, riasec_model, top_k=3
+                riasec_scores, loader, riasec_model, top_k=5
             )
         extra = {
             "interest_code"         : interest_code,
