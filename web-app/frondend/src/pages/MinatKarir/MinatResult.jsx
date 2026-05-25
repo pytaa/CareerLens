@@ -14,10 +14,26 @@ import ResultHeader from "../../components/ResultHeader";
 
 const MinatResult = ({ resultData, onBack, onRetake }) => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // State untuk menu mobile
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); 
+  
+  // State untuk mengontrol Pop-up Email
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+  const [emailInput, setEmailInput] = useState("");
 
   const dataInti = resultData?.data?.data || resultData?.data || resultData;
   const recommendations = dataInti?.recommendations;
+
+  // Fungsi Dummy untuk tombol Konfirmasi Email
+  const handleConfirmEmail = () => {
+    if (!emailInput) {
+      alert("Harap masukkan alamat email.");
+      return;
+    }
+    // Nantinya logika fetch ke backend diletakkan di sini
+    alert(`Konfirmasi berhasil. Laporan akan dikirim ke: ${emailInput}\n(Fitur backend menyusul)`);
+    setIsEmailModalOpen(false);
+    setEmailInput("");
+  };
 
   if (!resultData) {
     return (
@@ -67,7 +83,6 @@ const MinatResult = ({ resultData, onBack, onRetake }) => {
           />
         )}
 
-        {/* SIDEBAR (Di HP menjadi Drawer yang meluncur dari kiri) */}
         <aside 
           className={`
             fixed md:relative inset-y-0 left-0 z-50 w-[85%] sm:w-[320px] lg:w-85 
@@ -81,7 +96,6 @@ const MinatResult = ({ resultData, onBack, onRetake }) => {
             <h3 className="text-[11px] font-bold text-slate-400 tracking-wider uppercase">
               Hasil Rekomendasi
             </h3>
-            {/* Tombol Close khusus Mobile */}
             <button 
               className="md:hidden p-2 text-slate-400 hover:text-red-500 rounded-lg bg-slate-50"
               onClick={() => setIsMobileMenuOpen(false)}
@@ -98,7 +112,7 @@ const MinatResult = ({ resultData, onBack, onRetake }) => {
                   key={rec.role_id || idx}
                   onClick={() => {
                     setActiveIndex(idx);
-                    setIsMobileMenuOpen(false); // Tutup menu di HP saat ditekan
+                    setIsMobileMenuOpen(false);
                   }}
                   className={`p-4 rounded-xl transition-all duration-300 text-left w-full ${
                     isActive
@@ -117,11 +131,9 @@ const MinatResult = ({ resultData, onBack, onRetake }) => {
           </div>
         </aside>
 
-        {/* BAGIAN KANAN */}
         <section className="w-full flex-1 flex flex-col">
           <div className="pt-8 pb-4 pl-6 md:pl-12 pr-6 md:pr-8">
             
-            {/* HAMBURGER MENU (Hanya muncul di HP, tepat di atas judul) */}
             <div className="md:hidden mb-6">
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
@@ -308,7 +320,10 @@ const MinatResult = ({ resultData, onBack, onRetake }) => {
             >
               Tes Ulang
             </button>
-            <button className="flex-1 md:flex-none px-6 py-2.5 bg-white text-[#000066] hover:bg-slate-100 hover:-translate-y-0.5 rounded-xl font-bold transition-all duration-300 shadow-md hover:shadow-xl text-sm whitespace-nowrap">
+            <button 
+              onClick={() => setIsEmailModalOpen(true)}
+              className="flex-1 md:flex-none px-6 py-2.5 bg-white text-[#000066] hover:bg-slate-100 hover:-translate-y-0.5 rounded-xl font-bold transition-all duration-300 shadow-md hover:shadow-xl text-sm whitespace-nowrap"
+            >
               Unduh PDF
             </button>
           </div>
@@ -316,6 +331,56 @@ const MinatResult = ({ resultData, onBack, onRetake }) => {
       </div>
 
       <ResultFooter />
+
+      {/* ======== MODAL EMAIL POP-UP ======== */}
+      {isEmailModalOpen && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl w-full max-w-md p-6 md:p-8 relative shadow-2xl">
+            <button 
+              onClick={() => setIsEmailModalOpen(false)}
+              className="absolute top-6 right-6 text-slate-400 hover:text-slate-700 transition-colors"
+            >
+              <FiX size={24} />
+            </button>
+            
+            <h3 className="text-[22px] font-bold text-[#000066] mb-3 pr-8">
+              Unduh Hasil Analisis
+            </h3>
+            <p className="text-slate-500 text-sm leading-relaxed mb-6">
+              Masukkan email Anda untuk menerima salinan hasil analisis karir dalam format PDF.
+            </p>
+
+            <div className="mb-8">
+              <label className="block text-[11px] font-bold text-slate-500 tracking-wider uppercase mb-2">
+                Email
+              </label>
+              <input 
+                type="email" 
+                value={emailInput}
+                onChange={(e) => setEmailInput(e.target.value)}
+                placeholder="contoh@email.com"
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#000066]/20 focus:border-[#000066] transition-all text-sm"
+              />
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <button 
+                onClick={handleConfirmEmail}
+                className="w-full py-3.5 bg-[#000066] text-white font-bold rounded-xl hover:bg-[#00004d] transition-colors"
+              >
+                Konfirmasi
+              </button>
+              <button 
+                onClick={() => setIsEmailModalOpen(false)}
+                className="w-full py-3.5 bg-white border border-slate-200 text-slate-600 font-bold rounded-xl hover:bg-slate-50 transition-colors"
+              >
+                Batal
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

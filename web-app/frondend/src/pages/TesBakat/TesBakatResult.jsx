@@ -9,7 +9,8 @@ import {
   FiLayers,
   FiDatabase,
   FiPenTool,
-  FiTrendingUp
+  FiTrendingUp,
+  FiMail // Tambahan ikon untuk modal email
 } from "react-icons/fi";
 import IconUang from "../../../../assets/iconUang.png";
 import ResultFooter from "../../components/ResultFooter.jsx";
@@ -23,20 +24,34 @@ const TesBakatResult = ({ resultData, onBack, onRetake }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showAnimation, setShowAnimation] = useState(false);
 
+  // ======== STATE BARU UNTUK POP-UP EMAIL ========
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+  const [emailInput, setEmailInput] = useState("");
+
   const dataInti = resultData?.data?.data || resultData?.data || resultData;
   const recommendations = dataInti?.recommendations;
   const chartData = dataInti?.chart_data;
   const interestCode = dataInti?.interest_code;
   const sectorRecommendations = dataInti?.sector_recommendations;
 
-  // REVISI: Reset animasi (false) dihapus dari dalam useEffect.
-  // useEffect sekarang HANYA bertugas untuk memajukan grafik (true) setelah 100ms.
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowAnimation(true);
     }, 100); 
     return () => clearTimeout(timer);
   }, [activeIndex]);
+
+  // ======== FUNGSI KONFIRMASI EMAIL ========
+  const handleConfirmEmail = () => {
+    if (!emailInput) {
+      alert("Harap masukkan alamat email.");
+      return;
+    }
+    // Nantinya logika fetch ke backend diletakkan di sini
+    alert(`Konfirmasi berhasil. Laporan PDF akan dikirim ke: ${emailInput}\n(Fitur backend menyusul)`);
+    setIsEmailModalOpen(false);
+    setEmailInput("");
+  };
 
   if (!resultData) {
     return (
@@ -120,7 +135,6 @@ const TesBakatResult = ({ resultData, onBack, onRetake }) => {
                 <button
                   key={rec.role_id || idx}
                   onClick={() => {
-                    // Reset animasi dilakukan di sini saat tombol diklik
                     if (!isActive) {
                       setShowAnimation(false);
                       setActiveIndex(idx);
@@ -223,7 +237,7 @@ const TesBakatResult = ({ resultData, onBack, onRetake }) => {
                   />
                   <circle 
                     cx="80" cy="80" r={circleRadius} 
-                    className="text-[#000066] transition-[stroke-dashoffset] duration-1200 ease-in-out" 
+                    className="text-[#000066] transition-[stroke-dashoffset] duration-[1200ms] ease-in-out" 
                     strokeWidth="12" 
                     strokeDasharray={circleCircumference} 
                     strokeDashoffset={strokeOffset} 
@@ -315,7 +329,7 @@ const TesBakatResult = ({ resultData, onBack, onRetake }) => {
               <div className="relative border-l-2 border-slate-200 ml-4 md:ml-5 space-y-12 pb-4">
                 {Object.keys(groupedRoadmap).map((stepNum) => (
                   <div key={stepNum} className="relative pl-8 md:pl-12">
-                    <div className="absolute -left-4.25 md:-left-5.25 top-0 w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#000066] text-white flex items-center justify-center font-bold text-sm md:text-base ring-4 ring-[#F7F9FB]">
+                    <div className="absolute -left-[17px] md:-left-[21px] top-0 w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#000066] text-white flex items-center justify-center font-bold text-sm md:text-base ring-4 ring-[#F7F9FB]">
                       {stepNum}
                     </div>
 
@@ -410,6 +424,7 @@ const TesBakatResult = ({ resultData, onBack, onRetake }) => {
         </section>
       </main>
 
+      {/* BOTTOM ACTION BAR */}
       <div className="w-full bg-[#000066] text-white py-6 px-6 md:px-12 z-20 shrink-0">
         <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="text-center md:text-left">
@@ -427,7 +442,10 @@ const TesBakatResult = ({ resultData, onBack, onRetake }) => {
             >
               Tes Ulang
             </button>
-            <button className="flex-1 md:flex-none px-6 py-2.5 bg-white text-[#000066] hover:bg-slate-100 hover:-translate-y-0.5 rounded-xl font-bold transition-all duration-300 shadow-md hover:shadow-xl text-sm whitespace-nowrap">
+            <button 
+              onClick={() => setIsEmailModalOpen(true)}
+              className="flex-1 md:flex-none px-6 py-2.5 bg-white text-[#000066] hover:bg-slate-100 hover:-translate-y-0.5 rounded-xl font-bold transition-all duration-300 shadow-md hover:shadow-xl text-sm whitespace-nowrap"
+            >
               Unduh PDF
             </button>
           </div>
@@ -435,6 +453,56 @@ const TesBakatResult = ({ resultData, onBack, onRetake }) => {
       </div>
 
       <ResultFooter />
+
+      {/* ======== MODAL EMAIL POP-UP ======== */}
+      {isEmailModalOpen && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl w-full max-w-md p-6 md:p-8 relative shadow-2xl">
+            <button 
+              onClick={() => setIsEmailModalOpen(false)}
+              className="absolute top-6 right-6 text-slate-400 hover:text-slate-700 transition-colors"
+            >
+              <FiX size={24} />
+            </button>
+            
+            <h3 className="text-[22px] font-bold text-[#000066] mb-3 pr-8">
+              Unduh Hasil Analisis
+            </h3>
+            <p className="text-slate-500 text-sm leading-relaxed mb-6">
+              Masukkan email Anda untuk menerima salinan hasil analisis karir dalam format PDF.
+            </p>
+
+            <div className="mb-8">
+              <label className="block text-[11px] font-bold text-slate-500 tracking-wider uppercase mb-2">
+                Email
+              </label>
+              <input 
+                type="email" 
+                value={emailInput}
+                onChange={(e) => setEmailInput(e.target.value)}
+                placeholder="contoh@email.com"
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#000066]/20 focus:border-[#000066] transition-all text-sm"
+              />
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <button 
+                onClick={handleConfirmEmail}
+                className="w-full py-3.5 bg-[#000066] text-white font-bold rounded-xl hover:bg-[#00004d] transition-colors"
+              >
+                Konfirmasi
+              </button>
+              <button 
+                onClick={() => setIsEmailModalOpen(false)}
+                className="w-full py-3.5 bg-white border border-slate-200 text-slate-600 font-bold rounded-xl hover:bg-slate-50 transition-colors"
+              >
+                Batal
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
