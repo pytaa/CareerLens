@@ -28,7 +28,9 @@ const AnalisisSkill = () => {
     try {
       const currentUserId = getOrCreateUserId();
 
-      const response = await fetch('http://localhost:5000/api/recommendations', {
+      //url temp : http://localhost:5000/api/recommendations
+
+      const response = await fetch('http://localhost:5001/predict', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -66,7 +68,8 @@ const AnalisisSkill = () => {
         <SkillSelection onAnalyze={handleAnalyzeSkill} />
       ) : (
         <SkillResult 
-          resultData={resultData} 
+          resultData={resultData}
+          inputtedSkills={inputtedSkills}
           onBack={handleBackOrRetake} 
           onRetake={handleBackOrRetake} 
         />

@@ -11,7 +11,7 @@ import IconUang from "../../../assets/iconUang.png";
 import ResultFooter from "../../components/ResultFooter.jsx";
 import ResultHeader from "../../components/ResultHeader";
 
-const SkillResult = ({ resultData, onBack, onRetake }) => {
+const SkillResult = ({ resultData, inputtedSkills, onBack, onRetake }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
@@ -34,15 +34,40 @@ const SkillResult = ({ resultData, onBack, onRetake }) => {
   }, [activeIndex]);
 
   // ======== FUNGSI KONFIRMASI EMAIL ========
-  const handleConfirmEmail = () => {
+  const [isSendingPdf, setIsSendingPdf] = useState(false);
+
+  const handleConfirmEmail = async () => {
     if (!emailInput) {
       alert("Harap masukkan alamat email Anda.");
       return;
     }
-    // TODO: Tambahkan fetch API ke backend di sini
-    alert(`Sukses! Salinan analisis akan segera dikirim ke: ${emailInput}\n(Catatan: Integrasi Node.js sedang dalam proses)`);
-    setIsEmailModalOpen(false);
-    setEmailInput("");
+    
+    setIsSendingPdf(true);
+    try {
+      const response = await fetch('http://localhost:5000/api/pdf/skill', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: emailInput,
+          reqData: { payload: { skills: inputtedSkills } },
+          resData: resultData
+        })
+      });
+
+      const jsonResponse = await response.json();
+      if (jsonResponse.status === 'success') {
+        alert(`Berhasil! Laporan analisis PDF telah dikirim ke: ${emailInput}\n\nMohon periksa juga folder Spam atau Promosi jika email tidak ditemukan di Kotak Masuk utama Anda.`);
+        setIsEmailModalOpen(false);
+        setEmailInput("");
+      } else {
+        alert("Gagal mengirim email: " + jsonResponse.message);
+      }
+    } catch (error) {
+      console.error("Error sending PDF:", error);
+      alert("Terjadi kesalahan saat menghubungi server untuk pengiriman PDF.");
+    } finally {
+      setIsSendingPdf(false);
+    }
   };
 
   if (!resultData) {
@@ -461,9 +486,10 @@ const SkillResult = ({ resultData, onBack, onRetake }) => {
             <div className="flex flex-col gap-3">
               <button 
                 onClick={handleConfirmEmail}
-                className="w-full py-3.5 bg-[#000066] text-white font-bold rounded-xl hover:bg-[#00004d] transition-colors"
+                disabled={isSendingPdf}
+                className="w-full py-3.5 bg-[#000066] text-white font-bold rounded-xl hover:bg-[#00004d] transition-colors disabled:bg-slate-400"
               >
-                Konfirmasi
+                {isSendingPdf ? 'Mengirim...' : 'Konfirmasi'}
               </button>
               <button 
                 onClick={() => setIsEmailModalOpen(false)}

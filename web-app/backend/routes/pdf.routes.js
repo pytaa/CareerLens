@@ -4,6 +4,6 @@ const pdfController = require('../controllers/pdf.controller');
 const router = express.Router();
 
 router.post('/minat-karir', (req, res, next) => pdfController.sendMinatKarir(req, res, next));
-// Nanti akan ditambahkan rute untuk skill dan bakat
+router.post('/skill', (req, res, next) => pdfController.sendAnalisisSkill(req, res, next));
 
 module.exports = router;
