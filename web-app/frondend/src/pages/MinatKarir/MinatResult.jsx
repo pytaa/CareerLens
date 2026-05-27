@@ -12,27 +12,50 @@ import IconUang from "../../../assets/iconUang.png";
 import ResultFooter from "../../components/ResultFooter.jsx";
 import ResultHeader from "../../components/ResultHeader";
 
-const MinatResult = ({ resultData, onBack, onRetake }) => {
+const MinatResult = ({ resultData, reqData, onBack, onRetake }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); 
   
   // State untuk mengontrol Pop-up Email
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
   const [emailInput, setEmailInput] = useState("");
+  const [isSendingPdf, setIsSendingPdf] = useState(false);
 
   const dataInti = resultData?.data?.data || resultData?.data || resultData;
   const recommendations = dataInti?.recommendations;
 
-  // Fungsi Dummy untuk tombol Konfirmasi Email
-  const handleConfirmEmail = () => {
+  const handleConfirmEmail = async () => {
     if (!emailInput) {
       alert("Harap masukkan alamat email.");
       return;
     }
-    // Nantinya logika fetch ke backend diletakkan di sini
-    alert(`Konfirmasi berhasil. Laporan akan dikirim ke: ${emailInput}\n(Fitur backend menyusul)`);
-    setIsEmailModalOpen(false);
-    setEmailInput("");
+    
+    setIsSendingPdf(true);
+    try {
+      const response = await fetch('http://localhost:5000/api/pdf/minat-karir', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: emailInput,
+          reqData: reqData,
+          resData: resultData
+        })
+      });
+
+      const jsonResponse = await response.json();
+      if (jsonResponse.status === 'success') {
+        alert(`Berhasil! Laporan analisis PDF telah dikirim ke: ${emailInput}`);
+        setIsEmailModalOpen(false);
+        setEmailInput("");
+      } else {
+        alert("Gagal mengirim email: " + jsonResponse.message);
+      }
+    } catch (error) {
+      console.error("Error sending PDF:", error);
+      alert("Terjadi kesalahan saat menghubungi server untuk pengiriman PDF.");
+    } finally {
+      setIsSendingPdf(false);
+    }
   };
 
   if (!resultData) {
@@ -366,9 +389,10 @@ const MinatResult = ({ resultData, onBack, onRetake }) => {
             <div className="flex flex-col gap-3">
               <button 
                 onClick={handleConfirmEmail}
-                className="w-full py-3.5 bg-[#000066] text-white font-bold rounded-xl hover:bg-[#00004d] transition-colors"
+                disabled={isSendingPdf}
+                className="w-full py-3.5 bg-[#000066] text-white font-bold rounded-xl hover:bg-[#00004d] transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                Konfirmasi
+                {isSendingPdf ? 'Mengirim...' : 'Konfirmasi'}
               </button>
               <button 
                 onClick={() => setIsEmailModalOpen(false)}

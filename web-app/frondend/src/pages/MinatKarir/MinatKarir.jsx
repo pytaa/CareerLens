@@ -7,6 +7,7 @@ import MinatResult from './MinatResult';
 const MinatKarir = () => {
   const [view, setView] = useState('selection'); 
   const [resultData, setResultData] = useState(null);
+  const [reqData, setReqData] = useState(null);
 
   // Membuat atau mengambil ID Anonim dari peramban
   const getOrCreateUserId = () => {
@@ -23,15 +24,17 @@ const MinatKarir = () => {
 
     try {
       const currentUserId = getOrCreateUserId(); 
+      const reqPayload = {
+        user_id: currentUserId, 
+        method: "interest",
+        payload: { interest_id: industryId }
+      };
+      setReqData(reqPayload);
 
       const response = await fetch('http://localhost:5000/api/recommendations', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          user_id: currentUserId, 
-          method: "interest",
-          payload: { interest_id: industryId }
-        })
+        body: JSON.stringify(reqPayload)
       });
 
       const jsonResponse = await response.json();
@@ -54,6 +57,7 @@ const MinatKarir = () => {
   const handleBackOrRetake = () => {
     setView('selection');
     setResultData(null); // Kosongkan data agar siap untuk tes baru
+    setReqData(null);
   };
 
   return (
@@ -62,7 +66,8 @@ const MinatKarir = () => {
         <MinatSelection onSelect={handleSelectIndustry} />
       ) : (
         <MinatResult 
-          resultData={resultData}  /* <-- INI YANG TADI SALAH */
+          resultData={resultData}
+          reqData={reqData}
           onBack={handleBackOrRetake} 
           onRetake={handleBackOrRetake} 
         />
