@@ -24,7 +24,7 @@ const MinatKarir = () => {
     try {
       const currentUserId = getOrCreateUserId(); 
 
-      const response = await fetch('http://localhost:5000/predict', {
+      const response = await fetch('http://localhost:5000/api/recommendations', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
