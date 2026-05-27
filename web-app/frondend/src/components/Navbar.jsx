@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import logoIcon from '../../../assets/careerLens_logo_1.png';
+import logoIcon from '../../assets/careerLens_logo_1.png';
 
 const Navbar = () => {
   const navigate = useNavigate();

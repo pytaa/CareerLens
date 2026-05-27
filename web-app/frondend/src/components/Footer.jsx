@@ -1,7 +1,7 @@
 import React from 'react';
 import { FiInstagram, FiMessageCircle, FiMail, FiPhone, FiMapPin, FiBriefcase } from 'react-icons/fi';
 // Impor logo custom milikmu
-import logoIcon from '../../../assets/careerLens_logo_1.png'; 
+import logoIcon from '../../assets/careerLens_logo_1.png'; 
 
 const Footer = () => {
   return (

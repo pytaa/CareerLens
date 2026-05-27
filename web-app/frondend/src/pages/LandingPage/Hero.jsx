@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BsArrowRight } from 'react-icons/bs';
 import Particles from '../../components/Particles'; 
-import userLogo from '../../../../assets/careerLens_logo_1.png';
+import userLogo from '../../../assets/careerLens_logo_1.png';
 
 const fullText = "Temukan Lensa Karir Digitalmu";
 

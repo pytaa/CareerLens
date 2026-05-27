@@ -8,7 +8,7 @@ import {
   FiX
 } from "react-icons/fi";
 import { BiMoney } from "react-icons/bi";
-import IconUang from "../../../../assets/iconUang.png";
+import IconUang from "../../../assets/iconUang.png";
 import ResultFooter from "../../components/ResultFooter.jsx";
 import ResultHeader from "../../components/ResultHeader";
 

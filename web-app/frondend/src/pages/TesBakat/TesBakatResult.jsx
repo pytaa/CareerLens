@@ -12,7 +12,7 @@ import {
   FiTrendingUp,
   FiMail // Tambahan ikon untuk modal email
 } from "react-icons/fi";
-import IconUang from "../../../../assets/iconUang.png";
+import IconUang from "../../../assets/iconUang.png";
 import ResultFooter from "../../components/ResultFooter.jsx";
 import ResultHeader from "../../components/ResultHeader";
 

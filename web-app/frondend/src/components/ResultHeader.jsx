@@ -2,7 +2,7 @@
 import React from 'react';
 import { FiArrowLeft } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom'; 
-import LogoCareerLens from '../../../assets/careerLens_logo_2.png';
+import LogoCareerLens from '../../assets/careerLens_logo_2.png';
 
 const ResultHeader = () => {
   const navigate = useNavigate();

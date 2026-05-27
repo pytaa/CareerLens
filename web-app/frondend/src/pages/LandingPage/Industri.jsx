@@ -2,10 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import { BiCodeAlt, BiData, BiPalette, BiTrendingUp } from 'react-icons/bi';
 import { BsArrowRight } from 'react-icons/bs';
 
-import gambarIT from "../../../../assets/TI_dan_software.png"
-import gambarData from "../../../../assets/dataScience_dan_AI.png"
-import desainKreatif from "../../../../assets/desainKreatif_dan_UIUX.png"
-import digitalMarketing from "../../../../assets/digitalMarketing_dan_analis.png"
+import gambarIT from "../../../assets/TI_dan_software.png"
+import gambarData from "../../../assets/dataScience_dan_AI.png"
+import desainKreatif from "../../../assets/desainKreatif_dan_UIUX.png"
+import digitalMarketing from "../../../assets/digitalMarketing_dan_analis.png"
 
 // Komponen Pembungkus untuk Efek Animasi Muncul Saat Di-Scroll
 const ScrollFadeIn = ({ children, delay = 0, direction = 'up' }) => {
