@@ -31,7 +31,10 @@ const MinatKarir = () => {
       };
       setReqData(reqPayload);
 
-      const response = await fetch('http://localhost:5000/api/recommendations', {
+      //url temp : http://localhost:5000/api/recommendations
+      
+
+      const response = await fetch('http://localhost:5001/predict', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(reqPayload)

@@ -21,7 +21,9 @@ class PdfService {
   async sendMinatKarirPdf(email, reqData, resData) {
     const interestId = reqData?.payload?.interest_id || '';
     const sectorName = SECTOR_MAPPING[interestId] || interestId;
-    const recommendations = resData?.data?.recommendations || [];
+    // resData dari frontend mungkin sudah berupa object data, atau object response utuh
+    const dataInti = resData?.data?.data || resData?.data || resData;
+    const recommendations = dataInti?.recommendations || [];
 
     const pdfBuffer = await this._buildMinatKarirPdf(email, sectorName, recommendations);
     await this._sendEmail(email, pdfBuffer, 'Minat Karir');
@@ -106,41 +108,105 @@ class PdfService {
       doc.moveTo(50, tableBottom).lineTo(545, tableBottom).lineWidth(0.5).strokeColor('#dddddd').stroke();
       doc.moveTo(col2X - 10, tableTop - 10).lineTo(col2X - 10, tableBottom).lineWidth(0.5).strokeColor('#dddddd').stroke();
 
+      // Tabel Selesai
       doc.y = tableBottom + 30;
-
-      // REKOMENDASI JALUR KARIR
-      doc.font('Helvetica-Bold').fontSize(16).fillColor(blueColor).text('REKOMENDASI JALUR KARIR');
       doc.moveDown(1);
 
-      recommendations.forEach((role, idx) => {
-        if (doc.y > 650) {
-           doc.addPage();
-        }
+      recommendations.forEach((role, index) => {
+        // SELALU mulai rekomendasi di halaman baru sesuai permintaan
+        doc.addPage();
 
-        // Title and Salary
-        const roleY = doc.y;
-        doc.font('Helvetica-Bold').fontSize(14).fillColor('#000000').text(`${idx + 1}. ${role.role_name}`, 50, roleY);
+        const marginX = 50;
+        const contentWidth = 495;
+
+        // --- 1. HEADER (Title & Salary) ---
+        doc.font('Helvetica-Bold').fontSize(8).fillColor('#3b82f6').text('CAREER INSIGHT REPORT'.toUpperCase(), marginX, 50, { indent: 0 });
+        doc.moveDown(0.5);
+        
+        doc.font('Helvetica-Bold').fontSize(22).fillColor('#0f172a').text(role.role_name, marginX, doc.y, { indent: 0 });
+        doc.moveDown(0.3);
+        
         if (role.salary_range) {
-           const salaryWidth = doc.widthOfString(`Estimasi Gaji: ${role.salary_range}`);
-           doc.fillColor(blueColor).text(`Estimasi Gaji: ${role.salary_range}`, 545 - salaryWidth, roleY);
+            doc.font('Helvetica-Bold').fontSize(12).fillColor('#0f172a').text(role.salary_range, marginX, doc.y, { continued: true });
+            doc.font('Helvetica').fontSize(10).fillColor('#64748b').text(' / average monthly salary');
         }
         
         doc.moveDown(0.8);
-        
-        // Description
-        doc.font('Helvetica').fontSize(10).fillColor(textColor).text(role.description || '', { align: 'justify', lineGap: 3 });
-        doc.moveDown(0.8);
+        doc.moveTo(marginX, doc.y).lineTo(marginX + contentWidth, doc.y).lineWidth(0.5).strokeColor('#e2e8f0').stroke();
+        doc.moveDown(1.5);
 
-        // Keahlian Relevan
+        // --- 2. ROLE OVERVIEW ---
+        doc.font('Helvetica-Bold').fontSize(14).fillColor('#0f172a').text('Role Overview', marginX, doc.y, { indent: 0 });
+        doc.moveDown(0.5);
+        doc.font('Helvetica').fontSize(10).fillColor('#475569').text(role.description || '', marginX, doc.y, { align: 'justify', width: contentWidth, lineGap: 3, indent: 0 });
+        doc.moveDown(1.5);
+
+        // --- 3. CORE SKILLS (Box) ---
         if (role.skill_relevant && role.skill_relevant.length > 0) {
-            doc.font('Helvetica-Bold').text('Keahlian Relevan:');
-            doc.moveDown(0.3);
-            doc.font('Helvetica').fillColor('#555555').text(role.skill_relevant.map(s => `[ ${s.toUpperCase()} ]`).join('  '));
-            doc.moveDown(0.8);
+            const boxStartX = marginX;
+            const boxStartY = doc.y;
+            const boxWidth = contentWidth;
+            
+            // Calculate height needed for the box first
+            let currentX = boxStartX + 20;
+            let currentY = boxStartY + 40;
+            const tagHeight = 22;
+            const paddingX = 12;
+            const gapX = 8;
+            const gapY = 8;
+            
+            doc.font('Helvetica-Bold').fontSize(9);
+            role.skill_relevant.forEach(skill => {
+                const text = skill.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                const textWidth = doc.widthOfString(text);
+                const tagWidth = textWidth + (paddingX * 2);
+                
+                if (currentX + tagWidth > boxStartX + boxWidth - 20) {
+                    currentX = boxStartX + 20;
+                    currentY += tagHeight + gapY;
+                }
+                currentX += tagWidth + gapX;
+            });
+            
+            const boxHeight = (currentY - boxStartY) + tagHeight + 20;
+
+            // Draw Big Gray Box
+            doc.roundedRect(boxStartX, boxStartY, boxWidth, boxHeight, 8).fill('#f8fafc');
+            
+            // Draw Core Skills Text
+            doc.font('Helvetica-Bold').fontSize(14).fillColor('#0f172a').text('Core Skills', boxStartX + 20, boxStartY + 15, { indent: 0 });
+            
+            // Draw tags inside
+            currentX = boxStartX + 20;
+            currentY = boxStartY + 45;
+            
+            doc.font('Helvetica-Bold').fontSize(9);
+            role.skill_relevant.forEach(skill => {
+                const text = skill.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                const textWidth = doc.widthOfString(text);
+                const tagWidth = textWidth + (paddingX * 2);
+                
+                if (currentX + tagWidth > boxStartX + boxWidth - 20) {
+                    currentX = boxStartX + 20;
+                    currentY += tagHeight + gapY;
+                }
+                
+                doc.roundedRect(currentX, currentY, tagWidth, tagHeight, 11).fill('#e2e8f0');
+                doc.fillColor('#475569').text(text, currentX + paddingX, currentY + 6, { indent: 0 });
+                currentX += tagWidth + gapX;
+            });
+            
+            doc.y = boxStartY + boxHeight + 25;
         }
 
-        // Learning Path (Group by step)
+        // --- 4. UPSKILLING ROADMAP ---
         if (role.roadmap && role.roadmap.learning_path && role.roadmap.learning_path.length > 0) {
+            // Check page break
+            if (doc.y > 650) doc.addPage();
+
+            doc.font('Helvetica-Bold').fontSize(16).fillColor('#0f172a').text('Upskilling Roadmap', marginX, doc.y, { indent: 0 });
+            doc.moveDown(1);
+            
             const steps = {};
             role.roadmap.learning_path.forEach(lp => {
                 const s = lp.step || 1;
@@ -149,37 +215,155 @@ class PdfService {
             });
 
             Object.keys(steps).sort().forEach(stepNum => {
-                doc.font('Helvetica-Bold').fontSize(11).fillColor(blueColor).text(`Step ${stepNum}: Pembelajaran Tahap ${stepNum}`);
-                doc.moveDown(0.3);
-                steps[stepNum].forEach(course => {
-                    doc.font('Helvetica').fontSize(10).fillColor(textColor)
-                       .text(`• ${course.nama_skill} — ${course.link_course.split('/').pop().replace(/-/g, ' ')} (${course.platform})`);
+                // Determine height needed for this step box
+                const stepCourses = steps[stepNum];
+                const boxStartY = doc.y;
+                let estimatedHeight = 50 + (stepCourses.length * 20);
+                
+                // If the box will overflow the page, move to next page
+                if (boxStartY + estimatedHeight > 780) {
+                    doc.addPage();
+                }
+
+                const actualStartY = doc.y;
+                
+                // We will draw the box AFTER drawing the content so we know exactly the height.
+                // Or better, calculate EXACT height first.
+                // Let's just draw the content, track max Y, then draw the box UNDER it? PDFKit draws over.
+                // So we must calculate height exactly.
+                const boxHeight = 40 + (stepCourses.length * 22);
+                
+                // Draw Step Box
+                doc.roundedRect(marginX, actualStartY, contentWidth, boxHeight, 6)
+                   .lineWidth(1).strokeColor('#e2e8f0').stroke();
+
+                // Draw Black Circle with Number
+                const circleX = marginX + 25;
+                const circleY = actualStartY + 25;
+                doc.circle(circleX, circleY, 12).fill('#0f172a');
+                doc.font('Helvetica-Bold').fontSize(12).fillColor('#ffffff').text(stepNum, circleX - 10, circleY - 4, { width: 20, align: 'center', indent: 0 });
+                
+                // Draw Step Title
+                const titleX = circleX + 25;
+                doc.font('Helvetica-Bold').fontSize(12).fillColor('#0f172a').text(`Step ${stepNum}: Pembelajaran Tahap ${stepNum}`, titleX, actualStartY + 20, { indent: 0 });
+                
+                // Draw Courses
+                let courseY = actualStartY + 45;
+                stepCourses.forEach(course => {
+                    const platform = course.platform || course.resource || 'Unknown';
+                    const bulletText = `• ${course.nama_skill} (${platform})`;
+                    
+                    doc.font('Helvetica').fontSize(9).fillColor('#64748b').text(bulletText, titleX, courseY, { indent: 0 });
+                    
+                    // Link aligned to the right
+                    doc.fillColor('#3b82f6').text('Link ∞', marginX + contentWidth - 40, courseY, {
+                        link: course.link_course,
+                        underline: false,
+                        align: 'right',
+                        width: 30,
+                        indent: 0
+                    });
+                    
+                    courseY += 20;
                 });
-                doc.moveDown(0.5);
+                
+                doc.y = actualStartY + boxHeight + 15;
             });
         }
 
-        // Dummy Projects
-        if (role.roadmap && role.roadmap.dummy_projects && role.roadmap.dummy_projects.length > 0) {
-            doc.moveDown(0.5);
-            const projY = doc.y;
+        // --- 5. CAPSTONE PROJECT ---
+        const dummyProjects = role.dummy_projects || (role.roadmap && role.roadmap.dummy_projects) || [];
+        if (dummyProjects.length > 0) {
+            doc.moveDown(1);
             
-            // Draw grey box
-            doc.rect(50, projY, 495, 60).fill(lightGrey);
-            
-            doc.font('Helvetica-Bold').fontSize(10).fillColor('#000000').text(`Proyek Rekomendasi: ${role.roadmap.dummy_projects[0].judul || role.roadmap.dummy_projects[0]}`, 60, projY + 10);
-            
-            let projDesc = '';
-            if (role.roadmap.dummy_projects[0].brief_case) {
-                projDesc += role.roadmap.dummy_projects[0].brief_case + '. ';
-                projDesc += role.roadmap.dummy_projects[0].instructions + '. ';
-                projDesc += `(Tools: ${role.roadmap.dummy_projects[0].tools_used})`;
-            }
-            
-            doc.font('Helvetica').fontSize(9).fillColor('#444444').text(projDesc, 60, projY + 25, { width: 475 });
-            doc.y = projY + 70;
-        }
+            dummyProjects.forEach(proj => {
+                // Always give a nice amount of space for a project
+                if (doc.y > 550) doc.addPage();
 
+                const boxStartY = doc.y;
+                const boxWidth = contentWidth;
+                
+                // We'll use a trick: draw content first to calculate height, then draw the box?
+                // No, we can't draw box under text easily without storing commands.
+                // Let's estimate height.
+                let estimatedHeight = 180;
+                let instructionsArray = [];
+                let instructionsStr = proj.instructions || '';
+                if (instructionsStr.includes(';')) {
+                    instructionsArray = instructionsStr.split(';');
+                } else {
+                    instructionsArray = instructionsStr.split(/(?=[A-Z])/).filter(s => s.trim().length > 3);
+                    if (instructionsArray.length === 0) instructionsArray = [instructionsStr];
+                }
+                estimatedHeight += instructionsArray.length * 20;
+                
+                // Draw Box Background
+                doc.roundedRect(marginX, boxStartY, boxWidth, estimatedHeight, 8).fill('#f1f5f9');
+                
+                let currentY = boxStartY + 25;
+                const innerX = marginX + 25;
+                
+                // Pill "Capstone Project"
+                doc.roundedRect(innerX, currentY, 110, 22, 11).lineWidth(1).strokeColor('#cbd5e1').stroke();
+                doc.font('Helvetica').fontSize(9).fillColor('#0f172a').text('Capstone Project', innerX + 15, currentY + 6, { indent: 0 });
+                
+                currentY += 40;
+                
+                // Project Title
+                doc.font('Helvetica-Bold').fontSize(18).fillColor('#0f172a').text(proj.judul || 'Sales Data Dashboard', innerX, currentY, { indent: 0 });
+                currentY += 25;
+                
+                // Project Brief
+                doc.font('Helvetica').fontSize(10).fillColor('#64748b').text(proj.brief_case || '', innerX, currentY, { indent: 0, width: boxWidth - 50, lineGap: 3 });
+                currentY += 30; // approx height
+                
+                // Instruksi Header
+                doc.font('Helvetica').fontSize(9).fillColor('#64748b').text('INSTRUKSI', innerX, currentY, { indent: 0 });
+                currentY += 15;
+                
+                // Instruksi List
+                instructionsArray.forEach(inst => {
+                    const txt = inst.trim();
+                    if (txt) {
+                        doc.font('Helvetica').fontSize(10).fillColor('#475569').text(`•  ${txt}`, innerX, currentY, { indent: 0 });
+                        currentY += 18;
+                    }
+                });
+                
+                currentY += 15;
+                
+                // Tools Header
+                doc.font('Helvetica').fontSize(9).fillColor('#64748b').text('TOOLS', innerX, currentY, { indent: 0 });
+                currentY += 15;
+                
+                // Tools Pills
+                const toolsStr = proj.tools_used || '';
+                let toolsArray = [];
+                if (toolsStr.includes(',')) toolsArray = toolsStr.split(',');
+                else if (toolsStr.includes(';')) toolsArray = toolsStr.split(';');
+                else toolsArray = toolsStr.split(' ');
+
+                let toolX = innerX;
+                doc.font('Helvetica-Bold').fontSize(9);
+                toolsArray.forEach(tool => {
+                    const txt = tool.trim();
+                    if (!txt) return;
+                    
+                    const textWidth = doc.widthOfString(txt);
+                    const tagWidth = textWidth + 24; // padding
+                    
+                    doc.roundedRect(toolX, currentY, tagWidth, 22, 6).fill('#e2e8f0');
+                    doc.fillColor('#334155').text(txt, toolX + 12, currentY + 6, { indent: 0 });
+                    toolX += tagWidth + 8;
+                });
+                
+                // Update doc.y and potentially extend box if we miscalculated? 
+                // To be safe, we made estimatedHeight large enough. 
+                // Let's just set doc.y below the box.
+                doc.y = Math.max(currentY + 50, boxStartY + estimatedHeight);
+            });
+        }
+        
         doc.moveDown(1.5);
       });
 
