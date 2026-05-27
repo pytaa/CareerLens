@@ -43,7 +43,15 @@ class PdfService {
     });
 
     const subject = `CareerLens - Laporan Hasil Analisis ${type}`;
-    const html = `<p>Halo,</p><p>Berikut adalah lampiran laporan hasil analisis <b>${type}</b> dari CareerLens.</p><p>Terima kasih!</p>`;
+    const html = `
+      <div style="font-family: sans-serif; color: #333333; line-height: 1.6;">
+        <p>Halo,</p>
+        <p>Terima kasih telah menggunakan layanan CareerLens.</p>
+        <p>Bersama email ini, kami lampirkan dokumen PDF yang berisi <strong>Laporan Hasil Analisis ${type}</strong> Anda. Laporan ini memuat rincian profil karir, rekomendasi jalur pembelajaran (<em>roadmap</em>), proyek rekomendasi, serta keahlian yang relevan untuk menunjang masa depan karir Anda.</p>
+        <p>Semoga laporan ini dapat memberikan wawasan berharga untuk perjalanan karir Anda ke depannya.</p>
+        <p>Salam hangat,<br><strong>Tim CareerLens</strong></p>
+      </div>
+    `;
 
     await transporter.sendMail({
       from: this.emailFrom,
@@ -69,6 +77,17 @@ class PdfService {
       const blueColor = '#032b6a';
       const textColor = '#333333';
       const lightGrey = '#f7f7f7';
+
+      // --- WATERMARK KIRI BAWAH ---
+      const addWatermark = () => {
+          const prevX = doc.x;
+          const prevY = doc.y;
+          doc.font('Helvetica-Bold').fontSize(8).fillColor('#cbd5e1').text(`CareerLens © ${new Date().getFullYear()}`, 50, doc.page.height - 40, { lineBreak: false });
+          doc.x = prevX;
+          doc.y = prevY;
+      };
+      doc.on('pageAdded', addWatermark);
+      addWatermark(); // Untuk halaman pertama
 
       // Header
       doc.font('Helvetica-Bold').fontSize(22).fillColor(blueColor).text('Laporan Hasil Analisis Minat Karir');
@@ -283,10 +302,7 @@ class PdfService {
                 const boxStartY = doc.y;
                 const boxWidth = contentWidth;
                 
-                // We'll use a trick: draw content first to calculate height, then draw the box?
-                // No, we can't draw box under text easily without storing commands.
-                // Let's estimate height.
-                let estimatedHeight = 180;
+                let estimatedHeight = 220;
                 let instructionsArray = [];
                 let instructionsStr = proj.instructions || '';
                 if (instructionsStr.includes(';')) {

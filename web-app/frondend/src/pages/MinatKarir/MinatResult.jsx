@@ -44,7 +44,7 @@ const MinatResult = ({ resultData, reqData, onBack, onRetake }) => {
 
       const jsonResponse = await response.json();
       if (jsonResponse.status === 'success') {
-        alert(`Berhasil! Laporan analisis PDF telah dikirim ke: ${emailInput}`);
+        alert(`Berhasil! Laporan analisis PDF telah dikirim ke: ${emailInput}\n\nMohon periksa juga folder Spam atau Promosi jika email tidak ditemukan di Kotak Masuk utama Anda.`);
         setIsEmailModalOpen(false);
         setEmailInput("");
       } else {
