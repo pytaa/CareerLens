@@ -3,6 +3,9 @@ const nodemailer = require('nodemailer');
 const PDFDocument = require('pdfkit');
 const userEmailRepository = require('../repositories/user.email.repository');
 
+/**
+ * Service untuk mengelola Laporan (Report) pengguna. Termasuk di dalamnya pembuatan file PDF dan pengiriman via Email (SMTP).
+ */
 class ReportService extends BaseService {
   constructor() {
     super(null);
@@ -15,6 +18,10 @@ class ReportService extends BaseService {
     this.emailReplyTo = process.env.EMAIL_REPLY_TO || this.emailFrom;
   }
 
+  /**
+   * Menggenerasi laporan berbentuk PDF yang berisi ringkasan profil, 
+   * rekomendasi, dan roadmap, lalu mengirimkannya ke alamat email pengguna.
+   */
   async sendAnalysisReport({ email, user_id = null, profile = {}, summary = '', recommendations = [], riasec_scores = null }) {
     if (!email) {
       throw new Error('Alamat email penerima diperlukan.');

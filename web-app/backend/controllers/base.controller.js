@@ -1,3 +1,4 @@
+ //Menyediakan implementasi fungsi CRUD (Create, Read, Update, Delete)
 class BaseController {
   constructor(service) {
     this.service = service;

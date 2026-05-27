@@ -1,79 +1,52 @@
 import tensorflow as tf
 from src.layers import SkillEmbeddingLayer, CosineSimilarityLayer
 
-def build_skill_model(n_skills: int = 390) -> tf.keras.Model:
+def build_skill_model(n_skills=390):
+    skill_input = tf.keras.Input(shape=(n_skills,), name="skill_input")
+    role_input  = tf.keras.Input(shape=(n_skills,), name="role_skill_profile")
 
-    # Input 
-    skill_input = tf.keras.Input(
-        shape=(n_skills,), name="skill_input"
-    )
-    role_input  = tf.keras.Input(
-        shape=(n_skills,), name="role_skill_profile"
-    )
-
-    # User Branch 
+    # User Branch — sederhana tapi efektif
     x = SkillEmbeddingLayer(128, name="skill_embedding")(skill_input)
-    x = tf.keras.layers.Dense(256, activation="relu")(x)
-    x = tf.keras.layers.Dropout(0.3)(x)
     x = tf.keras.layers.Dense(128, activation="relu")(x)
-    user_embedding = tf.keras.layers.Dense(64, name="user_emb")(x)
+    x = tf.keras.layers.Dropout(0.2)(x)
+    x = tf.keras.layers.Dense(64, activation="relu")(x)
+    user_emb = tf.keras.layers.Dense(32, name="user_emb")(x)
 
-    # Role Branch 
-    y = tf.keras.layers.Dense(128, activation="relu")(role_input)
-    y = tf.keras.layers.Dense(64)(y)
-    role_embedding = y
+    # Role Branch — simetris dengan user branch
+    y = SkillEmbeddingLayer(128)(role_input)
+    y = tf.keras.layers.Dense(128, activation="relu")(y)
+    y = tf.keras.layers.Dropout(0.2)(y)
+    y = tf.keras.layers.Dense(64, activation="relu")(y)
+    role_emb = tf.keras.layers.Dense(32, name="role_emb")(y)
 
-    # Cosine Similarity → Role Score 
-    role_score = CosineSimilarityLayer(
-        name="role_score"
-    )([user_embedding, role_embedding])
+    # Cosine Similarity
+    role_score = CosineSimilarityLayer(name="role_score")([user_emb, role_emb])
 
-    # Skill Gap 
-    # Sigmoid → probability tiap skill perlu ditingkatkan
+    # Skill Gap dengan loss terpisah
     skill_gap = tf.keras.layers.Dense(
         n_skills, activation="sigmoid", name="skill_gap"
-    )(user_embedding)
+    )(user_emb)
 
-    model = tf.keras.Model(
+    return tf.keras.Model(
         inputs=[skill_input, role_input],
         outputs={"role_score": role_score, "skill_gap": skill_gap},
         name="SkillModel"
     )
 
-    return model
-
-
-def build_riasec_model() -> tf.keras.Model:
-    
-    # Input 
-    riasec_input = tf.keras.Input(
-        shape=(6,), name="riasec_input"
-    )
-    role_riasec  = tf.keras.Input(
-        shape=(6,), name="role_riasec_profile"
-    )
-
-    # User Branch 
+def build_riasec_model():
+    riasec_input = tf.keras.Input(shape=(6,), name="riasec_input")
+    role_riasec  = tf.keras.Input(shape=(6,), name="role_riasec_profile")
     x = tf.keras.layers.Dense(32, activation="relu")(riasec_input)
     x = tf.keras.layers.BatchNormalization()(x)
     x = tf.keras.layers.Dense(64, activation="relu")(x)
     x = tf.keras.layers.Dense(32)(x)
-    user_riasec_emb = x
-
-    # Role Branch 
+    user_emb = x
     y = tf.keras.layers.Dense(32, activation="relu")(role_riasec)
     y = tf.keras.layers.Dense(32)(y)
-    role_riasec_emb = y
-
-    # Cosine Similarity 
-    riasec_score = CosineSimilarityLayer(
-        name="riasec_score"
-    )([user_riasec_emb, role_riasec_emb])
-
-    model = tf.keras.Model(
+    role_emb = y
+    riasec_score = CosineSimilarityLayer(name="riasec_score")([user_emb, role_emb])
+    return tf.keras.Model(
         inputs=[riasec_input, role_riasec],
         outputs=riasec_score,
         name="RIASECModel"
     )
-
-    return model

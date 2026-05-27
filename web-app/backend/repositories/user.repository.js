@@ -1,6 +1,9 @@
 const BaseRepository = require('./base.repository');
 const { User } = require('../models');
 
+/**
+ * Repository untuk entitas User (Pengguna).
+ */
 class UserRepository extends BaseRepository {
   constructor() {
     super(User);

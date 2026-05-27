@@ -26,7 +26,6 @@ class CosineSimilarityLayer(tf.keras.layers.Layer):
         similarity = tf.reduce_sum(
             user_norm * role_norm, axis=-1, keepdims=True
         )
-        # Konversi [-1, 1] → [0, 100]
         return (similarity + 1) / 2 * 100
 
     def get_config(self):

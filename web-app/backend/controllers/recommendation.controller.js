@@ -6,6 +6,11 @@ class RecommendationController extends BaseController {
     super(recommendationService);
   }
 
+  /**
+   * Endpoint utama (Router) untuk semua prediksi AI.
+   * Fungsi ini membedakan jenis prediksi berdasarkan nilai `method` (interest, skill, riasec).
+   */
+
   async predict(req, res, next) {
     try {
       const { user_id, method, payload = {} } = req.body || {};
@@ -21,6 +26,7 @@ class RecommendationController extends BaseController {
       let result;
       switch (method) {
         case 'interest': {
+          // Normalisasi key dari payload (interest_id atau field_id)
           const interestId = payload.interest_id || payload.field_id;
           if (!interestId) {
             return res.status(400).json({ message: 'interest_id is required in payload.' });
@@ -29,6 +35,7 @@ class RecommendationController extends BaseController {
           break;
         }
         case 'skill': {
+          // Normalisasi input untuk skill dan bidang (field)
           const skills = payload.skills || payload.selected_skills || [];
           const selectedFields = payload.selected_fields || payload.fields || [];
           if (!Array.isArray(skills) || skills.length < 2) {
@@ -38,6 +45,7 @@ class RecommendationController extends BaseController {
           break;
         }
         case 'riasec': {
+          // Ekstrak skor RIASEC (bisa berupa object {r: 0.8, i: 0.9})
           const scores = payload.riasec_scores || payload.scores || payload;
           if (!scores || typeof scores !== 'object' || Object.keys(scores).length === 0) {
             return res.status(400).json({ message: 'riasec_scores atau skor RIASEC diperlukan.' });
@@ -59,6 +67,8 @@ class RecommendationController extends BaseController {
     }
   }
 
+  
+   // Endpoint khusus untuk prediksi skill (Alternatif dari router utama).
   async predictSkill(req, res, next) {
     try {
       const { user_id, selected_skills, selected_fields } = req.body;

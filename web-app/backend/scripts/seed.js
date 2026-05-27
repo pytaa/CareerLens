@@ -1,10 +1,39 @@
-
-
 require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 const csv = require('csv-parser');
-const { sequelize, CareerField, IndustryCategory, Role, Skill, RoleSkill, LearningResource, DummyProject, RoleProjectMapping } = require('../models');
+const { Client } = require('pg');
+
+let sequelize, CareerField, IndustryCategory, Role, Skill, RoleSkill, LearningResource, DummyProject, RoleProjectMapping;
+
+// Fungsi ini bertujuan untuk mengecek apakah database dengan nama yang ditentukan
+// sudah ada. Jika belum ada, maka database tersebut akan dibuat secara otomatis.
+const ensureDatabaseExists = async () => {
+  const dbName = process.env.DB_NAME || 'careerlens';
+  const client = new Client({
+    user: process.env.DB_USER || 'postgres',
+    password: process.env.DB_PASSWORD || 'password',
+    host: process.env.DB_HOST || 'localhost',
+    port: process.env.DB_PORT || 5432,
+    database: 'postgres'
+  });
+
+  try {
+    await client.connect();
+    const res = await client.query(`SELECT datname FROM pg_catalog.pg_database WHERE datname = '${dbName}'`);
+    if (res.rowCount === 0) {
+      console.log(`Database ${dbName} not found, creating it...`);
+      await client.query(`CREATE DATABASE "${dbName}"`);
+      console.log(`Database ${dbName} created successfully.`);
+    } else {
+      console.log(`Database ${dbName} already exists.`);
+    }
+  } catch (error) {
+    console.error('Error ensuring database exists:', error);
+  } finally {
+    await client.end();
+  }
+};
 
 const datasetPath = path.join(__dirname, '../../../dataset');
 
@@ -163,9 +192,25 @@ const seedRoleProjectMapping = async () => {
 // Main seed function
 const seedDatabase = async () => {
   try {
+    await ensureDatabaseExists();
+
+    const models = require('../models');
+    sequelize = models.sequelize;
+    CareerField = models.CareerField;
+    IndustryCategory = models.IndustryCategory;
+    Role = models.Role;
+    Skill = models.Skill;
+    RoleSkill = models.RoleSkill;
+    LearningResource = models.LearningResource;
+    DummyProject = models.DummyProject;
+    RoleProjectMapping = models.RoleProjectMapping;
+
     console.log('Syncing database...');
-    // force: true will drop tables if they exist - perfect for a clean seed
-    await sequelize.sync({ force: true });
+    const forceSync = process.env.NODE_ENV !== 'production' || process.env.FORCE_DB_SYNC === 'true';
+    if (forceSync) {
+      console.warn('WARNING: Running with force: true. This will drop all existing tables!');
+    }
+    await sequelize.sync({ force: forceSync });
     console.log('Database synced');
 
     await seedCareerFields();
