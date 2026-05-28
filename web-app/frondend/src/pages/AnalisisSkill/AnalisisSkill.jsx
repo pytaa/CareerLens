@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import Navbar from '../../components/Navbar';
 import SkillSelection from './SkillSelection';
 import SkillResult from './SkillResult';
 
 const AnalisisSkill = () => {
+    useEffect(() => {
+      document.title = "CareerLens - Analisis Skill";
+    });
+
   const [view, setView] = useState('selection');
   const [resultData, setResultData] = useState(null);
   

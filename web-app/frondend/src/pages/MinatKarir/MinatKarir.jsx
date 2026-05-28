@@ -1,5 +1,5 @@
 // src/pages/MinatKarir/MinatKarir.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import MinatSelection from './MinatSelection';
 import MinatResult from './MinatResult';
@@ -8,6 +8,10 @@ const MinatKarir = () => {
   const [view, setView] = useState('selection'); 
   const [resultData, setResultData] = useState(null);
   const [reqData, setReqData] = useState(null);
+
+  useEffect(() => {
+    document.title = "CareerLens - Minat karir";
+  });
 
   // Membuat atau mengambil ID Anonim dari peramban
   const getOrCreateUserId = () => {

@@ -8,8 +8,8 @@ const fullText = "Temukan Lensa Karir Digitalmu";
 
 // === PENGATURAN SPAWNER (TEKS MUNCUL OTOMATIS) ===
 const config = {
-  spawnInterval: 1200,   // Waktu (ms) setiap 1 teks baru muncul (1.2 detik)
-  lifeTime: 4000,        // Waktu hidup teks di layar (8 detik) sebelum dihapus
+  spawnInterval: 1000,   // Waktu (ms) setiap 1 teks baru muncul (1.2 detik)
+  lifeTime: 3000,        // Waktu hidup teks di layar (8 detik) sebelum dihapus
   minDistance: 30,       // Jarak aman antar teks (25% layar) agar tidak numpuk
   baseOpacity: 0.08,     // Ketebalan teks
   startScale: 1.5,       // Ukuran awal
@@ -17,10 +17,74 @@ const config = {
 };
 
 const backgroundCareers = [
-  "Data Scientist", "UI/UX Designer", "Cloud Engineer", "DevOps", 
-  "Cybersecurity", "Frontend Dev", "Backend Dev", "AI Specialist", 
-  "Product Manager", "SEO Specialist", "Fullstack Dev", "Blockchain",
-  "Data Analyst", "Game Developer", "System Analyst", "Scrum Master"
+  "Software Engineer / Developer",
+  "Frontend Developer",
+  "Backend Developer",
+  "Full Stack Developer",
+  "Mobile App (Android/iOS) Developer",
+  "DevOps Engineer",
+  "QA / Software Tester",
+  "System Analyst",
+  "Game Developer",
+  "Embedded Systems Engineer",
+  "Cloud Engineer",
+  "System Administrator",
+  "Network Engineer",
+  "Project Manager",
+  "AR/VR Developer",
+  "Blockchain Developer",
+  "System Engineer",
+  "Infrastructure Architect",
+  "Virtualization Specialist",
+  "Cyber Security Analyst/Architect",
+  "Security Consultant",
+  "Ethical Hacker",
+  "SOC Analyst",
+  "Information Security Specialist",
+  "Cyber Defense",
+  "Solution Architect",
+  "Data Analyst",
+  "Data Scientist",
+  "Machine Learning Engineer",
+  "AI Engineer",
+  "Business Intelligence Analyst",
+  "Data Engineer",
+  "Product Analyst",
+  "Big Data Engineer",
+  "Analytics Engineer",
+  "Deep Learning Engineer",
+  "NLP Engineer (Natural Language Processing)",
+  "Computer Vision Engineer",
+  "AI Prompt Engineer",
+  "Data Modeler",
+  "Data Architect",
+  "Database Developer",
+  "Database Administrator (DBA)",
+  "UI Designer",
+  "UX Designer",
+  "Product Designer",
+  "Graphic Designer",
+  "Motion Designer",
+  "UX Researcher",
+  "Illustrator",
+  "3D Designer",
+  "Game UI Designer",
+  "Design System Designer",
+  "AR/VR Developer (Unity)",
+  "Digital Marketing Specialist",
+  "SEO Specialist",
+  "Content Strategist",
+  "Performance Marketer (Ads)",
+  "Marketing Analyst",
+  "CRM Specialist",
+  "Content Writer / Copywriter",
+  "Social Media Manager",
+  "Community Manager",
+  "Virtual Assistant",
+  "Marketing Associate",
+  "E-commerce Manager",
+  "Campaign Analyst",
+  "Business Analyst (Marketing focus)"
 ];
 
 const particleColorsList = ["#030B26", "#0277B6", "#94a3b8", "#cbd5e1"];

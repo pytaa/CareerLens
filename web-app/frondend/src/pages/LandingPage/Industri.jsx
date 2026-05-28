@@ -54,7 +54,8 @@ export default function Industri() {
       desc: 'Membangun solusi perangkat lunak yang skalabel, arsitektur sistem cloud, dan aplikasi mobile masa depan. Peran ideal bagi Anda yang menyukai logika komputasi.', 
       icon: <BiCodeAlt size={32} />,
       color: 'bg-blue-100 text-blue-600',
-      image: gambarIT
+      image: gambarIT,
+      link: 'https://docif.telkomuniversity.ac.id/apa-itu-software-developer-pengertian-tugas-dan-skillnya/'
     },
     { 
       id: 'data_science', 
@@ -62,7 +63,8 @@ export default function Industri() {
       desc: 'Mengolah big data menjadi wawasan strategis dan mengembangkan model machine learning cerdas. Cocok untuk pemikir analitis dan pemecah masalah.', 
       icon: <BiData size={32} />,
       color: 'bg-indigo-100 text-indigo-600',
-      image: gambarData
+      image: gambarData,
+      link: 'https://id.jobstreet.com/id/career-advice/article/apa-itu-data-science-tugas-gaji'
     },
     { 
       id: 'design_uiux', 
@@ -70,7 +72,8 @@ export default function Industri() {
       desc: 'Menciptakan pengalaman interaksi digital yang intuitif dan visual estetis. Karier yang memadukan empati pengguna dengan kreativitas tanpa batas.', 
       icon: <BiPalette size={32} />,
       color: 'bg-purple-100 text-purple-600',
-      image: desainKreatif
+      image: desainKreatif,
+      link: 'https://jakarta.telkomuniversity.ac.id/mengenal-ui-ux-designer-profesi-yang-diminati-di-era-digital/'
     },
     { 
       id: 'digital_marketing', 
@@ -78,7 +81,8 @@ export default function Industri() {
       desc: 'Memanfaatkan kanal digital dan metrik data untuk mengoptimalkan pertumbuhan bisnis. Jalur tepat bagi yang berminat pada strategi dan perilaku konsumen.', 
       icon: <BiTrendingUp size={32} />,
       color: 'bg-emerald-100 text-emerald-600',
-      image: digitalMarketing
+      image: digitalMarketing,
+      link: 'https://www.lspr.ac.id/apa-itu-digital-marketing/'
     }
   ];
 
@@ -148,10 +152,16 @@ export default function Industri() {
                   </ScrollFadeIn>
                   
                   <ScrollFadeIn direction="up" delay={650}>
-                    <button className="flex items-center gap-2 text-[#0277B6] font-bold group hover:text-[#030B26] transition-colors">
+                    {/* Mengubah <button> menjadi <a> */}
+                    <a 
+                      href={item.link} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-[#0277B6] font-bold group hover:text-[#030B26] transition-colors"
+                    >
                       Pelajari Lebih Lanjut
                       <BsArrowRight className="group-hover:translate-x-1 transition-transform" />
-                    </button>
+                    </a>
                   </ScrollFadeIn>
                 </div>
 

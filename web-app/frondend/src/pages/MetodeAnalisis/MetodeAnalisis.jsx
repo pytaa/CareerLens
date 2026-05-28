@@ -1,4 +1,5 @@
 import React from 'react';
+import {useState, useEffect} from 'react'
 import { useNavigate } from 'react-router-dom';
 import { FiArrowLeft, FiChevronRight } from 'react-icons/fi';
 import { BiTargetLock, BiCodeAlt, BiBrain } from 'react-icons/bi';
@@ -6,6 +7,10 @@ import PageHeader from "../../components/PageHeader.jsx"
 
 const MetodeAnalisis = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = "CareerLens - Metode Analisis";
+  });
 
   const methods = [
     {

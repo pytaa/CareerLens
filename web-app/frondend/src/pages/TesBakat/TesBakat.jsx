@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid'; 
 import TesBakatResult from './TesBakatResult';
 import TesBakatQuiz from './TesBakatQuiz';
@@ -6,7 +6,12 @@ import { riasecQuestions } from '../../data/riasecQuestions';
 import { FiPlayCircle, FiCheckCircle } from 'react-icons/fi';
 import PageHeader from "../../components/PageHeader.jsx"
 
+
 const TesBakat = () => {
+  useEffect(() => {
+    document.title = "CareerLens - Tes Bakat";
+  });
+
   // State Navigasi Halaman
   const [view, setView] = useState('intro'); // 'intro', 'quiz', 'result'
   
