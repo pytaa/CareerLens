@@ -28,6 +28,19 @@ class PdfController {
       next(error);
     }
   }
+  async sendTesBakat(req, res, next) {
+    try {
+      const { email, reqData, resData } = req.body;
+      if (!email || !reqData || !resData) {
+        return res.status(400).json({ status: 'error', message: 'Email, reqData, dan resData wajib diisi.' });
+      }
+
+      const result = await pdfService.sendBakatPdf(email, reqData, resData);
+      res.json({ status: 'success', data: result });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new PdfController();

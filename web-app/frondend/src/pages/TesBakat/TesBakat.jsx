@@ -16,6 +16,7 @@ const TesBakat = () => {
   
   // State Hasil API
   const [resultData, setResultData] = useState(null);
+  const [payloadScores, setPayloadScores] = useState(null);
 
   // Fungsi cerdas untuk membuat atau mengambil ID Anonim dari peramban
   const getOrCreateUserId = () => {
@@ -57,21 +58,24 @@ const TesBakat = () => {
       rawScores[type] += ansValue;
     });
 
-    const payloadScores = {};
+    const scores = {};
     for (let key in rawScores) {
-      payloadScores[key] = parseFloat((rawScores[key] / 25).toFixed(2));
+      scores[key] = parseFloat((rawScores[key] / 25).toFixed(2));
     }
+    setPayloadScores(scores);
 
     try {
       const currentUserId = getOrCreateUserId();
 
-      const response = await fetch('http://localhost:5000/api/recommendations', {
+      //url temp : http://localhost:5000/api/recommendations
+
+      const response = await fetch('http://localhost:5001/predict', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           user_id: currentUserId, 
           method: "riasec",
-          payload: { riasec_scores: payloadScores }
+          payload: { riasec_scores: scores }
         })
       });
 
@@ -160,7 +164,8 @@ const TesBakat = () => {
         />
       ) : (
         <TesBakatResult 
-          resultData={resultData}    
+          resultData={resultData}
+          payloadScores={payloadScores}
           onBack={handleRetake}        
           onRetake={handleRetake}      
         />
