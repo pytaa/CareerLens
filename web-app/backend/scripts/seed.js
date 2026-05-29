@@ -137,7 +137,7 @@ const seedRoleSkills = async () => {
           roleSkills.push({
             role_id: row.role_id,
             skill_id: skillId,
-            weight: 1.0 // Default weight since CSV doesn't have it
+            weight: 1.0 
           });
         }
       });

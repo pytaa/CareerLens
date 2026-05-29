@@ -32,9 +32,8 @@ const readCSV = (filePath) => {
   });
 };
 
-/**
- * Fungsi utama untuk menambal (patching) data yang hilang di database
- */
+
+//Fungsi utama untuk menambal (patching) data yang hilang di database
 const patchRoles = async () => {
   try {
     console.log('Menghubungkan ke database...');
