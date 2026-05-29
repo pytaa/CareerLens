@@ -1,6 +1,4 @@
-/**
- * Menyediakan fungsi CRUD bawaan yang akan dipanggil oleh BaseController.
- */
+//Menyediakan fungsi CRUD bawaan yang akan dipanggil oleh BaseController.
 class BaseService {
   constructor(repository) {
     this.repository = repository;

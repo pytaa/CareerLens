@@ -16,12 +16,12 @@ axiosRetry(axios, {
 });
 class RecommendationService extends BaseService {
   constructor() {
-    super(null); // No single repository
+    super(null); 
     this.aiServiceUrl = process.env.AI_SERVICE_URL || 'http://localhost:8000';
-    this.aiTimeout = parseInt(process.env.AI_SERVICE_TIMEOUT) || 30000;
+    this.aiTimeout = parseInt(process.env.AI_SERVICE_TIMEOUT) || 120000;
     
-    // Inisialisasi Cache In-Memory dengan TTL 24 jam (86400 detik)
-    this.cache = new NodeCache({ stdTTL: 86400 });
+    // Inisialisasi Cache In-Memory dengan TTL 1 jam (3600 detik)
+    this.cache = new NodeCache({ stdTTL: 3600 });
   }
 
   _isValidUUID(uuid) {
@@ -29,11 +29,8 @@ class RecommendationService extends BaseService {
     return typeof uuid === 'string' && uuidRegex.test(uuid);
   }
 
-  /**
-   * Memprediksi/Merekomendasikan karir berdasarkan bidang minat.
-   * Alur: Memanggil API AI -> Menyimpan riwayat tes -> Menambah detail (Enrichment) dengan data lokal DB.
-   * Jika AI gagal/timeout, sistem otomatis mengeksekusi _fallbackPredictInterest.
-   */
+  
+//Memprediksi/Merekomendasikan karir berdasarkan bidang minat. Jika AI gagal/timeout, sistem otomatis mengeksekusi _fallbackPredictInterest.
   async predictInterest(interestId, userId = null) {
     let result;
     const normalizedInterestId = this._normalizeInterestId(interestId);
@@ -85,9 +82,7 @@ class RecommendationService extends BaseService {
     return enriched;
   }
 
-  /**
-   * Memprediksi karir berdasarkan keahlian (Skill) user.
-   */
+//Memprediksi karir berdasarkan keahlian (Skill) user. Jika cache kosong, ia memanggil API AI. Jika AI gagal, fallback ke database lokal.
   async predictSkill(selectedSkills, selectedFields = [], userId = null) {
     let result;
     const skills = Array.isArray(selectedSkills) ? selectedSkills : [];
@@ -140,9 +135,7 @@ class RecommendationService extends BaseService {
     return enriched;
   }
 
-  /**
-   * Memprediksi karir berdasarkan kepribadian tipe RIASEC (Realistic, Investigative, dll).
-   */
+//Memprediksi karir berdasarkan kepribadian tipe RIASEC. Mengirim payload skor RIASEC ke AI untuk dikonversi menjadi rekomendasi karir.
   async predictRiasec(payload, userId = null) {
     let result;
     const scores = this._normalizeRiasecPayload(payload);
@@ -194,10 +187,8 @@ class RecommendationService extends BaseService {
     return enriched;
   }
 
-  /**
-   * Mengambil data mentah (hanya berisi ID Role dan skor) dari AI, 
-   * kemudian menggabungkannya dengan data terperinci dari Database Lokal PostgreSQL 
-   */
+
+//Mengambil data mentah (hanya berisi ID Role dan skor) dari AI, kemudian menggabungkannya dengan data terperinci dari Database Lokal PostgreSQL 
   async _enrichPredictionResult(result) {
     if (!result || !Array.isArray(result.recommendations)) {
       return result;
@@ -245,18 +236,18 @@ class RecommendationService extends BaseService {
     return recommendations.map(item => {
       const key = item.role_id || item.role_name;
       const roleDetail = item.role_id ? detailsById[item.role_id] : detailsByName[item.role_name?.toLowerCase()];
-
-      if (!roleDetail) {
-        return this._normalizeRecommendation(item);
-      }
+      const safeRoleDetail = roleDetail || {};
 
       const normalized = this._normalizeRecommendation(item);
-      normalized.description = normalized.description || roleDetail.description || '';
-      normalized.salary_range = normalized.salary_range || roleDetail.salary_range || '';
+      const aiDesc = (normalized.description || '').trim();
+      const aiSalary = (normalized.salary_range || '').trim();
+      
+      normalized.description = safeRoleDetail.description || aiDesc || 'Deskripsi terperinci untuk peran ini sedang dalam pembaruan. Secara umum, peran ini sangat relevan dengan profil dan keahlian Anda.';
+      normalized.salary_range = safeRoleDetail.salary_range || aiSalary || 'Menyesuaikan rata-rata standar industri';
       normalized.skill_relevant = Array.isArray(normalized.skill_relevant) && normalized.skill_relevant.length
         ? normalized.skill_relevant
-        : (roleDetail.Skills || []).map(skill => skill.name);
-      normalized.roadmap = this._buildRoadmap(roleDetail, normalized.roadmap);
+        : (safeRoleDetail.Skills || []).map(skill => skill.name);
+      normalized.roadmap = this._buildRoadmap(safeRoleDetail, normalized.roadmap);
 
       return normalized;
     });
@@ -264,6 +255,10 @@ class RecommendationService extends BaseService {
 
   //normalisasi data rekomendasi
   _normalizeRecommendation(item) {
+    const roadmap = item.roadmap || {};
+    const learning_path = roadmap.learning_path || item.learning_path || [];
+    const dummy_projects = roadmap.dummy_projects || item.dummy_projects || [];
+
     return {
       role_id: item.role_id || null,
       role_name: item.role_name || item.name || null,
@@ -272,10 +267,11 @@ class RecommendationService extends BaseService {
       salary_range: item.salary_range || null,
       skill_relevant: Array.isArray(item.skill_relevant) ? item.skill_relevant : [],
       skill_gap: Array.isArray(item.skill_gap) ? item.skill_gap : [],
-      roadmap: item.roadmap || { learning_path: [], dummy_projects: [] }
+      roadmap: { learning_path, dummy_projects }
     };
   }
 
+//Membangun struktur roadmap pembelajaran dan dummy proyek dari data Role.
   _buildRoadmap(roleDetail, existingRoadmap = { learning_path: [], dummy_projects: [] }) {
     const learningPath = (roleDetail.LearningResources || [])
       .slice()
@@ -295,16 +291,68 @@ class RecommendationService extends BaseService {
       .sort((a, b) => a.sort_order - b.sort_order)
       .map(mapping => {
         const project = mapping.DummyProject;
-        return project?.judul_project || '';
+        if (!project) return null;
+        return {
+          project_id: project.project_id,
+          judul: project.judul_project,
+          brief_case: project.brief_case,
+          instructions: project.instructions,
+          tools_used: project.tools_used
+        };
+      })
+      .filter(Boolean);
+
+    const normalizeLearningPath = (path) => {
+      if (!Array.isArray(path)) return [];
+      return path.map((item, idx) => {
+        let platformName = item.platform || 'Online Platform';
+        if (!item.platform && item.resource) {
+          if (item.resource.includes('coursera')) platformName = 'Coursera';
+          else if (item.resource.includes('dicoding')) platformName = 'Dicoding';
+          else if (item.resource.includes('udemy')) platformName = 'Udemy';
+          else if (item.resource.includes('edx')) platformName = 'edX';
+        }
+        return {
+          step: item.step || item.step_number || (idx + 1),
+          nama_skill: item.nama_skill || item.title || item.course_name || 'Materi Pembelajaran',
+          link_course: item.link_course || (item.resource && item.resource.startsWith('http') ? item.resource : '#'),
+          tipe: item.tipe || item.type || 'Course',
+          platform: platformName,
+          title: item.nama_skill || item.title || 'Materi Pembelajaran',
+          resource: item.platform || item.resource || 'Platform'
+        };
       });
+    };
+
+    const normalizeDummyProjects = (projects) => {
+      if (!Array.isArray(projects)) return [];
+      return projects.map((p, idx) => {
+        if (typeof p === 'string') {
+          return {
+            project_id: `dummy_${idx}`,
+            judul: p,
+            brief_case: 'Sebuah proyek praktikal untuk mengaplikasikan kemampuan Anda pada studi kasus nyata.',
+            instructions: 'Lakukan analisis kebutuhan;Implementasikan solusi;Lakukan testing',
+            tools_used: 'Standard Tools'
+          };
+        }
+        return {
+          project_id: p.project_id || p.id || `dummy_${idx}`,
+          judul: p.judul || p.project_name || p.title || 'Proyek Tanpa Judul',
+          brief_case: p.brief_case || p.description || 'Deskripsi tidak tersedia.',
+          instructions: p.instructions || p.tasks || 'Ikuti panduan standar.',
+          tools_used: p.tools_used || p.tools || 'Tidak disebutkan'
+        };
+      });
+    };
 
     return {
-      learning_path: learningPath.length ? learningPath : (existingRoadmap.learning_path || []),
-      dummy_projects: dummyProjects.length ? dummyProjects : (existingRoadmap.dummy_projects || [])
+      learning_path: learningPath.length ? learningPath : normalizeLearningPath(existingRoadmap.learning_path),
+      dummy_projects: dummyProjects.length ? dummyProjects : normalizeDummyProjects(existingRoadmap.dummy_projects)
     };
   }
 
-  //membangun data chart
+//Membangun data chart untuk divisualisasikan di frontend
   _buildChartData(recommendations) {
     const labels = recommendations.map(item => item.role_name || 'Unknown');
     const scores = recommendations.map(item => {
@@ -317,7 +365,7 @@ class RecommendationService extends BaseService {
     return { labels, scores };
   }
 
-  //menormalisasi data riasec
+//Menormalisasi format input skor RIASEC dari berbagai bentuk payload frontend
   _normalizeRiasecPayload(payload) {
     if (!payload || typeof payload !== 'object') {
       throw new Error('Invalid RIASEC payload');
@@ -334,7 +382,7 @@ class RecommendationService extends BaseService {
     return payload;
   }
 
-  //menormalisasi data interest
+//Mengonversi string ID Minat Karir (seperti 'it_software') menjadi format standar Field ID ('F01', 'F02', dll) yang dikenali oleh database lokal.
   _normalizeInterestId(interestId) {
     const normalized = String(interestId || '').trim();
     const interestMapping = {
@@ -351,7 +399,8 @@ class RecommendationService extends BaseService {
     return interestMapping[normalized] || normalized;
   }
 
-  //menyimpan data user output
+
+//Menyimpan hasil akhir (output) rekomendasi ke dalam tabel riwayat user, yang nantinya memungkinkan sistem untuk melacak hasil tes pengguna anonim berdasarkan UUID unik mereka.
   async _storeUserOutput(userId, outputType, context, outputValue) {
     try {
       await userOutputRepository.create({
@@ -365,7 +414,8 @@ class RecommendationService extends BaseService {
     }
   }
 
-  // Fallback methods for when AI service is unavailable
+
+//Fallback untuk prediksi Minat Karir. Menarik role berdasarkan bidang minat.
   async _fallbackPredictInterest(interestId, userId = null) {
     const fieldMapping = {
       'it_software': 'F01',
@@ -403,6 +453,9 @@ class RecommendationService extends BaseService {
     };
   }
 
+
+//Fallback untuk prediksi Skill. Mengambil role secara statis.
+
   async _fallbackPredictSkill(selectedSkills, selectedFields = [], userId = null) {
     // For now, return all roles (implement skill matching later)
     const roles = await roleRepository.findAll();
@@ -421,17 +474,30 @@ class RecommendationService extends BaseService {
         skill_relevant: selectedSkills.slice(0, 3),
         skill_gap: selectedSkills.length > 3 ? selectedSkills.slice(3) : [],
         roadmap: {
-          learning_path: [], // Would need to populate from learning_resources
-          dummy_projects: [] // Would need to populate from role_project_mapping
+          learning_path: [],
+          dummy_projects: []
         }
       }))
     };
   }
 
+//Fallback untuk prediksi RIASEC. Mencari role yang memiliki skor terdekat.
   async _fallbackPredictRiasec(scores, userId = null) {
     const roles = await roleRepository.findByRiasecScores(scores);
 
+    // Compute interest_code from top 3 scores
+    const sortedScores = Object.entries(scores || {})
+      .sort((a, b) => (b[1] || 0) - (a[1] || 0))
+      .slice(0, 3)
+      .map(entry => entry[0].charAt(0).toUpperCase());
+    const interestCode = sortedScores.join('') || 'RIA';
+
     return {
+      interest_code: interestCode,
+      sector_recommendations: [
+        { field_name: "Teknologi & Bisnis", relevance_pct: 95 },
+        { field_name: "Desain & Kreatif", relevance_pct: 85 }
+      ],
       chart_data: {
         labels: roles.slice(0, 3).map(r => r.role_name),
         scores: [90.0, 80.0, 70.0] // Dummy scores
@@ -442,11 +508,11 @@ class RecommendationService extends BaseService {
         match_pct: 90.0 - (index * 10),
         description: role.description,
         salary_range: role.salary_range,
-        skill_relevant: [], // Would need to populate
+        skill_relevant: [],
         skill_gap: [],
         roadmap: {
-          learning_path: [], // Would need to populate
-          dummy_projects: [] // Would need to populate
+          learning_path: [],
+          dummy_projects: []
         }
       }))
     };

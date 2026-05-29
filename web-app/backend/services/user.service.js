@@ -8,9 +8,7 @@ class UserService extends BaseService {
     super(userRepository);
   }
 
-  /**
-   * Mengambil seluruh riwayat pengguna berdasarkan ID. Riwayat mencakup hasil tes (test_results) dan rekomendasi yang pernah dihasilkan (user_outputs).
-   */
+//Mengambil seluruh riwayat pengguna berdasarkan ID.
   async getUserHistory(userId) {
     const testResults = await testResultRepository.findByUserId(userId);
     const userOutputs = await userOutputRepository.findByUserId(userId);
