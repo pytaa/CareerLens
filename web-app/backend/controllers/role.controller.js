@@ -6,10 +6,9 @@ class RoleController extends BaseController {
     super(roleService);
   }
 
-  /**
-   * Mengambil detail spesifik dari sebuah role pekerjaan beserta seluruh relasinya
-   * (seperti skill yang dibutuhkan, roadmap/learning resources, dan dummy projects).
-   */
+
+//Mengambil detail spesifik dari sebuah role pekerjaan beserta seluruh relasinya
+
   async getDetails(req, res, next) {
     try {
       const { id } = req.params;

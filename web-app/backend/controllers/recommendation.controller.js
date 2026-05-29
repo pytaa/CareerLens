@@ -6,10 +6,8 @@ class RecommendationController extends BaseController {
     super(recommendationService);
   }
 
-  /**
-   * Endpoint utama (Router) untuk semua prediksi AI.
-   * Fungsi ini membedakan jenis prediksi berdasarkan nilai `method` (interest, skill, riasec).
-   */
+   // Endpoint utama (Router) untuk semua prediksi AI.
+   //Fungsi ini membedakan jenis prediksi berdasarkan nilai `method` (interest, skill, riasec).
 
   async predict(req, res, next) {
     try {
@@ -66,7 +64,6 @@ class RecommendationController extends BaseController {
       next(error);
     }
   }
-
   
    // Endpoint khusus untuk prediksi skill (Alternatif dari router utama).
   async predictSkill(req, res, next) {
