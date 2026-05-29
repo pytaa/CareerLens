@@ -3,7 +3,6 @@ const roleRoutes = require('./roles.routes');
 const skillRoutes = require('./skills.routes');
 const userRoutes = require('./users.routes');
 const recommendationRoutes = require('./recommendations.routes');
-const reportRoutes = require('./reports.routes');
 const pdfRoutes = require('./pdf.routes');
 
 const router = express.Router();
@@ -15,7 +14,6 @@ router.use('/users', userRoutes);
 router.use('/recommendations', recommendationRoutes);
 // Alias untuk menjaga kompatibilitas dengan frontend yang memanggil singular path
 router.use('/recommendation', recommendationRoutes); 
-router.use('/reports', reportRoutes);
 router.use('/pdf', pdfRoutes);
 
 module.exports = router;
