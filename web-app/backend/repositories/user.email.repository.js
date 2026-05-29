@@ -1,9 +1,7 @@
 const BaseRepository = require('./base.repository');
 const { UserEmail } = require('../models');
 
-/**
- * Repository untuk melacak pengiriman email ke pengguna.
- */
+//Repository untuk melacak pengiriman email ke pengguna.
 class UserEmailRepository extends BaseRepository {
   constructor() {
     super(UserEmail);

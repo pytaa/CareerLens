@@ -1,9 +1,7 @@
 const BaseRepository = require('./base.repository');
 const { TestResult } = require('../models');
 
-/**
- * Repository untuk menyimpan dan mengambil riwayat hasil tes AI milik pengguna.
- */
+//Repository untuk menyimpan dan mengambil riwayat hasil tes AI milik pengguna.
 class TestResultRepository extends BaseRepository {
   constructor() {
     super(TestResult);

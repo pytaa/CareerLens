@@ -60,7 +60,7 @@ class RoleRepository extends BaseRepository {
           include: [
             {
               model: DummyProject,
-              attributes: ['project_id', 'judul_project', 'brief_case', 'tools_used']
+              attributes: ['project_id', 'judul_project', 'brief_case', 'instructions', 'tools_used']
             }
           ]
         },
