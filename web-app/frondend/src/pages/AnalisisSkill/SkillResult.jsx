@@ -44,7 +44,7 @@ const SkillResult = ({ resultData, inputtedSkills, onBack, onRetake }) => {
     
     setIsSendingPdf(true);
     try {
-      const response = await fetch('http://localhost:5000/api/pdf/skill', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/pdf/skill`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
