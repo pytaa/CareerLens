@@ -33,10 +33,10 @@ class RecommendationService extends BaseService {
   async _ensureUserExists(userId) {
     if (!this._isValidUUID(userId)) return false;
     try {
-      const user = await userRepository.findById(userId);
-      if (!user) {
-        await userRepository.create({ id: userId });
-      }
+      await userRepository.model.findOrCreate({
+        where: { id: userId },
+        defaults: { id: userId }
+      });
       return true;
     } catch (error) {
       console.error('Failed to ensure user exists:', error.message);
@@ -73,24 +73,27 @@ class RecommendationService extends BaseService {
           this.cache.set(cacheKey, aiData);
         }
       }
-
-      // Tetap simpan riwayat tes ke database jika userId adalah UUID yang valid
-      if (this._isValidUUID(userId)) {
-        await this._ensureUserExists(userId);
-        await testResultRepository.create({
-          user_id: userId,
-          test_name: 'interest',
-          test_payload: { interest_id: normalizedInterestId },
-          result_payload: aiData,
-          passed: aiData.status === 'success'
-        });
-      }
-
       result = aiData.data;
     } catch (error) {
       console.error('AI Service Error (interest):', error.message);
       console.log('Falling back to local interest prediction');
       result = await this._fallbackPredictInterest(normalizedInterestId, userId);
+    }
+
+    // Tetap simpan riwayat tes ke database jika userId adalah UUID yang valid
+    if (this._isValidUUID(userId)) {
+      try {
+        await this._ensureUserExists(userId);
+        await testResultRepository.create({
+          user_id: userId,
+          test_name: 'interest',
+          test_payload: { interest_id: normalizedInterestId },
+          result_payload: result || {},
+          passed: true
+        });
+      } catch (dbError) {
+        console.error('Failed to store test result (interest):', dbError.message);
+      }
     }
 
     const enriched = await this._enrichPredictionResult(result);
@@ -131,23 +134,26 @@ class RecommendationService extends BaseService {
           this.cache.set(cacheKey, aiData);
         }
       }
-
-      if (this._isValidUUID(userId)) {
-        await this._ensureUserExists(userId);
-        await testResultRepository.create({
-          user_id: userId,
-          test_name: 'skill',
-          test_payload: { selected_skills: skills, selected_fields: fields },
-          result_payload: aiData,
-          passed: aiData.status === 'success'
-        });
-      }
-
       result = aiData.data;
     } catch (error) {
       console.error('AI Service Error (skill):', error.message);
       console.log('Falling back to local skill prediction');
       result = await this._fallbackPredictSkill(skills, fields, userId);
+    }
+
+    if (this._isValidUUID(userId)) {
+      try {
+        await this._ensureUserExists(userId);
+        await testResultRepository.create({
+          user_id: userId,
+          test_name: 'skill',
+          test_payload: { selected_skills: skills, selected_fields: fields },
+          result_payload: result || {},
+          passed: true
+        });
+      } catch (dbError) {
+        console.error('Failed to store test result (skill):', dbError.message);
+      }
     }
 
     const enriched = await this._enrichPredictionResult(result);
@@ -187,23 +193,26 @@ class RecommendationService extends BaseService {
           this.cache.set(cacheKey, aiData);
         }
       }
-
-      if (this._isValidUUID(userId)) {
-        await this._ensureUserExists(userId);
-        await testResultRepository.create({
-          user_id: userId,
-          test_name: 'riasec',
-          test_payload: scores,
-          result_payload: aiData,
-          passed: aiData.status === 'success'
-        });
-      }
-
       result = aiData.data;
     } catch (error) {
       console.error('AI Service Error (riasec):', error.message);
       console.log('Falling back to local RIASEC prediction');
       result = await this._fallbackPredictRiasec(scores, userId);
+    }
+
+    if (this._isValidUUID(userId)) {
+      try {
+        await this._ensureUserExists(userId);
+        await testResultRepository.create({
+          user_id: userId,
+          test_name: 'riasec',
+          test_payload: scores,
+          result_payload: result || {},
+          passed: true
+        });
+      } catch (dbError) {
+        console.error('Failed to store test result (riasec):', dbError.message);
+      }
     }
 
     const enriched = await this._enrichPredictionResult(result);

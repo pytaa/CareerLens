@@ -35,7 +35,7 @@ const ensureDatabaseExists = async () => {
   }
 };
 
-const datasetPath = path.join(__dirname, '../../../dataset');
+const datasetPath = path.join(__dirname, '../dataset');
 
 // Helper function to read CSV
 const readCSV = (filePath) => {
