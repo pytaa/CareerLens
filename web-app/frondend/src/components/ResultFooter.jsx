@@ -1,5 +1,5 @@
 import React from 'react';
-import CareerLensLogo from '../../assets/careerlens_logo_1.png';
+import CareerLensLogo from '../../assets/careerLens_logo_1.png';
 
 const ResultFooter = () => {
   return (

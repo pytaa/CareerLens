@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
 // Import icon/logo dari folder assets
-import CareerLensIcon from '../../assets/careerlens_logo_2.png';
+import CareerLensIcon from '../../assets/careerLens_logo_2.png';
 
 const PageHeader = () => {
   const navigate = useNavigate();
