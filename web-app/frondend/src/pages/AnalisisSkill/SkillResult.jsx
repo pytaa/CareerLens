@@ -44,13 +44,15 @@ const SkillResult = ({ resultData, inputtedSkills, onBack, onRetake }) => {
     
     setIsSendingPdf(true);
     try {
+      const userId = localStorage.getItem('careerlens_user_id');
       const response = await fetch(`${import.meta.env.VITE_API_URL}/pdf/skill`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: emailInput,
           reqData: { payload: { skills: inputtedSkills } },
-          resData: resultData
+          resData: resultData,
+          userId: userId
         })
       });
 

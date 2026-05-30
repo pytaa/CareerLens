@@ -32,13 +32,15 @@ const MinatResult = ({ resultData, reqData, onBack, onRetake }) => {
     
     setIsSendingPdf(true);
     try {
+      const userId = localStorage.getItem('careerlens_user_id');
       const response = await fetch(`${import.meta.env.VITE_API_URL}/pdf/minat-karir`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: emailInput,
           reqData: reqData,
-          resData: resultData
+          resData: resultData,
+          userId: userId
         })
       });
 

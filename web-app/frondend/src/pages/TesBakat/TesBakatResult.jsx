@@ -52,13 +52,15 @@ const TesBakatResult = ({ resultData, payloadScores, onBack, onRetake }) => {
     
     setIsSendingPdf(true);
     try {
+      const userId = localStorage.getItem('careerlens_user_id');
       const response = await fetch(`${import.meta.env.VITE_API_URL}/pdf/bakat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: emailInput,
           reqData: { payload: { riasec_scores: payloadScores } },
-          resData: resultData
+          resData: resultData,
+          userId: userId
         })
       });
 
