@@ -23,11 +23,11 @@ const TesBakat = () => {
   const [resultData, setResultData] = useState(null);
   const [payloadScores, setPayloadScores] = useState(null);
 
-  // Fungsi cerdas untuk membuat atau mengambil ID Anonim dari peramban
+  // Fungsi untuk membuat atau mengambil ID
   const getOrCreateUserId = () => {
     let userId = localStorage.getItem('careerlens_user_id');
     if (!userId) {
-      userId = `user_${uuidv4()}`;
+      userId = uuidv4();
       localStorage.setItem('careerlens_user_id', userId);
     }
     return userId;
@@ -74,7 +74,7 @@ const TesBakat = () => {
 
       //url temp : http://localhost:5000/api/recommendations
 
-      const response = await fetch('http://localhost:5001/predict', {
+      const response = await fetch('http://localhost:5000/api/recommendations', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

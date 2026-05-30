@@ -2,6 +2,7 @@ const BaseService = require('./base.service');
 const roleRepository = require('../repositories/role.repository');
 const testResultRepository = require('../repositories/test.result.repository');
 const userOutputRepository = require('../repositories/user.output.repository');
+const userRepository = require('../repositories/user.repository');
 const axios = require('axios');
 const axiosRetry = require('axios-retry').default || require('axios-retry');
 const NodeCache = require('node-cache');
@@ -27,6 +28,20 @@ class RecommendationService extends BaseService {
   _isValidUUID(uuid) {
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     return typeof uuid === 'string' && uuidRegex.test(uuid);
+  }
+
+  async _ensureUserExists(userId) {
+    if (!this._isValidUUID(userId)) return false;
+    try {
+      const user = await userRepository.findById(userId);
+      if (!user) {
+        await userRepository.create({ id: userId });
+      }
+      return true;
+    } catch (error) {
+      console.error('Failed to ensure user exists:', error.message);
+      return false;
+    }
   }
 
   
@@ -61,6 +76,7 @@ class RecommendationService extends BaseService {
 
       // Tetap simpan riwayat tes ke database jika userId adalah UUID yang valid
       if (this._isValidUUID(userId)) {
+        await this._ensureUserExists(userId);
         await testResultRepository.create({
           user_id: userId,
           test_name: 'interest',
@@ -78,7 +94,10 @@ class RecommendationService extends BaseService {
     }
 
     const enriched = await this._enrichPredictionResult(result);
-    if (this._isValidUUID(userId)) await this._storeUserOutput(userId, 'interest', { interest_id: normalizedInterestId }, enriched);
+    if (this._isValidUUID(userId)) {
+      await this._ensureUserExists(userId);
+      await this._storeUserOutput(userId, 'interest', { interest_id: normalizedInterestId }, enriched);
+    }
     return enriched;
   }
 
@@ -114,6 +133,7 @@ class RecommendationService extends BaseService {
       }
 
       if (this._isValidUUID(userId)) {
+        await this._ensureUserExists(userId);
         await testResultRepository.create({
           user_id: userId,
           test_name: 'skill',
@@ -131,7 +151,10 @@ class RecommendationService extends BaseService {
     }
 
     const enriched = await this._enrichPredictionResult(result);
-    if (this._isValidUUID(userId)) await this._storeUserOutput(userId, 'skill', { skills, selected_fields: fields }, enriched);
+    if (this._isValidUUID(userId)) {
+      await this._ensureUserExists(userId);
+      await this._storeUserOutput(userId, 'skill', { skills, selected_fields: fields }, enriched);
+    }
     return enriched;
   }
 
@@ -166,6 +189,7 @@ class RecommendationService extends BaseService {
       }
 
       if (this._isValidUUID(userId)) {
+        await this._ensureUserExists(userId);
         await testResultRepository.create({
           user_id: userId,
           test_name: 'riasec',
@@ -183,7 +207,10 @@ class RecommendationService extends BaseService {
     }
 
     const enriched = await this._enrichPredictionResult(result);
-    if (this._isValidUUID(userId)) await this._storeUserOutput(userId, 'riasec', { riasec_scores: scores }, enriched);
+    if (this._isValidUUID(userId)) {
+      await this._ensureUserExists(userId);
+      await this._storeUserOutput(userId, 'riasec', { riasec_scores: scores }, enriched);
+    }
     return enriched;
   }
 

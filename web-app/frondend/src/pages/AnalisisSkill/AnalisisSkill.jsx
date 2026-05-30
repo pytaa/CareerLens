@@ -15,11 +15,11 @@ const AnalisisSkill = () => {
   // State untuk menyimpan skill yang diketik user
   const [inputtedSkills, setInputtedSkills] = useState([]);
 
-  // Membuat atau mengambil ID Anonim dari peramban
+  // Membuat atau mengambil ID 
   const getOrCreateUserId = () => {
     let userId = localStorage.getItem('careerlens_user_id');
     if (!userId) {
-      userId = `user_${uuidv4()}`;
+      userId = uuidv4();
       localStorage.setItem('careerlens_user_id', userId);
     }
     return userId;
@@ -34,7 +34,7 @@ const AnalisisSkill = () => {
 
       //url temp : http://localhost:5000/api/recommendations
 
-      const response = await fetch('http://localhost:5001/predict', {
+      const response = await fetch('http://localhost:5000/api/recommendations', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
