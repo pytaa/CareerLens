@@ -32,16 +32,6 @@ class PdfService {
   }
 
   async _sendEmail(to, pdfBuffer, type) {
-    const transporter = nodemailer.createTransport({
-      host: this.smtpHost,
-      port: this.smtpPort,
-      secure: this.smtpSecure,
-      auth: this.smtpUser && this.smtpPass ? {
-        user: this.smtpUser,
-        pass: this.smtpPass
-      } : undefined
-    });
-
     const subject = `CareerLens - Laporan Hasil Analisis ${type}`;
     const html = `
       <div style="font-family: sans-serif; color: #333333; line-height: 1.6;">
@@ -52,6 +42,38 @@ class PdfService {
         <p>Salam hangat,<br><strong>Tim CareerLens</strong></p>
       </div>
     `;
+
+    //Brevo API (HTTP Port 443)
+    if (process.env.BREVO_API_KEY) {
+      const axios = require('axios');
+      await axios.post('https://api.brevo.com/v3/smtp/email', {
+        sender: { name: "CareerLens", email: this.emailFrom },
+        to: [{ email: to }],
+        subject: subject,
+        htmlContent: html,
+        attachment: [{
+          name: `CareerLens_Laporan_${type.replace(' ', '_')}.pdf`,
+          content: pdfBuffer.toString('base64')
+        }]
+      }, {
+        headers: {
+          'api-key': process.env.BREVO_API_KEY,
+          'Content-Type': 'application/json'
+        }
+      });
+      return;
+    }
+
+    // Fallback: SMTP Klasik via Nodemailer (Biasanya diblokir Railway)
+    const transporter = nodemailer.createTransport({
+      host: this.smtpHost,
+      port: this.smtpPort,
+      secure: this.smtpSecure,
+      auth: this.smtpUser && this.smtpPass ? {
+        user: this.smtpUser,
+        pass: this.smtpPass
+      } : undefined
+    });
 
     await transporter.sendMail({
       from: this.emailFrom,
@@ -78,7 +100,7 @@ class PdfService {
       const textColor = '#333333';
       const lightGrey = '#f7f7f7';
 
-      // --- WATERMARK KIRI BAWAH ---
+      // WATERMARK KIRI BAWAH
       const addWatermark = () => {
           const prevX = doc.x;
           const prevY = doc.y;
