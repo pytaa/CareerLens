@@ -55,9 +55,9 @@ class RecommendationService extends BaseService {
       let aiData = this.cache.get(cacheKey);
 
       if (aiData) {
-        console.log(`⚡ [Cache Hit] predictInterest: ${normalizedInterestId}`);
+        console.log(`[Cache Hit] predictInterest: ${normalizedInterestId}`);
       } else {
-        console.log(`⏳ [Cache Miss] predictInterest: ${normalizedInterestId}`);
+        console.log(`[Cache Miss] predictInterest: ${normalizedInterestId}`);
         const aiResponse = await axios.post(`${this.aiServiceUrl}/predict`, {
           user_id: userId || 'anonymous',
           method: 'interest',
@@ -382,9 +382,12 @@ class RecommendationService extends BaseService {
       });
     };
 
+    const normalizedAIPath = normalizeLearningPath(existingRoadmap.learning_path);
+    const normalizedAIProjects = normalizeDummyProjects(existingRoadmap.dummy_projects);
+
     return {
-      learning_path: learningPath.length ? learningPath : normalizeLearningPath(existingRoadmap.learning_path),
-      dummy_projects: dummyProjects.length ? dummyProjects : normalizeDummyProjects(existingRoadmap.dummy_projects)
+      learning_path: normalizedAIPath.length > 0 ? normalizedAIPath : learningPath,
+      dummy_projects: normalizedAIProjects.length > 0 ? normalizedAIProjects : dummyProjects
     };
   }
 
