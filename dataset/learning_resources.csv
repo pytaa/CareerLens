@@ -1,4 +1,4 @@
-﻿resource_id,role_id,step_number,nama_skill,link_course,tipe,platform
+resource_id,role_id,step_number,nama_skill,link_course,tipe,platform
 RES0001,R001,1,Agile - Agile Project Management,https://www.coursera.org/learn/agile-project-management,Video Course + Certificate,Coursera
 RES0002,R001,1,Sql - Analyze Data To Answer Questions,https://www.coursera.org/learn/analyze-data,Video Course + Certificate,Coursera
 RES0003,R001,1,Python - Data Analysis With Python,https://www.coursera.org/learn/data-analysis-with-python,Video Course + Certificate,Coursera
@@ -37,7 +37,6 @@ RES0035,R003,2,Node.Js - Chatbots: Messenger Chatbot With Api.Ai And Node.Js,htt
 RES0036,R003,2,"Python - Core: A Web App Reference Guide For Django, Python, And More",https://www.udemy.com/coding-for-entrepreneurs-core/,Video Course + Certificate,Udemy
 RES0037,R003,3,Python - Applied Data Science With Python,https://www.coursera.org/specializations/data-science-python,Video Course + Certificate,Coursera
 RES0038,R003,3,Python - Data Visualization With Python,https://www.coursera.org/learn/python-for-data-visualization,Video Course + Certificate,Coursera
-RES0039,R003,3,Python - Genomic Data Science,https://www.coursera.org/specializations/genomic-data-science,Video Course + Certificate,Coursera
 RES0040,R003,4,Python - Agentic Ai With Langchain And Langgraph,https://www.coursera.org/learn/agentic-ai-with-langchain-and-langgraph,Video Course + Certificate,Coursera
 RES0041,R003,4,Python - Ai Code Generation For Everyone,https://www.coursera.org/learn/ai-code-generation-everyone,Video Course + Certificate,Coursera
 RES0042,R003,4,Python - Ai Python For Beginners,https://www.coursera.org/learn/ai-python-for-beginners,Video Course + Certificate,Coursera
@@ -82,7 +81,6 @@ RES0080,R006,2,Python - Expressway To Data Science: Python Programming,https://w
 RES0081,R006,2,"Python, Linux - Applied Software Engineering Fundamentals",https://www.coursera.org/specializations/software-engineering-fundamentals,Video Course + Certificate,Coursera
 RES0082,R006,3,Python - Applied Data Science With Python,https://www.coursera.org/specializations/data-science-python,Video Course + Certificate,Coursera
 RES0083,R006,3,Python - Data Visualization With Python,https://www.coursera.org/learn/python-for-data-visualization,Video Course + Certificate,Coursera
-RES0084,R006,3,Python - Genomic Data Science,https://www.coursera.org/specializations/genomic-data-science,Video Course + Certificate,Coursera
 RES0085,R006,4,Python - Agentic Ai With Langchain And Langgraph,https://www.coursera.org/learn/agentic-ai-with-langchain-and-langgraph,Video Course + Certificate,Coursera
 RES0086,R006,4,Python - Ai Code Generation For Everyone,https://www.coursera.org/learn/ai-code-generation-everyone,Video Course + Certificate,Coursera
 RES0087,R006,4,Python - Ai Python For Beginners,https://www.coursera.org/learn/ai-python-for-beginners,Video Course + Certificate,Coursera
@@ -296,12 +294,10 @@ RES0294,R020,5,Python - Python Data Structures,https://www.coursera.org/learn/py
 RES0295,R021,1,Python - Data Analysis With Python,https://www.coursera.org/learn/data-analysis-with-python,Video Course + Certificate,Coursera
 RES0296,R021,1,Siem - Sound The Alarm: Detection And Response,https://www.coursera.org/learn/detection-and-response,Video Course + Certificate,Coursera
 RES0297,R021,1,Python - Introduction To Software Engineering,https://www.coursera.org/learn/introduction-to-software-engineering,Video Course + Certificate,Coursera
-RES0298,R021,2,Python - Investment Management With Python And Machine Learning,https://www.coursera.org/specializations/investment-management-python-machine-learning,Video Course + Certificate,Coursera
 RES0299,R021,2,Python - An Introduction To Programming The Internet Of Things (Iot),https://www.coursera.org/specializations/iot,Video Course + Certificate,Coursera
 RES0300,R021,2,Python - Network Automation Engineering Fundamentals,https://www.coursera.org/specializations/networkautomation,Video Course + Certificate,Coursera
 RES0301,R021,3,Python - Applied Data Science With Python,https://www.coursera.org/specializations/data-science-python,Video Course + Certificate,Coursera
 RES0302,R021,3,Python - Data Visualization With Python,https://www.coursera.org/learn/python-for-data-visualization,Video Course + Certificate,Coursera
-RES0303,R021,3,Python - Genomic Data Science,https://www.coursera.org/specializations/genomic-data-science,Video Course + Certificate,Coursera
 RES0304,R021,4,Python - Agentic Ai With Langchain And Langgraph,https://www.coursera.org/learn/agentic-ai-with-langchain-and-langgraph,Video Course + Certificate,Coursera
 RES0305,R021,4,Python - Ai Code Generation For Everyone,https://www.coursera.org/learn/ai-code-generation-everyone,Video Course + Certificate,Coursera
 RES0306,R021,4,Python - Ai Python For Beginners,https://www.coursera.org/learn/ai-python-for-beginners,Video Course + Certificate,Coursera
@@ -313,7 +309,6 @@ RES0311,R022,1,Python - Data Analysis With Python,https://www.coursera.org/learn
 RES0312,R022,1,Python - Introduction To Software Engineering,https://www.coursera.org/learn/introduction-to-software-engineering,Video Course + Certificate,Coursera
 RES0313,R022,2,Cryptography - Introduction To Cyber Security,https://www.coursera.org/specializations/intro-cyber-security,Video Course + Certificate,Coursera
 RES0314,R022,2,Python - Introduction To Data Science,https://www.coursera.org/specializations/introduction-data-science,Video Course + Certificate,Coursera
-RES0315,R022,2,Python - Investment Management With Python And Machine Learning,https://www.coursera.org/specializations/investment-management-python-machine-learning,Video Course + Certificate,Coursera
 RES0316,R022,3,Python - Applied Data Science With Python,https://www.coursera.org/specializations/data-science-python,Video Course + Certificate,Coursera
 RES0317,R022,3,Cryptography - Cybersecurity,https://www.coursera.org/specializations/cyber-security,Video Course + Certificate,Coursera
 RES0318,R022,3,Python - Data Visualization With Python,https://www.coursera.org/learn/python-for-data-visualization,Video Course + Certificate,Coursera
@@ -326,12 +321,10 @@ RES0324,R022,5,Python - Developing Ai Applications With Python And Flask,https:/
 RES0325,R023,1,"Vulnerability Assessment - Assets, Threats, And Vulnerabilities",https://www.coursera.org/learn/assets-threats-and-vulnerabilities,Video Course + Certificate,Coursera
 RES0326,R023,1,Python - Data Analysis With Python,https://www.coursera.org/learn/data-analysis-with-python,Video Course + Certificate,Coursera
 RES0327,R023,1,Siem - Sound The Alarm: Detection And Response,https://www.coursera.org/learn/detection-and-response,Video Course + Certificate,Coursera
-RES0328,R023,2,Python - Investment Management With Python And Machine Learning,https://www.coursera.org/specializations/investment-management-python-machine-learning,Video Course + Certificate,Coursera
 RES0329,R023,2,Python - An Introduction To Programming The Internet Of Things (Iot),https://www.coursera.org/specializations/iot,Video Course + Certificate,Coursera
 RES0330,R023,2,Network Security - Managing Cybersecurity,https://www.coursera.org/specializations/managing-cybersecurity,Video Course + Certificate,Coursera
 RES0331,R023,3,Python - Applied Data Science With Python,https://www.coursera.org/specializations/data-science-python,Video Course + Certificate,Coursera
 RES0332,R023,3,Python - Data Visualization With Python,https://www.coursera.org/learn/python-for-data-visualization,Video Course + Certificate,Coursera
-RES0333,R023,3,Python - Genomic Data Science,https://www.coursera.org/specializations/genomic-data-science,Video Course + Certificate,Coursera
 RES0334,R023,4,Python - Agentic Ai With Langchain And Langgraph,https://www.coursera.org/learn/agentic-ai-with-langchain-and-langgraph,Video Course + Certificate,Coursera
 RES0335,R023,4,Python - Ai Code Generation For Everyone,https://www.coursera.org/learn/ai-code-generation-everyone,Video Course + Certificate,Coursera
 RES0336,R023,4,Python - Ai Python For Beginners,https://www.coursera.org/learn/ai-python-for-beginners,Video Course + Certificate,Coursera
@@ -346,7 +339,6 @@ RES0344,R024,2,Python - Expressway To Data Science: Python Programming,https://w
 RES0345,R024,2,"Threat Intelligence, Forensics - Security Analyst Fundamentals",https://www.coursera.org/specializations/security-analyst-fundamentals,Video Course + Certificate,Coursera
 RES0346,R024,3,Python - Applied Data Science With Python,https://www.coursera.org/specializations/data-science-python,Video Course + Certificate,Coursera
 RES0347,R024,3,Python - Data Visualization With Python,https://www.coursera.org/learn/python-for-data-visualization,Video Course + Certificate,Coursera
-RES0348,R024,3,Python - Genomic Data Science,https://www.coursera.org/specializations/genomic-data-science,Video Course + Certificate,Coursera
 RES0349,R024,4,Python - Agentic Ai With Langchain And Langgraph,https://www.coursera.org/learn/agentic-ai-with-langchain-and-langgraph,Video Course + Certificate,Coursera
 RES0350,R024,4,Python - Ai Code Generation For Everyone,https://www.coursera.org/learn/ai-code-generation-everyone,Video Course + Certificate,Coursera
 RES0351,R024,4,Python - Ai Python For Beginners,https://www.coursera.org/learn/ai-python-for-beginners,Video Course + Certificate,Coursera
@@ -361,7 +353,6 @@ RES0359,R025,2,"Python - Python, Bash And Sql Essentials For Data Engineering",h
 RES0360,R025,2,Python - Expressway To Data Science: Python Programming,https://www.coursera.org/specializations/python-programming-data-science,Video Course + Certificate,Coursera
 RES0361,R025,3,Python - Applied Data Science With Python,https://www.coursera.org/specializations/data-science-python,Video Course + Certificate,Coursera
 RES0362,R025,3,Python - Data Visualization With Python,https://www.coursera.org/learn/python-for-data-visualization,Video Course + Certificate,Coursera
-RES0363,R025,3,Python - Genomic Data Science,https://www.coursera.org/specializations/genomic-data-science,Video Course + Certificate,Coursera
 RES0364,R025,4,Python - Agentic Ai With Langchain And Langgraph,https://www.coursera.org/learn/agentic-ai-with-langchain-and-langgraph,Video Course + Certificate,Coursera
 RES0365,R025,4,Python - Ai Code Generation For Everyone,https://www.coursera.org/learn/ai-code-generation-everyone,Video Course + Certificate,Coursera
 RES0366,R025,4,Python - Ai Python For Beginners,https://www.coursera.org/learn/ai-python-for-beginners,Video Course + Certificate,Coursera
@@ -384,9 +375,7 @@ RES0382,R026,5,Aws - Aws Cloud Solutions Architect Professional Certificate,http
 RES0383,R026,5,Aws - Aws Cloud Support Associate Professional Certificate,https://www.coursera.org/professional-certificates/aws-cloud-support-associate,Video Course + Certificate,Coursera
 RES0384,R026,5,Aws - Aws Cloud Technology Consultant Professional Certificate,https://www.coursera.org/professional-certificates/aws-cloud-technology-consultant,Video Course + Certificate,Coursera
 RES0385,R027,1,Sql - Analyze Data To Answer Questions,https://www.coursera.org/learn/analyze-data,Video Course + Certificate,Coursera
-RES0386,R027,1,Statistical Analysis - Understanding Clinical Research: Behind The Statistics,https://www.coursera.org/learn/clinical-research,Video Course + Certificate,Coursera
 RES0387,R027,1,"R, Data Visualization - Data Analysis With R Programming",https://www.coursera.org/learn/data-analysis-r,Video Course + Certificate,Coursera
-RES0388,R027,2,Python - Investment Management With Python And Machine Learning,https://www.coursera.org/specializations/investment-management-python-machine-learning,Video Course + Certificate,Coursera
 RES0389,R027,2,Python - An Introduction To Programming The Internet Of Things (Iot),https://www.coursera.org/specializations/iot,Video Course + Certificate,Coursera
 RES0390,R027,2,R - Data Science,https://www.coursera.org/specializations/jhu-data-science,Video Course + Certificate,Coursera
 RES0391,R027,3,"Sql, Data Visualization - Advanced Business Analytics",https://www.coursera.org/specializations/data-analytics-business,Video Course + Certificate,Coursera
@@ -416,7 +405,6 @@ RES0414,R028,5,Machine Learning - Pytorch: Advanced Architectures And Deployment
 RES0415,R029,1,Machine Learning - Ai For Everyone,https://www.coursera.org/learn/ai-for-everyone,Video Course + Certificate,Coursera
 RES0416,R029,1,Machine Learning - Getting Started With Ai Using Ibm Watson,https://www.coursera.org/learn/ai-with-ibm-watson,Video Course + Certificate,Coursera
 RES0417,R029,1,Sql - Analyze Data To Answer Questions,https://www.coursera.org/learn/analyze-data,Video Course + Certificate,Coursera
-RES0418,R029,2,"Python, Machine Learning - Investment Management With Python And Machine Learning",https://www.coursera.org/specializations/investment-management-python-machine-learning,Video Course + Certificate,Coursera
 RES0419,R029,2,Python - An Introduction To Programming The Internet Of Things (Iot),https://www.coursera.org/specializations/iot,Video Course + Certificate,Coursera
 RES0420,R029,2,Machine Learning - Data Science,https://www.coursera.org/specializations/jhu-data-science,Video Course + Certificate,Coursera
 RES0421,R029,3,Machine Learning - Ai For Medicine,https://www.coursera.org/specializations/ai-for-medicine,Video Course + Certificate,Coursera
@@ -471,14 +459,12 @@ RES0469,R032,4,Python - Agentic Ai With Langchain And Langgraph,https://www.cour
 RES0470,R032,4,Python - Ai Code Generation For Everyone,https://www.coursera.org/learn/ai-code-generation-everyone,Video Course + Certificate,Coursera
 RES0471,R032,4,Python - Ai Python For Beginners,https://www.coursera.org/learn/ai-python-for-beginners,Video Course + Certificate,Coursera
 RES0472,R032,5,"Python, Apache Spark, Hadoop - Spark, Hadoop, And Snowflake For Data Engineering",https://www.coursera.org/learn/spark-hadoop-snowflake-data-engineering,Video Course + Certificate,Coursera
-RES0473,R032,5,Sql - Sugar. Software Unificado Para La Gestión Arqueológica,https://www.coursera.org/learn/sugar-software-unificado-gestion-arqueologica,Video Course + Certificate,Coursera
 RES0474,R032,5,Python - The Power Of Statistics,https://www.coursera.org/learn/the-power-of-statistics,Video Course + Certificate,Coursera
 RES0475,R033,1,Sql - Analyze Data To Answer Questions,https://www.coursera.org/learn/analyze-data,Video Course + Certificate,Coursera
 RES0476,R033,1,Data Visualization - Data Analysis With R Programming,https://www.coursera.org/learn/data-analysis-r,Video Course + Certificate,Coursera
 RES0477,R033,1,"Python, Data Visualization - Data Analysis With Python",https://www.coursera.org/learn/data-analysis-with-python,Video Course + Certificate,Coursera
 RES0478,R033,2,Python - Cloud Application Development Foundations,https://www.coursera.org/specializations/ibm-cloud-application-development-foundations,Video Course + Certificate,Coursera
 RES0479,R033,2,"Sql, Python - Introduction To Data Science",https://www.coursera.org/specializations/introduction-data-science,Video Course + Certificate,Coursera
-RES0480,R033,2,Python - Investment Management With Python And Machine Learning,https://www.coursera.org/specializations/investment-management-python-machine-learning,Video Course + Certificate,Coursera
 RES0481,R033,3,"Sql, Data Visualization - Advanced Business Analytics",https://www.coursera.org/specializations/data-analytics-business,Video Course + Certificate,Coursera
 RES0482,R033,3,Python - Applied Data Science With Python,https://www.coursera.org/specializations/data-science-python,Video Course + Certificate,Coursera
 RES0483,R033,3,Excel - Business Analytics With Excel: Elementary To Advanced,https://www.coursera.org/learn/business-analytics-excel,Video Course + Certificate,Coursera
@@ -501,12 +487,10 @@ RES0499,R034,4,Python - Agentic Ai With Langchain And Langgraph,https://www.cour
 RES0500,R034,4,Python - Ai Code Generation For Everyone,https://www.coursera.org/learn/ai-code-generation-everyone,Video Course + Certificate,Coursera
 RES0501,R034,4,Python - Ai Python For Beginners,https://www.coursera.org/learn/ai-python-for-beginners,Video Course + Certificate,Coursera
 RES0502,R034,5,"Apache Spark, Hadoop, Python - Spark, Hadoop, And Snowflake For Data Engineering",https://www.coursera.org/learn/spark-hadoop-snowflake-data-engineering,Video Course + Certificate,Coursera
-RES0503,R034,5,Sql - Sugar. Software Unificado Para La Gestión Arqueológica,https://www.coursera.org/learn/sugar-software-unificado-gestion-arqueologica,Video Course + Certificate,Coursera
 RES0504,R034,5,Python - The Power Of Statistics,https://www.coursera.org/learn/the-power-of-statistics,Video Course + Certificate,Coursera
 RES0505,R035,1,Sql - Analyze Data To Answer Questions,https://www.coursera.org/learn/analyze-data,Video Course + Certificate,Coursera
 RES0506,R035,1,Python - Data Analysis With Python,https://www.coursera.org/learn/data-analysis-with-python,Video Course + Certificate,Coursera
 RES0507,R035,1,Sql - Prepare Data For Exploration,https://www.coursera.org/learn/data-preparation,Video Course + Certificate,Coursera
-RES0508,R035,2,Python - Investment Management With Python And Machine Learning,https://www.coursera.org/specializations/investment-management-python-machine-learning,Video Course + Certificate,Coursera
 RES0509,R035,2,Python - An Introduction To Programming The Internet Of Things (Iot),https://www.coursera.org/specializations/iot,Video Course + Certificate,Coursera
 RES0510,R035,2,"Sql, Spark - Learn Sql Basics For Data Science",https://www.coursera.org/specializations/learn-sql-basics-data-science,Video Course + Certificate,Coursera
 RES0511,R035,3,Sql - Advanced Business Analytics,https://www.coursera.org/specializations/data-analytics-business,Video Course + Certificate,Coursera
@@ -537,7 +521,6 @@ RES0535,R037,1,Sql - Analyze Data To Answer Questions,https://www.coursera.org/l
 RES0536,R037,1,Python - Data Analysis With Python,https://www.coursera.org/learn/data-analysis-with-python,Video Course + Certificate,Coursera
 RES0537,R037,1,Sql - Prepare Data For Exploration,https://www.coursera.org/learn/data-preparation,Video Course + Certificate,Coursera
 RES0538,R037,2,"Python, Sql - Introduction To Data Science",https://www.coursera.org/specializations/introduction-data-science,Video Course + Certificate,Coursera
-RES0539,R037,2,Python - Investment Management With Python And Machine Learning,https://www.coursera.org/specializations/investment-management-python-machine-learning,Video Course + Certificate,Coursera
 RES0540,R037,2,Python - An Introduction To Programming The Internet Of Things (Iot),https://www.coursera.org/specializations/iot,Video Course + Certificate,Coursera
 RES0541,R037,3,Sql - Advanced Business Analytics,https://www.coursera.org/specializations/data-analytics-business,Video Course + Certificate,Coursera
 RES0542,R037,3,Python - Applied Data Science With Python,https://www.coursera.org/specializations/data-science-python,Video Course + Certificate,Coursera
@@ -571,7 +554,6 @@ RES0569,R039,2,Python - Applied Software Engineering Fundamentals,https://www.co
 RES0570,R039,2,Python - Statistics With Python,https://www.coursera.org/specializations/statistics-with-python,Video Course + Certificate,Coursera
 RES0571,R039,3,Python - Applied Data Science With Python,https://www.coursera.org/specializations/data-science-python,Video Course + Certificate,Coursera
 RES0572,R039,3,Python - Data Visualization With Python,https://www.coursera.org/learn/python-for-data-visualization,Video Course + Certificate,Coursera
-RES0573,R039,3,Python - Genomic Data Science,https://www.coursera.org/specializations/genomic-data-science,Video Course + Certificate,Coursera
 RES0574,R039,4,"Rag, Vector Databases - Advanced Rag With Vector Databases And Retrievers",https://www.coursera.org/learn/advanced-rag-with-vector-databases-and-retrievers,Video Course + Certificate,Coursera
 RES0575,R039,4,"Python, Langchain - Agentic Ai With Langchain And Langgraph",https://www.coursera.org/learn/agentic-ai-with-langchain-and-langgraph,Video Course + Certificate,Coursera
 RES0576,R039,4,Prompt Engineering - Ai Basics And Tools For Creativity,https://www.coursera.org/learn/ai-basics-and-tools-for-creativity,Video Course + Certificate,Coursera
@@ -582,7 +564,6 @@ RES0580,R040,1,Sql - Analyze Data To Answer Questions,https://www.coursera.org/l
 RES0581,R040,1,Python - Data Analysis With Python,https://www.coursera.org/learn/data-analysis-with-python,Video Course + Certificate,Coursera
 RES0582,R040,1,Sql - Prepare Data For Exploration,https://www.coursera.org/learn/data-preparation,Video Course + Certificate,Coursera
 RES0583,R040,2,"Sql, Python - Introduction To Data Science",https://www.coursera.org/specializations/introduction-data-science,Video Course + Certificate,Coursera
-RES0584,R040,2,Python - Investment Management With Python And Machine Learning,https://www.coursera.org/specializations/investment-management-python-machine-learning,Video Course + Certificate,Coursera
 RES0585,R040,2,Python - An Introduction To Programming The Internet Of Things (Iot),https://www.coursera.org/specializations/iot,Video Course + Certificate,Coursera
 RES0586,R040,3,Sql - Advanced Business Analytics,https://www.coursera.org/specializations/data-analytics-business,Video Course + Certificate,Coursera
 RES0587,R040,3,Python - Applied Data Science With Python,https://www.coursera.org/specializations/data-science-python,Video Course + Certificate,Coursera
@@ -910,7 +891,6 @@ RES0908,R063,5,"Crm - Crm, Project Management & Omnichannel Strategy Specializat
 RES0909,R063,5,"Social Media - Online Marketing: Social Media, Ads & E-Commerce Certificate Specialization",https://www.coursera.org/specializations/online-marketing-social-media-ads-e-commerce-certificate,Video Course + Certificate,Coursera
 RES0910,R064,1,Research - Basic Elements Of Design: Design Principles And Software Overview,https://www.coursera.org/learn/basic-elements-design,Video Course + Certificate,Coursera
 RES0911,R064,1,Research - English For Business And Entrepreneurship,https://www.coursera.org/learn/business,Video Course + Certificate,Coursera
-RES0912,R064,1,Research - Data Management For Clinical Research,https://www.coursera.org/learn/clinical-data-management,Video Course + Certificate,Coursera
 RES0913,R064,2,Research - Google Ux Design,https://www.coursera.org/professional-certificates/google-ux-design,Video Course + Certificate,Coursera
 RES0914,R064,2,Research - Digital Marketing Strategy And Planning,https://www.coursera.org/specializations/digital-marketing-strategy-planning,Video Course + Certificate,Coursera
 RES0915,R064,2,Research - European Business Law,https://www.coursera.org/specializations/european-business-law,Video Course + Certificate,Coursera
