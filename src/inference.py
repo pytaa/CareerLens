@@ -123,11 +123,18 @@ def predict_by_skill(
 
         # Minimal ada 1 skill cocok
         if overlap >= 1:
+            
+            overlap_ratio = overlap / len(user_lower)
+
+            final_score = (
+                0.7 * score + 0.3 * (overlap_ratio * 100)
+            )
 
             filtered_scores.append({
                 "idx"     : idx,
                 "score"   : score,
-                "overlap" : overlap
+                "overlap" : overlap,
+                "final_score": final_score
             })
 
     # =====================================================
@@ -136,10 +143,8 @@ def predict_by_skill(
 
     filtered_scores = sorted(
         filtered_scores,
-        key=lambda x: (
-            x["overlap"],
-            x["score"]
-        ),
+        key=lambda x:
+            x["final_score"],
         reverse=True
     )
 
@@ -179,7 +184,7 @@ def predict_by_skill(
             "role_id" : row["role_id"],
             "role_name" : row["nama_role"],
             "match_pct" : round(
-                item["score"],
+                item["final_score"],
                 1
             ),
             "description" : row.get(
