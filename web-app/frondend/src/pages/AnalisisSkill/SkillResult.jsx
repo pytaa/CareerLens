@@ -338,15 +338,28 @@ const SkillResult = ({ resultData, inputtedSkills, onBack, onRetake }) => {
                     </h3>
 
                     <div className="grid grid-cols-1 xl:grid-cols-2 gap-5 max-w-5xl">
-                      {groupedRoadmap[stepNum].map((course, idx) => (
+                      {groupedRoadmap[stepNum].map((course, idx) => {
+                        const titleParts = course.nama_skill?.split(" - ") || [];
+                        const hasCategory = titleParts.length > 1;
+                        const categoryName = hasCategory ? titleParts[0] : null;
+                        const courseName = hasCategory ? titleParts.slice(1).join(" - ") : course.nama_skill;
+
+                        return (
                         <div
                           key={idx}
                           className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col hover:shadow-md transition-shadow"
                         >
                           <div className="flex flex-wrap md:flex-nowrap justify-between items-start mb-3 gap-2">
-                            <h4 className="font-bold text-[#000066] text-lg leading-tight">
-                              {course.nama_skill}
-                            </h4>
+                            <div className="flex flex-col gap-1.5">
+                              {categoryName && (
+                                <span className="text-[#3b82f6] text-[11px] font-bold uppercase tracking-wider">
+                                  {categoryName}
+                                </span>
+                              )}
+                              <h4 className="font-bold text-[#000066] text-lg leading-tight">
+                                {courseName}
+                              </h4>
+                            </div>
                             <span className="shrink-0 bg-slate-100 text-[#464651] text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider mt-1 md:mt-0">
                               {course.platform}
                             </span>
@@ -363,7 +376,8 @@ const SkillResult = ({ resultData, inputtedSkills, onBack, onRetake }) => {
                             Lihat Kursus <FiExternalLink size={16} />
                           </a>
                         </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
                 ))}

@@ -292,12 +292,14 @@ class PdfService {
                 let courseY = actualStartY + 45;
                 stepCourses.forEach(course => {
                     const platform = course.platform || course.resource || 'Unknown';
-                    const bulletText = `• ${course.nama_skill} (${platform})`;
+                    const titleParts = course.nama_skill?.split(" - ") || [];
+                    const cleanName = titleParts.length > 1 ? titleParts.slice(1).join(" - ") : course.nama_skill;
+                    const bulletText = `• ${cleanName} (${platform})`;
                     
                     doc.font('Helvetica').fontSize(9).fillColor('#64748b').text(bulletText, titleX, courseY, { indent: 0 });
                     
                     // Link aligned to the right
-                    doc.fillColor('#3b82f6').text('Link ∞', marginX + contentWidth - 40, courseY, {
+                    doc.fillColor('#3b82f6').text('Link', marginX + contentWidth - 40, courseY, {
                         link: course.link_course,
                         underline: false,
                         align: 'right',
@@ -686,11 +688,13 @@ class PdfService {
                 let courseY = actualStartY + 45;
                 stepCourses.forEach(course => {
                     const platform = course.platform || course.resource || 'Unknown';
-                    const bulletText = `• ${course.nama_skill} (${platform})`;
+                    const titleParts = course.nama_skill?.split(" - ") || [];
+                    const cleanName = titleParts.length > 1 ? titleParts.slice(1).join(" - ") : course.nama_skill;
+                    const bulletText = `• ${cleanName} (${platform})`;
                     
                     doc.font('Helvetica').fontSize(9).fillColor('#64748b').text(bulletText, titleX, courseY, { indent: 0 });
                     
-                    doc.fillColor('#3b82f6').text('Link ∞', marginX + contentWidth - 40, courseY, {
+                    doc.fillColor('#3b82f6').text('Link', marginX + contentWidth - 40, courseY, {
                         link: course.link_course,
                         underline: false,
                         align: 'right',
@@ -1066,11 +1070,13 @@ class PdfService {
                 let courseY = actualStartY + 45;
                 stepCourses.forEach(course => {
                     const platform = course.platform || course.resource || 'Unknown';
-                    const bulletText = `• ${course.nama_skill} (${platform})`;
+                    const titleParts = course.nama_skill?.split(" - ") || [];
+                    const cleanName = titleParts.length > 1 ? titleParts.slice(1).join(" - ") : course.nama_skill;
+                    const bulletText = `• ${cleanName} (${platform})`;
                     
                     doc.font('Helvetica').fontSize(9).fillColor('#64748b').text(bulletText, titleX, courseY, { indent: 0 });
                     
-                    doc.fillColor('#3b82f6').text('Link ∞', 50 + 495 - 40, courseY, {
+                    doc.fillColor('#3b82f6').text('Link', 50 + 495 - 40, courseY, {
                         link: course.link_course,
                         underline: false,
                         align: 'right',
