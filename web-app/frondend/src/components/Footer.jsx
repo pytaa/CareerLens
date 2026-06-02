@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiInstagram, FiMessageCircle, FiMail, FiPhone, FiMapPin, FiBriefcase } from 'react-icons/fi';
+import { FiGithub } from 'react-icons/fi';
 // Impor logo custom milikmu
 import logoIcon from '../../assets/careerLens_logo_1.png'; 
 
@@ -8,23 +8,24 @@ const Footer = () => {
     <footer className="bg-[#030b26] text-white py-12">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
         
-        {/* Contact Details */}
+        {/* Credits */}
         <div>
-          <h3 className="text-xl font-bold mb-6">Contact Details</h3>
-          <ul className="space-y-4 text-sm text-slate-300">
-            <li className="flex items-center gap-3"><FiInstagram size={18} /> CareerLens_</li>
-            <li className="flex items-center gap-3"><FiMessageCircle size={18} /> 081234567899</li>
-            <li className="flex items-center gap-3"><FiMail size={18} /> <a href="mailto:careerlens@gmail.com" className="underline hover:text-white">careerlens@gmail.com</a></li>
-            <li className="flex items-center gap-3"><FiPhone size={18} /> 081234567899</li>
-          </ul>
+          <h3 className="text-xl font-bold mb-6">Credits</h3>
+          <p className="text-sm text-slate-300 leading-relaxed pr-4">
+            Aplikasi ini dikembangkan oleh Tim CareerLens sebagai proyek akhir (Capstone Project). Kami berdedikasi untuk membantu generasi muda menemukan jalur karir dan peta jalan belajar terbaik.
+          </p>
         </div>
 
-        {/* Company Name */}
+        {/* Repository */}
         <div>
-          <h3 className="text-xl font-bold mb-6">Company Name</h3>
+          <h3 className="text-xl font-bold mb-6">Source</h3>
           <ul className="space-y-4 text-sm text-slate-300">
-            <li className="flex items-center gap-3"><FiBriefcase size={18} /> CareerLens Corp.</li>
-            <li className="flex items-center gap-3"><FiMapPin size={18} /> Indonesia</li>
+            <li className="flex items-center gap-3">
+              <FiGithub size={18} /> 
+              <a href="https://github.com/pytaa/CareerLens" target="_blank" rel="noopener noreferrer" className="hover:text-white hover:underline transition-colors">
+                GitHub Repository
+              </a>
+            </li>
           </ul>
         </div>
 
