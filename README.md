@@ -13,7 +13,7 @@ Melalui kombinasi Machine Learning, Skill Analysis, dan Tes Bakat RIASEC, sistem
 
 ---
 
-# 🌐 Live Demo
+# Live Demo
 
 | Service | URL |
 |----------|----------|
@@ -120,7 +120,7 @@ Layanan eksternal yang digunakan:
 ## 1. Clone Repository
 
 ```bash
-git clone https://github.com/your-username/CareerLens.git
+git clone https://github.com/pytaa/CareerLens.git
 
 cd CareerLens
 ```
@@ -202,7 +202,7 @@ http://localhost:5173
 
 ---
 
-# 🗄️ Database Setup (PostgreSQL)
+# Database Setup (PostgreSQL)
 
 CareerLens menggunakan PostgreSQL sebagai database utama untuk menyimpan data pengguna, hasil analisis karier, dan rekomendasi yang dihasilkan sistem.
 
@@ -234,7 +234,7 @@ docker-compose up -d db
 
 ---
 
-# 📧 Email Setup (Brevo)
+# Email Setup
 
 CareerLens menggunakan Brevo untuk mengirim laporan hasil analisis karier dalam format PDF kepada pengguna.
 
@@ -262,29 +262,15 @@ BREVO_SENDER_EMAIL=your_verified_email
 
 ---
 
-# 🤖 AI Service Setup
+# AI Models
 
-CareerLens menggunakan model Deep Learning yang di-deploy melalui Hugging Face Spaces.
+Model yang digunakan dalam CareerLens dapat diakses melalui:
 
-### AI Service Configuration
-
-```env
-AI_SERVICE_URL=https://your-huggingface-space.hf.space
-AI_SERVICE_TIMEOUT=120000
-```
-
-### Available Models
-
-| Model File | Purpose |
-|------------|----------|
-| riasec_model_best.keras | Model terbaik untuk prediksi RIASEC |
-| riasec_model_final.keras | Model final RIASEC |
-| skill_model_best.keras | Model terbaik untuk analisis skill |
-| skill_model_final.keras | Model final analisis skill |
+- [CareerLens Models]([https://drive.google.com/drive/folders/1m9pCoNPWp6gRV1Qn5iMAYHUvtyoS8ju2?usp=sharing](https://drive.google.com/drive/folders/1m9pCoNPWp6gRV1Qn5iMAYHUvtyoS8ju2?usp=sharing))
 
 ---
 
-# 🐳 Docker Setup
+# Docker Setup
 
 CareerLens menyediakan konfigurasi Docker untuk menjalankan seluruh layanan secara lokal.
 
@@ -316,13 +302,17 @@ docker-compose down
 
 ---
 
-# 👥 Team
+## 👥 Tim Pengembang (CC26-PSU093)
 
 | Nama | ID | Universitas | Peran |
-|--------|--------|-------------|---------|
+| :--- | :--- | :--- | :--- |
 | Najdain Tafdhila | CFCC319D6X1704 | Universitas Sumatera Utara | Full-Stack Web Developer |
 | Muhammad Aidil Radiansyah | CFCC208D6Y2420 | Universitas Hasanuddin | Full-Stack Web Developer |
 | Sevilla Claudia Depari | CDCC319D6X0996 | Universitas Sumatera Utara | Data Scientist |
 | Pyta Nur Chumairah | CDCC208D6X1680 | Universitas Hasanuddin | Data Scientist |
 | Nazwa Nabila | CACC319D6X0515 | Universitas Sumatera Utara | AI Engineer |
 | Susi Pujiarti | CACC319D6X0883 | Universitas Sumatera Utara | AI Engineer |
+
+## License
+
+This project was developed as part of the Coding Camp 2026 Capstone Project.
