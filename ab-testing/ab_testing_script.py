@@ -3,16 +3,11 @@ import numpy as np
 import time
 from scipy import stats
 
-# ==========================================
 # STEP 1: LOAD DATASET (Kondisi Kontrol vs Treatment)
-# ==========================================
-# Pastikan jalur file csv sudah sesuai
 df_variant_a = pd.read_csv("dataset_learning_resources/learning_resources_OLD.csv")       # Dataset lama yang kotor
 df_variant_b = pd.read_csv("dataset_learning_resources/learning_resources_ULTIMATE.csv")  # Dataset baru yang bersih
 
-# ==========================================
 # STEP 2: PREPARE 50 TEST CASES (REPRESENTING ALL ROLES)
-# ==========================================
 test_cases = [
     # --- 1-10: Software & Web Engineering ---
     "html, css, javascript, react, sass",                            # Frontend Developer
@@ -80,9 +75,7 @@ test_cases = [
 # Tempat penampungan hasil metrik
 results = []
 
-# ==========================================
 # STEP 3: SIMULATION & MEASUREMENT LOOP
-# ==========================================
 print("Memulai simulasi A/B testing pada 50 sampel...")
 
 for idx, query in enumerate(test_cases):
@@ -111,9 +104,7 @@ for idx, query in enumerate(test_cases):
 # Mengubah hasil ke bentuk DataFrame
 df_results = pd.DataFrame(results)
 
-# ==========================================
 # STEP 4: STATISTICAL SIGNIFICANCE TESTING
-# ==========================================
 # Paired T-Test untuk Noise (Kualitas)
 t_stat_noise, p_value_noise = stats.ttest_rel(df_results["noise_variant_a"], df_results["noise_variant_b"])
 
@@ -130,9 +121,6 @@ if p_value_noise < 0.05:
 else:
     print("Kesimpulan: Terima H0. Tidak ada perbedaan signifikan.")
 
-# ==========================================
-# STEP 5: EXPORT DATA UNTUK SEVILLA
-# ==========================================
-# Kita simpan hasil mentah per kasus agar Sevilla bisa mengolah visualisasinya
+# STEP 5: EXPORT DATA
 df_results.to_csv("output_ab/ab_testing_results.csv", index=False)
 print("\nSukses! File 'ab_testing_results.csv' telah dibuat.")
