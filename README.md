@@ -266,7 +266,7 @@ BREVO_SENDER_EMAIL=your_verified_email
 
 Model yang digunakan dalam CareerLens dapat diakses melalui:
 
-- [CareerLens Models]([https://drive.google.com/drive/folders/1m9pCoNPWp6gRV1Qn5iMAYHUvtyoS8ju2?usp=sharing](https://drive.google.com/drive/folders/1m9pCoNPWp6gRV1Qn5iMAYHUvtyoS8ju2?usp=sharing))
+- [CareerLens Models] (https://drive.google.com/drive/folders/1m9pCoNPWp6gRV1Qn5iMAYHUvtyoS8ju2?usp=sharing)
 
 ---
 
