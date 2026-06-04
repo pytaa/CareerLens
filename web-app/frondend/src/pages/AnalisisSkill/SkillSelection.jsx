@@ -216,7 +216,7 @@ const SkillSelection = ({ onAnalyze }) => {
 
             {/* Dropdown Menu */}
             {isDropdownOpen && filteredSkills.length > 0 && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-[#030b26] border border-blue-900 rounded-xl shadow-2xl z-50 overflow-hidden max-h-60 overflow-y-auto">
+              <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-200 rounded-xl shadow-xl z-50 overflow-hidden max-h-60 overflow-y-auto">
                 {/* List Skill yang Tersedia */}
                 {filteredSkills.map((skill) => (
                   <div
@@ -225,7 +225,7 @@ const SkillSelection = ({ onAnalyze }) => {
                       e.preventDefault();
                       handleAddSkillFromList(skill);
                     }}
-                    className="w-full text-left px-5 py-3.5 text-white hover:bg-[#0277b6] cursor-pointer border-b border-slate-700/50 last:border-0 transition-colors text-sm font-medium capitalize"
+                    className="w-full text-left px-5 py-3.5 text-slate-700 hover:bg-blue-50 hover:text-[#0277b6] cursor-pointer border-b border-slate-100 last:border-0 transition-colors text-sm font-medium capitalize"
                   >
                     {skill}
                   </div>
