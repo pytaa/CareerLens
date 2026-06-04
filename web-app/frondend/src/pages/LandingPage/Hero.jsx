@@ -223,7 +223,7 @@ export default function Hero() {
         />
       </div>
 
-      <div className="relative z-10 w-full max-w-4xl px-6 flex flex-col items-center text-center mt-24 md:mt-12 pointer-events-auto">
+      <div className="relative z-10 w-full max-w-4xl px-6 flex flex-col items-center text-center -mt-8 md:mt-12 pointer-events-auto">
         
         <div 
           className={`relative mb-4 transition-all duration-1000 ease-out transform ${
