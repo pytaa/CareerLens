@@ -181,9 +181,6 @@ const SkillSelection = ({ onAnalyze }) => {
 
             {/* Input Group */}
             <div className="relative flex items-center bg-white border border-slate-200 rounded-xl overflow-hidden focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100 transition-all shadow-sm">
-              <div className="pl-5 pr-2 text-slate-400">
-                 <BiBrain size={22} />
-              </div>
               <input 
                 type="text" 
                 placeholder="Ketik atau pilih keahlian Anda..."
@@ -196,11 +193,11 @@ const SkillSelection = ({ onAnalyze }) => {
                 // Saat diklik/fokus, pastikan dropdown terbuka untuk memandu user
                 onFocus={() => setIsDropdownOpen(true)} 
                 onBlur={() => setTimeout(() => setIsDropdownOpen(false), 200)}
-                className="grow py-4 px-2 outline-none text-slate-700 bg-transparent placeholder:text-slate-400"
+                className="grow min-w-0 text-ellipsis py-4 pl-4 md:pl-6 pr-2 outline-none text-slate-700 bg-transparent placeholder:text-slate-400 text-sm md:text-base"
               />
               
               {/* Icon panah penanda ada dropdown */}
-              <div className="px-2 text-slate-400 cursor-pointer" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+              <div className="shrink-0 px-2 text-slate-400 cursor-pointer" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
                  <FiChevronDown size={20} className={`transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
               </div>
 
@@ -208,7 +205,7 @@ const SkillSelection = ({ onAnalyze }) => {
               <button 
                 onClick={handleAddSkill}
                 disabled={!isValidSkillInput}
-                className="bg-slate-50 hover:bg-slate-100 text-[#030b26] disabled:text-slate-400 font-bold px-8 py-4 border-l border-slate-200 transition-colors h-full"
+                className="hidden md:block shrink-0 bg-slate-50 hover:bg-slate-100 text-[#030b26] disabled:text-slate-400 font-bold px-8 py-4 border-l border-slate-200 transition-colors h-full"
               >
                 Tambah
               </button>
@@ -266,9 +263,8 @@ const SkillSelection = ({ onAnalyze }) => {
             <button 
               onClick={handleSubmit}
               disabled={selectedSkills.length < 2}
-              className="flex items-center gap-3 bg-[#030b26] hover:bg-[#0a194f] disabled:opacity-50 disabled:cursor-not-allowed text-white px-10 py-4 rounded-xl font-bold text-lg shadow-lg transition-all"
+              className="flex items-center justify-center gap-3 bg-[#030b26] hover:bg-[#0a194f] disabled:opacity-50 disabled:cursor-not-allowed text-white px-10 py-4 rounded-xl font-bold text-lg shadow-lg transition-all w-full md:w-auto text-center"
             >
-              <BiBarChartAlt2 size={24} />
               Temukan Sektor dan Analisis
             </button>
           </div>
