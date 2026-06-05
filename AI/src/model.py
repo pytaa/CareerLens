@@ -1,5 +1,5 @@
 import tensorflow as tf
-from src.layers import SkillEmbeddingLayer, CosineSimilarityLayer
+from AI_ENGINEER.src.layers import SkillEmbeddingLayer, CosineSimilarityLayer
 
 def build_skill_model(n_skills=390):
     skill_input = tf.keras.Input(shape=(n_skills,), name="skill_input")

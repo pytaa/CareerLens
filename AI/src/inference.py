@@ -1,8 +1,8 @@
 import numpy as np
 import tensorflow as tf
 
-from src.data_loader import DatasetLoader
-from src.utils       import (
+from AI_ENGINEER.src.data_loader import DatasetLoader
+from AI_ENGINEER.src.utils       import (
     get_interest_code,
     get_sector_recommendations,
     format_salary

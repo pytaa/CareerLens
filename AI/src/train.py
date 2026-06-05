@@ -2,8 +2,8 @@ import tensorflow as tf
 import numpy as np
 import os
 
-from src.losses    import WeightedMatchingLoss   
-from src.callbacks import CareerLensCallback
+from AI_ENGINEER.src.losses    import WeightedMatchingLoss   
+from AI_ENGINEER.src.callbacks import CareerLensCallback
 
 
 def train_model(

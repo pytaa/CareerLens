@@ -2,18 +2,18 @@ import tensorflow as tf
 
 from fastapi import APIRouter, HTTPException
 
-from api.schemas import BaseRequest
+from AI_ENGINEER.api.schemas import BaseRequest
 
-from src.data_loader import DatasetLoader
-from src.inference import predict
+from AI_ENGINEER.src.data_loader import DatasetLoader
+from AI_ENGINEER.src.inference import predict
 
 # IMPORT CUSTOM LAYER & LOSS
-from src.layers import (
+from AI_ENGINEER.src.layers import (
     SkillEmbeddingLayer,
     CosineSimilarityLayer
 )
 
-from src.losses import WeightedMatchingLoss
+from AI_ENGINEER.src.losses import WeightedMatchingLoss
 
 router = APIRouter()
 
