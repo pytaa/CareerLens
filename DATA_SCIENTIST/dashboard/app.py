@@ -3,11 +3,12 @@
 import sys
 import os
 
-# Daftarkan root folder (CareerLens) ke dalam sistem Python secara dinamis
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 if ROOT_DIR not in sys.path:
     sys.path.insert(0, ROOT_DIR)
-    
+
+LOGO_PATH = os.path.join(ROOT_DIR, "DATA_SCIENTIST", "dashboard", "assets", "careerlens_logo.png")
+
 import streamlit as st
 from data_loader import get_platform_stats
 
@@ -158,7 +159,7 @@ with st.sidebar:
     # Display logo image
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        st.image("assets/careerlens_logo.png", use_container_width=True)
+        st.image(LOGO_PATH, width='stretch')
     
     st.markdown("""
     <div style="text-align:center; padding: 8px 0;">
