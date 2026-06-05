@@ -1,0 +1,51 @@
+case_id,query,noise_variant_a,noise_variant_b,latency_variant_a,latency_variant_b
+1,"html, css, javascript, react, sass",4,1,126.64397218835737,111.51430898873858
+2,"java, mysql, rest api, javascript",5,0,128.12307954692147,113.44976775806002
+3,"golang, microservices, redis, postgresql",5,0,192.89634839997234,136.39446285306957
+4,"typescript, node.js, express.js, react, mongodb",3,1,169.6447742883094,104.80394147983817
+5,"kotlin, android studio, jetpack compose, firebase",6,0,195.1112713063677,132.83516817355414
+6,"swift, xcode, restful api, git",3,0,182.5500550095132,123.87652559019813
+7,"selenium, appium, testng, api testing, postman",3,1,138.6985700946314,100.08446102870607
+8,"requirements analysis, uml, erd design, bpmn",6,0,132.60304467057446,106.27195480244328
+9,"c/c++, microcontrollers, rtos, embedded linux",5,0,129.1244126834296,94.55258673685154
+10,"c#, unity, 3d mathematics, game physics",6,0,191.44614942709876,85.61083000683136
+11,"docker, kubernetes, ci/cd, ansible, helm",3,1,153.66834733849873,124.82950998790517
+12,"aws, cloud architecture, terraform, cloudformation",3,0,162.77858223643346,127.02789686129204
+13,"linux, windows server, active directory, powershell",6,0,148.26345577148643,94.75455023710846
+14,"cisco networking, bgp, ospf, lan, wan",5,1,145.82572827554978,85.79216351036571
+15,"agile, scrum, jira, stakeholder management, pmp",5,1,185.98731350745155,108.57767043302603
+16,"unity, openxr, arcore, arkit",5,1,187.2107283829684,126.98134636683429
+17,"solidity, ethereum, smart contracts, dapps, web3.js",3,1,155.47585801906655,92.34788365940484
+18,"enterprise architecture, solution design, cloud infrastructure",7,1,164.9344999039849,82.97638390680012
+19,"virtualization, vmware, vmware vsphere, vsan, proxmox",3,1,125.09584510830948,98.16908595283567
+20,"storage management, backup management, disaster recovery",4,1,145.91746275075496,103.03712037662838
+21,"vulnerability assessment, log analysis, siem, firewalls",3,0,133.76682922071618,88.58474930131915
+22,"penetration testing, kali linux, metasploit, burp suite",5,0,139.6095929837648,118.56679702400042
+23,"qradar, splunk, incident response, threat intelligence",6,0,169.47003467370763,107.77387989957649
+24,"iso 27001, compliance auditing, risk assessment, compliance",6,0,169.52061812590162,89.54256678537841
+25,"network security, network defense, intrusion detection, ids/ips",4,1,155.61316290853412,106.04453093259232
+26,"cyber threat intelligence, threat modeling, mitre att&ck",5,1,199.4194979404649,132.15373045925134
+27,"vulnerability management, vulnerability scanning, forensics",7,0,158.39932745167542,119.29721165049037
+28,"sql, excel, power bi, tableau, data analysis",4,0,150.12291740143664,88.86235113045618
+29,"python, r, scikit-learn, statistical analysis",4,1,180.63125313852873,135.4042934085395
+30,"python, tensorflow, pytorch, feature engineering, mlflow",7,0,139.55746565533786,95.83738667118995
+31,"etl, airflow, apache spark, kafka, data warehousing",5,0,165.1277249217102,84.21358969194998
+32,"hadoop, hive, hbase, mapreduce, spark",4,1,197.16576434315164,90.27178727018136
+33,"dax, power bi, data modeling, analytics reporting, ssrs",5,1,133.59163326355963,110.57399969440186
+34,"nlp, bert, hugging face transformers, langchain, spacy",7,1,176.9909024291222,119.12312255543623
+35,"opencv, yolo, cnns, image segmentation, pytorch",3,1,138.46670627796112,92.14964922441882
+36,"prompt engineering, gpt-4, llms, rag, vector databases",4,1,126.05969065690952,116.48644095579748
+37,"oracle, backup & recovery, index optimization, replication",7,1,158.47366290405785,121.68132661326356
+38,"figma, user interface design, typography, color theory",4,1,141.65368174248425,131.64242632089605
+39,"wireframing, prototyping, usability testing, journey mapping",3,0,168.21674948065424,113.47978968176702
+40,"adobe xd, sketch, design systems, heuristic evaluation",7,1,195.3543754475825,132.83068889595307
+41,"user research, interview techniques, survey design, affinity mapping",4,1,178.4541650345467,120.84925031241778
+42,"adobe photoshop, adobe illustrator, canva, layout design",6,1,122.9073863940456,92.01387484908042
+43,"adobe after effects, adobe premiere pro, cinema 4d, lottie",5,0,178.57146538980703,105.69115946586703
+44,"blender, 3d modeling, texturing, zbrush, substance painter",4,1,130.0039417817277,92.48132045069741
+45,"digital marketing, google ads, meta ads, google analytics",3,1,135.4834572515839,85.50849099639707
+46,"seo, keyword research, link building, technical seo, semrush",5,0,139.02052668024135,127.48137969139569
+47,"content strategy, editorial planning, audience research, content analytics",7,0,139.34331252119273,125.34148063842392
+48,"crm, salesforce crm, hubspot, email automation",4,1,171.49156389100995,136.04965718383207
+49,"copywriting, editing, blog writing, seo writing",3,0,163.16375021433396,124.1442787036396
+50,"social media management, hootsuite, meta business suite, instagram ads",5,0,141.72337450817363,95.87752715339369

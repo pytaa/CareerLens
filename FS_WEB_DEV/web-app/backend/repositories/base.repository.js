@@ -1,0 +1,41 @@
+ //Fungsi CRUD bawaan ada di sini agar repository spesifik tidak perlu mengulang kode.
+class BaseRepository {
+  constructor(model) {
+    this.model = model;
+  }
+
+  async findAll(options = {}) {
+    return await this.model.findAll(options);
+  }
+
+  async findById(id, options = {}) {
+    return await this.model.findByPk(id, options);
+  }
+
+  async findOne(options = {}) {
+    return await this.model.findOne(options);
+  }
+
+  async create(data, options = {}) {
+    return await this.model.create(data, options);
+  }
+
+  async update(id, data, options = {}) {
+    const instance = await this.model.findByPk(id);
+    if (!instance) return null;
+    return await instance.update(data, options);
+  }
+
+  async delete(id, options = {}) {
+    const instance = await this.model.findByPk(id);
+    if (!instance) return false;
+    await instance.destroy(options);
+    return true;
+  }
+
+  async count(options = {}) {
+    return await this.model.count(options);
+  }
+}
+
+module.exports = BaseRepository;
