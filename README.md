@@ -111,9 +111,16 @@ CareerLens/
 │   │   ├── fields.csv
 │   │   ├── dummy_projects.csv
 │   │   └── ...
-│   ├── ab-testing/                 # A/B Testing experiments
+│   ├── ab-testing/                # A/B Testing experiments
+│   │   └── dataset_learning_resources/
+│   │   └── outpue_ab/
+│   │   └── README.md
+│   │   └── ab_testing_script.py
+│   │   └── ab_testing_visualization.py                 
 │   ├── notebook/
 │   │   └── EDA_CareerLens.ipynb
+│   ├── report/
+│   │   └── Laporan Teknis.pdf
 │   ├── README_DS.md
 │   └── data_dictionary.md
 │
