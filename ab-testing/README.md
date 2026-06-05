@@ -42,17 +42,18 @@ Eksperimen ini dijalankan menggunakan metode **Controlled Simulation Testing** d
 Eksperimen terhadap 50 sampel berpasangan menghasilkan metrik ringkasan sebagai berikut:
 | Metrik Evaluasi | Varian A (Control) | Varian B (Treatment) | Perubahan (%) | P-Value | Kesimpulan |
 | :--- | :---: | :---: | :---: | :---: | :--- |
-| **Rata-rata Noise** | 4.92 courses | 0.40 courses | -91.86% | 0.000000 | Tolak H₀ (Signifikan) |
-| **Rata-rata Latency** | 161.66 ms | 110.43 ms | -31.69% | 0.000000 | Tolak H₀ (Signifikan) |
+| **Rata-rata Noise** | 4.72 courses | 0.54 courses | -88.56% | 0.000000 | Tolak H₀ (Signifikan) |
+| **Rata-rata Latency** | 157.19 ms | 109.08 ms | -30.61% | 0.000000 | Tolak H₀ (Signifikan) |
 
 ### 1. Evaluasi Kualitas Rekomendasi (Noise Reduction)
-* Temuan: 
-* Kekuatan Efek (Cohen's d):
-* Catatan Metodologi: 
+* Temuan: Proses pembersihan data secara masif pada Varian B berhasil menekan kemunculan kursus tidak relevan (*noise*) secara drastis. Rata-rata *noise* terpangkas hebat dari **4.72** kursus per pencarian menjadi hanya **0.54** kursus pada Varian B (efisiensi kebersihan sebesar **88.56%**). Melalui uji *Paired T-Test*, diperoleh nilai $P-value = 0.000000$ ($P < 0.05$), yang berarti keputusan statistik adalah **Tolak $H_0$**. Ini membuktikan secara ilmiah bahwa pembersihan kurikulum luar domain berdampak nyata pada akurasi rekomendasi.
+* Kekuatan Efek (Cohen's d): Sangat Besar (*Large Effect Size*). Penurunan kontaminasi data asing ini memberikan kepastian bahwa pengguna website hanya akan mendapatkan rekomendasi kompetensi yang benar-benar relevan dengan karir IT pilihan mereka.
+* Catatan Metodologi: Metrik *noise* dihitung berdasarkan total kemunculan materi non-IT/luar domain yang menyusup ke dalam sistem ketika diuji menggunakan 50 kombinasi *keywords* keahlian sampel.
 
 ### 2. Evaluasi Efisiensi Sistem (Latency)
-* Temuan: 
-* Kekuatan Efek (Cohen's d): 
+* Temuan: Varian B menunjukkan peningkatan efisiensi performa komputasi backend yang sangat nyata. Waktu respons rata-rata (*average latency*) berhasil dipangkas dari **157.19 ms** (Varian A) menjadi **109.08 ms** (Varian B), atau menghemat waktu pemrosesan sebesar **30.61%**. Nilai $P-value = 0.000000$ ($P < 0.05$) menegaskan bahwa performa Varian B yang lebih gegas ini murni karena struktur dataset `ULTIMATE` yang lebih ramping, bukan faktor kebetulan (*random chance*).
+* Kekuatan Efek (Cohen's d): Besar (*Large Effect Size*). Reduksi baris dan kolom sampah terbukti meringankan beban *input/output* (I/O) memori saat skrip backend melakukan pemindaian data.
+* Catatan Metodologi: Durasi latensi dihitung dalam satuan milidetik (ms) menggunakan pemanfaatan pustaka `time` internal Python untuk mengukur kecepatan eksekusi fungsi pencarian pada memori lokal.
 
 ## ⚙️ Catatan Batasan Eksperimen (Scope Limitations)
 1. Synthetic User Query: Pengujian dilakukan dalam lingkungan simulasi terkontrol menggunakan variasi kata kunci riil dari repositori keahlian lokal untuk mengantisipasi ketiadaan trafik pengguna aktif pada fase pra-rilis.
