@@ -7,7 +7,7 @@ import sys
 import os
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from DATA_SCIENTIST.dashboard.data_loader import load_roles
+from data_loader import load_roles
 
 
 # ==================== CSS ====================

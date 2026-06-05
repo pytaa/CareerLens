@@ -7,7 +7,7 @@ import os
 
 # Ensure the parent directory (dashboard/) is on the path so data_loader is importable
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from DATA_SCIENTIST.dashboard.data_loader import load_roles, load_fields, load_master_roles, load_learning_resources, load_master_feature_final
+from data_loader import load_roles, load_fields, load_master_roles, load_learning_resources, load_master_feature_final
 
 
 # ==================== CSS ====================

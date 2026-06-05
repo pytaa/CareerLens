@@ -1,6 +1,15 @@
 # pyrefly: ignore [missing-import]
+
+import sys
+import os
+
+# Daftarkan root folder (CareerLens) ke dalam sistem Python secara dinamis
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+if ROOT_DIR not in sys.path:
+    sys.path.insert(0, ROOT_DIR)
+    
 import streamlit as st
-from DATA_SCIENTIST.dashboard.data_loader import get_platform_stats
+from data_loader import get_platform_stats
 
 st.set_page_config(
     page_title="CareerLens",

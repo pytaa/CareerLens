@@ -1,28 +1,33 @@
 import pandas as pd
 import streamlit as st
+import os
+
+# Hitung secara absolut letak folder dataset dari posisi file ini
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__)) # .../dashboard
+DATASET_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "..", "dataset")) # .../DATA_SCIENTIST/dataset
 
 @st.cache_data
 def load_fields():
     """Tabel 1: Memuat referensi master bidang industri"""
-    df = pd.read_csv("../dataset/fields.csv")
+    df = pd.read_csv(os.path.join(DATASET_DIR, "fields.csv"))
     return df
 
 @st.cache_data
 def load_roles():
     """Tabel 2: Memuat skor psikometrik RIASEC tiap peran"""
-    df = pd.read_csv("../dataset/roles.csv")
+    df = pd.read_csv(os.path.join(DATASET_DIR, "roles.csv"))
     return df
 
 @st.cache_data
 def load_master_roles():
     """Tabel 3: Memuat data induk teks deskripsi, skill, dan gaji"""
-    df = pd.read_csv("../dataset/master_roles.csv")
+    df = pd.read_csv(os.path.join(DATASET_DIR, "master_roles.csv"))
     return df
 
 @st.cache_data
 def load_learning_resources(role_id=None):
     """Tabel 4: Memuat data resource belajar"""
-    df = pd.read_csv("../dataset/learning_resources.csv")
+    df = pd.read_csv(os.path.join(DATASET_DIR, "learning_resources.csv"))
     if role_id:
         return df[df['role_id'] == role_id]
     return df
@@ -30,8 +35,8 @@ def load_learning_resources(role_id=None):
 @st.cache_data
 def load_career_projects(role_id=None):
     """Tabel 5 & 6: Menggabungkan berkas studi kasus proyek dengan tabel relasi"""
-    df_project = pd.read_csv("../dataset/dummy_projects.csv")
-    df_mapping = pd.read_csv("../dataset/project_role_mapping.csv")
+    df_project = pd.read_csv(os.path.join(DATASET_DIR, "dummy_projects.csv"))
+    df_mapping = pd.read_csv(os.path.join(DATASET_DIR, "project_role_mapping.csv"))
     
     merged = pd.merge(df_project, df_mapping, on='project_id')
     
@@ -42,21 +47,21 @@ def load_career_projects(role_id=None):
 @st.cache_data
 def load_test_questions():
     """Tabel 7: Memuat bank kuesioner kuis minat bakat RIASEC"""
-    df = pd.read_csv("../dataset/test_question.csv")
+    df = pd.read_csv(os.path.join(DATASET_DIR, "test_question.csv"))
     return df
 
 @st.cache_data
 def load_master_feature_final():
     """Tabel 8: Memuat data matriks biner final siap pakai untuk model AI"""
-    df = pd.read_csv("../dataset/master_feature_final.csv")
+    df = pd.read_csv(os.path.join(DATASET_DIR, "master_feature_final.csv"))
     return df
 
 # Fungsi agregasi makro untuk komponen st.metric di landing page
 @st.cache_data
 def get_platform_stats():
     """Menghitung metrik agregasi makro untuk komponen st.metric di halaman utama"""
-    df_master = pd.read_csv("../dataset/master_roles.csv")
-    df_resources = pd.read_csv("../dataset/learning_resources.csv")
+    df_master = pd.read_csv(os.path.join(DATASET_DIR, "master_roles.csv"))
+    df_resources = pd.read_csv(os.path.join(DATASET_DIR, "learning_resources.csv"))
     
     total_roles = int(df_master['role_id'].nunique())
 
