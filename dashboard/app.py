@@ -1,4 +1,6 @@
+# pyrefly: ignore [missing-import]
 import streamlit as st
+from data_loader import get_platform_stats
 
 st.set_page_config(
     page_title="CareerLens",
@@ -7,7 +9,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# ==================== CSS PREMIUM (Adaptive & Responsive) ====================
+# ==================== GLOBAL CSS ====================
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@700;800;900&family=Inter:wght@400;500;600&display=swap');
@@ -142,117 +144,151 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ==================== SECTION 1: HERO ====================
-st.markdown("""
-<div class="hero-section">
-    <div class="hero">
-        <div class="hero-title">🔎 CareerLens</div>
-        <div class="hero-subtitle">Platform Analisis Karier & Market Insight</div>
-        <div class="hero-desc">
-            Dashboard interaktif untuk membantu pengguna memahami peluang karier,
-            menganalisis kecocokan minat berbasis <strong>RIASEC</strong>, membaca insight pasar kerja,
-            dan menemukan jalur pembelajaran yang relevan.
-        </div>
-    </div>
-</div>
-""", unsafe_allow_html=True)
 
-# ==================== SECTION 2: SEKILAS PLATFORM ====================
-st.markdown("""
-<div class="stats-section">
-    <div class="section-title">📊 Sekilas Platform</div>
-    <div class="stats-grid">
-        <div class="stats-card">
-            <div class="stats-label">Total Role Pekerjaan</div>
-            <div class="stats-value">—</div>
-        </div>
-        <div class="stats-card">
-            <div class="stats-label">Skill Paling Dicari</div>
-            <div class="stats-value">—</div>
-        </div>
-        <div class="stats-card">
-            <div class="stats-label">Rata-Rata Gaji Pasar</div>
-            <div class="stats-value">—</div>
-        </div>
-        <div class="stats-card">
-            <div class="stats-label">Total Resource Belajar</div>
-            <div class="stats-value">—</div>
-        </div>
-    </div>
-</div>
-""", unsafe_allow_html=True)
-
-st.divider()
-
-# ==================== SECTION 3: FITUR UTAMA (Sesuai Wireframe Chart Kamu) ====================
-st.markdown("""
-<div class="features-section">
-    <div class="section-title">🚀 Fitur & Komponen Analisis</div>
-    <div class="feature-grid">
-        <div class="feature-card">
-            <span class="icon">📈</span>
-            <h3>01. Market Overview</h3>
-            <p>Analisis makro industri lowongan kerja saat ini yang memuat:</p>
-            <ul>
-                <li>Distribusi Pekerjaan per Bidang (Bar Chart)</li>
-                <li>Top 15 Keterampilan Paling Dicari (Horizontal Bar Chart)</li>
-                <li>Sebaran Gaji Industri (Box Plot)</li>
-                <li>Popularitas Platform Pembelajaran (Bar Chart)</li>
-            </ul>
-        </div>
-        <div class="feature-card">
-            <span class="icon">🧠</span>
-            <h3>02. RIASEC Analytics</h3>
-            <p>Pemetaan minat kepribadian kerja berdasarkan framework RIASEC:</p>
-            <ul>
-                <li>Radar/Spider Chart analisis kecocokan untuk setiap pilihan role</li>
-                <li>Bar Chart visualisasi sebaran peran dominan pada setiap aspek kepribadian</li>
-            </ul>
-        </div>
-        <div class="feature-card">
-            <span class="icon">🗺️</span>
-            <h3>03. Career Explorer</h3>
-            <p>Navigasi mikro untuk pengembangan keahlian personal:</p>
-            <ul>
-                <li>Eksplorasi prasyarat detail per peran karier</li>
-                <li>Penyusunan kurikulum dan peta jalan pembelajaran (Roadmap)</li>
-                <li>Kurasi sumber daya pendidikan (Resources)</li>
-            </ul>
-        </div>
-    </div>
-</div>
-""", unsafe_allow_html=True)
-
-st.divider()
-
-# ==================== SECTION 4: ALUR EKSPLORASI ====================
-st.markdown("""
-<div class="workflow-section">
-    <div class="section-title">🛠️ Alur Eksplorasi</div>
-    <div class="flow-grid">
-        <div class="flow-box">
-            <div class="flow-step">Langkah 01</div>
-            <div class="flow-text">Pahami peta kekuatan industri saat ini di halaman Market Insight.</div>
-        </div>
-        <div class="flow-box">
-            <div class="flow-step">Langkah 02</div>
-            <div class="flow-text">Identifikasi karakter dan kecocokan minat profesi Anda lewat RIASEC Analytics.</div>
-        </div>
-        <div class="flow-box">
-            <div class="flow-step">Langkah 03</div>
-            <div class="flow-text">Ambil keputusan dan susun kurikulum belajar Anda di Career Explorer.</div>
-        </div>
-    </div>
-</div>
-""", unsafe_allow_html=True)
-
-# ==================== SECTION 5: SIDEBAR & DATA INFO ====================
+# ==================== SIDEBAR: LOGO + NAVIGATION ====================
 with st.sidebar:
-    st.markdown("### 🧭 Navigasi Menu")
-    st.info("Silakan gunakan menu di atas untuk berpindah halaman.")
+    # Display logo image
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        st.image("assets/careerlens_logo.png", use_container_width=True)
     
-    st.markdown("### 🗃️ Data Source")
-    st.caption("Data yang dianalisis merupakan kompilasi tren pasar industri lowongan kerja lokal & framework minat RIASEC terintegrasi.")
-    
+    st.markdown("""
+    <div style="text-align:center; padding: 8px 0;">
+        <div style="font-size:11px; color:#6B7280; font-family:'Inter',sans-serif;">
+            Platform Analisis Karier & Market Insight
+        </div>
+    </div>
+    <hr style="border:none; border-top:1px solid rgba(128,128,128,0.2); margin:12px 0 16px 0;">
+    """, unsafe_allow_html=True)
+
+    selected_page = st.selectbox(
+        "🧭 Navigasi Menu",
+        options=["Overview", "Market Insights", "RIASEC Analysis", "Career Explorer"],
+        key="navigation"
+    )
+
     st.markdown("---")
-    st.caption("Developed by CareerLens Team")
+    st.caption("Developed by CareerLens Team · 2024")
+
+
+# ==================== PAGE ROUTING ====================
+if selected_page == "Overview":
+    # ---- LOAD DYNAMIC METRICS ----
+    stats = get_platform_stats()
+
+    # ---- SECTION 1: HERO ----
+    st.markdown(f"""
+    <div class="hero-section">
+        <div class="hero">
+            <div class="hero-title">🔎 CareerLens</div>
+            <div class="hero-subtitle">Platform Analisis Karier & Market Insight</div>
+            <div class="hero-desc">
+                Dashboard interaktif untuk membantu pengguna memahami peluang karier,
+                menganalisis kecocokan minat berbasis <strong>RIASEC</strong>, membaca insight pasar kerja,
+                dan menemukan jalur pembelajaran yang relevan.
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # ---- SECTION 2: METRIC CARDS (DYNAMIC) ----
+    st.markdown(f"""
+    <div class="stats-section">
+        <div class="section-title">📊 Sekilas Platform</div>
+        <div class="stats-grid">
+            <div class="stats-card">
+                <div class="stats-label">Total Roles</div>
+                <div class="stats-value">{stats['total_roles']}</div>
+            </div>
+            <div class="stats-card">
+                <div class="stats-label">Most Demanded Skill</div>
+                <div class="stats-value" style="font-size:22px; padding-top:6px;">{stats['top_skill']}</div>
+            </div>
+            <div class="stats-card">
+                <div class="stats-label">Average Market Salary</div>
+                <div class="stats-value" style="font-size:20px; padding-top:6px;">{stats['avg_salary']}</div>
+            </div>
+            <div class="stats-card">
+                <div class="stats-label">Total Learning Resources</div>
+                <div class="stats-value">{stats['total_resources']}</div>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.divider()
+
+    # ---- SECTION 3: FEATURE CARDS ----
+    st.markdown("""
+    <div class="features-section">
+        <div class="section-title">🚀 Fitur & Komponen Analisis</div>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <span class="icon">📈</span>
+                <h3>01. Market Insights</h3>
+                <p>Analisis makro industri lowongan kerja saat ini yang memuat:</p>
+                <ul>
+                    <li>Distribusi Pekerjaan per Bidang (Bar Chart)</li>
+                    <li>Top 15 Keterampilan Paling Dicari (Horizontal Bar)</li>
+                    <li>Sebaran Gaji Industri (Box Plot)</li>
+                    <li>Popularitas Platform Pembelajaran (Bar Chart)</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <span class="icon">🧠</span>
+                <h3>02. RIASEC Analysis</h3>
+                <p>Pemetaan minat kepribadian kerja berdasarkan framework RIASEC:</p>
+                <ul>
+                    <li>Radar/Spider Chart profil RIASEC per role pilihan</li>
+                    <li>Bar Chart distribusi peran dominan tiap dimensi kepribadian</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <span class="icon">🗺️</span>
+                <h3>03. Career Explorer</h3>
+                <p>Navigasi mikro untuk pengembangan keahlian personal:</p>
+                <ul>
+                    <li>Eksplorasi prasyarat detail per peran karier</li>
+                    <li>Penyusunan kurikulum dan peta jalan pembelajaran (Roadmap)</li>
+                    <li>Kurasi sumber daya pendidikan (Resources)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.divider()
+
+    # ---- SECTION 4: WORKFLOW ----
+    st.markdown("""
+    <div class="workflow-section">
+        <div class="section-title">🛠️ Alur Eksplorasi</div>
+        <div class="flow-grid">
+            <div class="flow-box">
+                <div class="flow-step">Langkah 01</div>
+                <div class="flow-text">Pahami peta kekuatan industri saat ini di halaman Market Insights.</div>
+            </div>
+            <div class="flow-box">
+                <div class="flow-step">Langkah 02</div>
+                <div class="flow-text">Identifikasi karakter dan kecocokan minat profesi Anda lewat RIASEC Analysis.</div>
+            </div>
+            <div class="flow-box">
+                <div class="flow-step">Langkah 03</div>
+                <div class="flow-text">Ambil keputusan dan susun kurikulum belajar Anda di Career Explorer.</div>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+
+elif selected_page == "Market Insights":
+    from modules.market_overview import render_market_overview
+    render_market_overview()
+
+elif selected_page == "RIASEC Analysis":
+    from modules.riasec_analytics import render_riasec_analytics
+    render_riasec_analytics()
+
+elif selected_page == "Career Explorer":
+    from modules.career_explorer import render_career_explorer
+    render_career_explorer()
